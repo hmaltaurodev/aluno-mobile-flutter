@@ -1,0 +1,4 @@
+enum AcademicRegime {
+  semiannual,
+  yearly
+}

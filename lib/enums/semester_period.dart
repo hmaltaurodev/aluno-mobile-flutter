@@ -1,0 +1,4 @@
+enum SemesterPeriod {
+  first,
+  second
+}
