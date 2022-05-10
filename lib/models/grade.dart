@@ -19,4 +19,24 @@ class Grade {
     required this.bimester,
     required this.grade
   });
+  
+  factory Grade.fromMap(Map map) {
+    return Grade(
+      id: int.tryParse(map[gradeId].toString()),
+      classroomStudentId: int.parse(map[gradeClassroomStudentId].toString()),
+      disciplineId: int.parse(map[gradeDisciplineId].toString()),
+      bimester: int.parse(map[gradeBimester].toString()),
+      grade: double.parse(map[gradeGrade].toString())
+    );
+  }
+
+  Map<String, dynamic> toMap() {
+    return {
+      gradeId: id,
+      gradeClassroomStudentId: classroomStudentId,
+      gradeDisciplineId: disciplineId,
+      gradeBimester: bimester,
+      gradeGrade: grade
+    };
+  }
 }

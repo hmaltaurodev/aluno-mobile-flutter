@@ -10,12 +10,33 @@ class Course {
   int mecId;
   String description;
   int academicDegree;
-  bool isActive = true;
+  bool isActive;
 
   Course({
     this.id,
     required this.mecId,
     required this.description,
-    required this.academicDegree
+    required this.academicDegree,
+    this.isActive = true
   });
+
+  factory Course.fromMap(Map map) {
+    return Course(
+      id: int.tryParse(map[courseId].toString()),
+      mecId: int.parse(map[courseMecId].toString()),
+      description: map[courseDescription].toString(),
+      academicDegree: int.parse(map[courseAcademicDegree].toString()),
+      isActive: map[courseIsActive]
+    );
+  }
+
+  Map<String, dynamic> toMap() {
+    return {
+      courseId: id,
+      courseMecId: mecId,
+      courseDescription: description,
+      courseAcademicDegree: academicDegree,
+      courseIsActive: isActive
+    };
+  }
 }
