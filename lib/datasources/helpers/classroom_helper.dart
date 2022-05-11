@@ -4,6 +4,12 @@ import 'package:sqflite/utils/utils.dart';
 import 'package:aluno_mobile_flutter/datasources/database.dart';
 
 const String classroomSqlCreate = '''
+  CREATE TABLE $classroomTable (
+    $classroomId INT PRIMARY KEY AUTOINCREMENT,
+    $classroomCurriculumGrideId INT,
+    $classroomPeriodYear INT,
+    $classroomIsActive BOOLEAN
+  );
 ''';
 
 const String classroomSqlCount = '''

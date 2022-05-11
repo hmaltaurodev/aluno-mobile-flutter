@@ -25,7 +25,17 @@ class DataBase {
       pathDatabase,
       version: _version,
       onCreate: (Database database, int version) async {
-
+        await database.execute(studentSqlCreate);
+        await database.execute(teacherSqlCreate);
+        await database.execute(userSqlCreate);
+        await database.execute(disciplineSqlCreate);
+        await database.execute(courseSqlCreate);
+        await database.execute(curriculumGrideSqlCreate);
+        await database.execute(curriculumGrideDisciplineSqlCreate);
+        await database.execute(classroomSqlCreate);
+        await database.execute(classroomStudentSqlCreate);
+        await database.execute(frequencySqlCreate);
+        await database.execute(gradeSqlCreate);
       }
     );
   }

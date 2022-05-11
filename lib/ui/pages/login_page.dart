@@ -11,9 +11,20 @@ class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Aluno Mobile'),
+      floatingActionButton: FloatingActionButton(
+        backgroundColor: const Color.fromRGBO(0, 0, 253, 1),
+        onPressed: () { },
       ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+      bottomNavigationBar: const BottomAppBar(
+        child: Padding(
+          child: Icon(null),
+          padding: EdgeInsets.all(8),
+        ),
+        color: Color.fromRGBO(0, 0, 253, 1),
+        shape: CircularNotchedRectangle(),
+      ),
+      extendBody: true,
     );
   }
 }

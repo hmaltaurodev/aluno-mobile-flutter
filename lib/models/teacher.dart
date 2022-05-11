@@ -2,7 +2,7 @@ import 'package:intl/intl.dart';
 
 const String teacherTable = 'TEACHER';
 const String teacherId = 'ID';
-const String teacherRegistrarionId = 'REGISTRATION_ID';
+const String teacherRegistrationId = 'REGISTRATION_ID';
 const String teacherName = 'NAME';
 const String teacherCpf = 'CPF';
 const String teacherBirthDate = 'BIRTH_DATE';
@@ -31,7 +31,7 @@ class Teacher {
   factory Teacher.fromMap(Map map) {
     return Teacher(
         id: int.tryParse(map[teacherId].toString()),
-        registrationId: int.parse(map[teacherRegistrarionId].toString()),
+        registrationId: int.parse(map[teacherRegistrationId].toString()),
         name: map[teacherName].toString(),
         cpf: map[teacherCpf].toString(),
         birthDate: DateFormat('dd/MM/yyyy').parse(map[teacherBirthDate].toString()),
@@ -43,7 +43,7 @@ class Teacher {
   Map<String, dynamic> toMap() {
     return {
       teacherId: id,
-      teacherRegistrarionId: registrationId,
+      teacherRegistrationId: registrationId,
       teacherName: name,
       teacherCpf: cpf,
       teacherBirthDate: DateFormat('dd/MM/yyyy').format(birthDate),
