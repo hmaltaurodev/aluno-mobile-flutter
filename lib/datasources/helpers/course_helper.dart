@@ -5,10 +5,10 @@ import 'package:aluno_mobile_flutter/datasources/database.dart';
 
 const String courseSqlCreate = '''
   CREATE TABLE $courseTable (
-    $courseId INT PRIMARY KEY AUTOINCREMENT,
-    $courseMecId INT,
+    $courseId INTEGER PRIMARY KEY AUTOINCREMENT,
+    $courseMecId INTEGER,
     $courseDescription TEXT,
-    $courseAcademicDegree INT,
+    $courseAcademicDegree INTEGER,
     $courseIsActive BOOLEAN
   );
 ''';

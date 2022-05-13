@@ -5,8 +5,8 @@ import 'package:aluno_mobile_flutter/datasources/database.dart';
 
 const String studentSqlCreate = '''
   CREATE TABLE $studentTable (
-    $studentId INT PRIMARY KEY AUTOINCREMENT,
-    $studentRegistrationId INT,
+    $studentId INTEGER PRIMARY KEY AUTOINCREMENT,
+    $studentRegistrationId INTEGER,
     $studentName TEXT,
     $studentCpf TEXT,
     $studentBirthDate TEXT,

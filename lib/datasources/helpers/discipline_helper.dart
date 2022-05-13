@@ -5,11 +5,11 @@ import 'package:aluno_mobile_flutter/datasources/database.dart';
 
 const String disciplineSqlCreate = '''
   CREATE TABLE $disciplineTable (
-    $disciplineId INT PRIMARY KEY AUTOINCREMENT,
+    $disciplineId INTEGER PRIMARY KEY AUTOINCREMENT,
     $disciplineDescription TEXT,
-    $disciplineClassHours INT,
-    $disciplineNumberOfClasses INT,
-    $disciplineTeacherId INT,
+    $disciplineClassHours INTEGER,
+    $disciplineNumberOfClasses INTEGER,
+    $disciplineTeacherId INTEGER,
     $disciplineIsActive BOOLEAN
   );
 ''';

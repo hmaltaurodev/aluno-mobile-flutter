@@ -5,9 +5,9 @@ import 'package:aluno_mobile_flutter/datasources/database.dart';
 
 const String classroomSqlCreate = '''
   CREATE TABLE $classroomTable (
-    $classroomId INT PRIMARY KEY AUTOINCREMENT,
-    $classroomCurriculumGrideId INT,
-    $classroomPeriodYear INT,
+    $classroomId INTEGER PRIMARY KEY AUTOINCREMENT,
+    $classroomCurriculumGrideId INTEGER,
+    $classroomPeriodYear INTEGER,
     $classroomIsActive BOOLEAN
   );
 ''';

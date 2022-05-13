@@ -5,10 +5,10 @@ import 'package:aluno_mobile_flutter/datasources/database.dart';
 
 const String gradeSqlCreate = '''
   CREATE TABLE $gradeTable (
-    $gradeId INT PRIMARY KEY AUTOINCREMENT,
-    $gradeClassroomStudentId INT,
-    $gradeDisciplineId INT,
-    $gradeBimester INT,
+    $gradeId INTEGER PRIMARY KEY AUTOINCREMENT,
+    $gradeClassroomStudentId INTEGER,
+    $gradeDisciplineId INTEGER,
+    $gradeBimester INTEGER,
     $gradeGrade DECIMAL(10, 2)
   );
 ''';

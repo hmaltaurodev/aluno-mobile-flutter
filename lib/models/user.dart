@@ -1,3 +1,6 @@
+import 'package:aluno_mobile_flutter/datasources/helpers/helpers.dart';
+import 'package:aluno_mobile_flutter/enums/enums.dart';
+
 const String userTable = 'USER';
 const String userId = 'ID';
 const String userUsername = 'USERNAME';
@@ -14,7 +17,7 @@ class User {
   int userType;
   int? studentId;
   int? teacherId;
-  bool isActive;
+  int isActive;
 
   User({
     this.id,
@@ -23,7 +26,7 @@ class User {
     required this.userType,
     this.studentId,
     this.teacherId,
-    this.isActive = true
+    this.isActive = 1
   });
 
   factory User.fromMap(Map map) {
@@ -34,7 +37,7 @@ class User {
       userType: int.parse(map[userUserType].toString()),
       studentId: int.tryParse(map[userStudentId].toString()),
       teacherId: int.tryParse(map[userTeacherId].toString()),
-      isActive: map[userIsActive]
+      isActive: int.parse(map[userIsActive].toString())
     );
   }
 
@@ -48,5 +51,19 @@ class User {
       userTeacherId: teacherId,
       userIsActive: isActive
     };
+  }
+
+  static Future<void> createDefaultUser() async {
+    final UserHelper userHelper = UserHelper();
+
+    if (await userHelper.getByUsername('admin') == null) {
+      userHelper.insert(User(
+          username: 'admin',
+          password: 'admin',
+          userType: UserType.admin.toInt(),
+          isActive: 1
+        )
+      );
+    }
   }
 }

@@ -5,11 +5,11 @@ import 'package:aluno_mobile_flutter/datasources/database.dart';
 
 const String curriculumGrideSqlCreate = '''
   CREATE TABLE $curriculumGrideTable (
-    $curriculumGrideId INT PRIMARY KEY AUTOINCREMENT,
-    $curriculumGrideCourseId INT,
-    $curriculumGrideAcademicYear INT,
-    $curriculumGrideAcademicRegime INT,
-    $curriculumGrideSemesterPeriod INT,
+    $curriculumGrideId INTEGER PRIMARY KEY AUTOINCREMENT,
+    $curriculumGrideCourseId INTEGER,
+    $curriculumGrideAcademicYear INTEGER,
+    $curriculumGrideAcademicRegime INTEGER,
+    $curriculumGrideSemesterPeriod INTEGER,
     $curriculumGrideIsActive BOOLEAN
   );
 ''';

@@ -5,10 +5,10 @@ import 'package:aluno_mobile_flutter/datasources/database.dart';
 
 const String frequencySqlCreate = '''
   CREATE TABLE $frequencyTable (
-    $frequencyId INT PRIMARY KEY AUTOINCREMENT,
-    $frequencyClassroomStudentId INT,
-    $frequencyDisciplineId INT,
-    $frequencyLessonNumber INT,
+    $frequencyId INTEGER PRIMARY KEY AUTOINCREMENT,
+    $frequencyClassroomStudentId INTEGER,
+    $frequencyDisciplineId INTEGER,
+    $frequencyLessonNumber INTEGER,
     $frequencyPresence BOOLEAN
   );
 ''';

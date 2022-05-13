@@ -5,8 +5,9 @@ import 'package:aluno_mobile_flutter/datasources/database.dart';
 
 const String curriculumGrideDisciplineSqlCreate = '''
   CREATE TABLE $curriculumGrideDisciplineTable (
-    $curriculumGrideDisciplineCurriculumGrideId INT PRIMARY KEY,
-    $curriculumGrideDisciplineDisciplineId INT PRIMARY KEY
+    $curriculumGrideDisciplineCurriculumGrideId INTEGER NOT NULL,
+    $curriculumGrideDisciplineDisciplineId INTEGER NOT NULL,
+    PRIMARY KEY ($curriculumGrideDisciplineCurriculumGrideId, $curriculumGrideDisciplineDisciplineId)
   );
 ''';
 

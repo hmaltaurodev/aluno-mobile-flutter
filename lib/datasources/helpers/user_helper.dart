@@ -5,12 +5,12 @@ import 'package:aluno_mobile_flutter/datasources/database.dart';
 
 const String userSqlCreate = '''
   CREATE TABLE $userTable (
-    $userId INT PRIMARY KEY AUTOINCREMENT,
+    $userId INTEGER PRIMARY KEY AUTOINCREMENT,
     $userUsername TEXT,
     $userPassword TEXT,
-    $userUserType INT,
-    $userStudentId INT NULL,
-    $userTeacherId INT NULL,
+    $userUserType INTEGER,
+    $userStudentId INTEGER NULL,
+    $userTeacherId INTEGER NULL,
     $userIsActive BOOLEAN
   );
 ''';
@@ -68,6 +68,36 @@ class UserHelper {
         userTable,
         where: '$userId = ?',
         whereArgs: [id]
+    );
+
+    if (users.isNotEmpty) {
+      return User.fromMap(users.first);
+    }
+
+    return null;
+  }
+
+  Future<User?> getByUsername(String username) async {
+    Database database = await DataBase().getDatabase;
+    List users = await database.query(
+        userTable,
+        where: '$userUsername = ?',
+        whereArgs: [username]
+    );
+
+    if (users.isNotEmpty) {
+      return User.fromMap(users.first);
+    }
+
+    return null;
+  }
+
+  Future<User?> getByLogin(String username, String password) async {
+    Database database = await DataBase().getDatabase;
+    List users = await database.query(
+        userTable,
+        where: '$userUsername = ? AND $userPassword = ?',
+        whereArgs: [username, password]
     );
 
     if (users.isNotEmpty) {

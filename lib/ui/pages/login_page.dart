@@ -1,6 +1,9 @@
+import 'package:aluno_mobile_flutter/datasources/helpers/helpers.dart';
+import 'package:aluno_mobile_flutter/models/models.dart';
 import 'package:aluno_mobile_flutter/ui/components/w_elevated_button.dart';
 import 'package:aluno_mobile_flutter/ui/pages/home_page.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({ Key? key }) : super(key: key);
@@ -10,6 +13,18 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
+  final TextEditingController _usernameController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
+
+  @override
+  void initState() {
+    super.initState();
+    User.createDefaultUser();
+    //SchedulerBinding.instance?.addPostFrameCallback((_) {
+    //  Navigator.of(context).pushNamed("home_page");
+    //});
+  }
+
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
@@ -44,15 +59,16 @@ class _LoginPageState extends State<LoginPage> {
                     ],
                   )
               ),
-              const Padding(
-                padding: EdgeInsets.only(
+              Padding(
+                padding: const EdgeInsets.only(
                     top: 50,
                     bottom: 10,
                     left: 30,
                     right: 30
                 ),
                 child: TextField(
-                  decoration: InputDecoration(
+                  controller: _usernameController,
+                  decoration: const InputDecoration(
                     prefixIcon: Icon(
                       Icons.supervised_user_circle_outlined,
                     ),
@@ -63,16 +79,17 @@ class _LoginPageState extends State<LoginPage> {
                   ),
                 ),
               ),
-              const Padding(
-                padding: EdgeInsets.only(
+              Padding(
+                padding: const EdgeInsets.only(
                     top: 10,
                     bottom: 10,
                     left: 30,
                     right: 30
                 ),
                 child: TextField(
+                  controller: _passwordController,
                   obscureText: true,
-                  decoration: InputDecoration(
+                  decoration: const InputDecoration(
                     prefixIcon: Icon(
                       Icons.password,
                     ),
@@ -99,14 +116,7 @@ class _LoginPageState extends State<LoginPage> {
                     ),
                   ),
                 ),
-                onPressed: () {
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => const HomePage()
-                      )
-                  );
-                },
+                onPressed: _login,
               ),
               Padding(
                 padding: const EdgeInsets.symmetric(
@@ -127,5 +137,27 @@ class _LoginPageState extends State<LoginPage> {
         ),
       ),
     );
+  }
+
+  void _login() async {
+    FocusScope.of(context).unfocus();
+    UserHelper userHelper = UserHelper();
+    User? user = await userHelper.getByLogin(_usernameController.text, _passwordController.text);
+
+    if (user != null) {
+      Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (context) => HomePage(user: user)
+          )
+      );
+    }
+    else {
+      const snackBar = SnackBar(
+        content: Text('Usuário ou senha incorreta!')
+      );
+
+      ScaffoldMessenger.of(context).showSnackBar(snackBar);
+    }
   }
 }
