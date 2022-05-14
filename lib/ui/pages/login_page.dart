@@ -3,6 +3,7 @@ import 'package:aluno_mobile_flutter/models/models.dart';
 import 'package:aluno_mobile_flutter/ui/components/w_elevated_button.dart';
 import 'package:aluno_mobile_flutter/ui/pages/home_page.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter/scheduler.dart';
 
 class LoginPage extends StatefulWidget {
@@ -20,6 +21,7 @@ class _LoginPageState extends State<LoginPage> {
   void initState() {
     super.initState();
     User.createDefaultUser();
+
     //SchedulerBinding.instance?.addPostFrameCallback((_) {
     //  Navigator.of(context).pushNamed("home_page");
     //});
@@ -142,22 +144,27 @@ class _LoginPageState extends State<LoginPage> {
   void _login() async {
     FocusScope.of(context).unfocus();
     UserHelper userHelper = UserHelper();
-    User? user = await userHelper.getByLogin(_usernameController.text, _passwordController.text);
+    User? user = await userHelper.getByUsername('admin');
+    /*await userHelper.getByLogin(
+      _usernameController.text,
+      _passwordController.text
+    );*/
 
-    if (user != null) {
+    //if (user != null) {
+      //await (await SharedPreferences.getInstance()).setString('user_loged', user.username);
       Navigator.push(
           context,
           MaterialPageRoute(
-              builder: (context) => HomePage(user: user)
+              builder: (context) => HomePage(user: user!)
           )
       );
-    }
+    /*}
     else {
       const snackBar = SnackBar(
         content: Text('Usuário ou senha incorreta!')
       );
 
       ScaffoldMessenger.of(context).showSnackBar(snackBar);
-    }
+    }*/
   }
 }

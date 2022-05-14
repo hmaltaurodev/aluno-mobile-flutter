@@ -1,5 +1,6 @@
 import 'package:aluno_mobile_flutter/datasources/helpers/helpers.dart';
 import 'package:aluno_mobile_flutter/enums/enums.dart';
+import 'package:crypt/crypt.dart';
 
 const String userTable = 'USER';
 const String userId = 'ID';
@@ -59,7 +60,7 @@ class User {
     if (await userHelper.getByUsername('admin') == null) {
       userHelper.insert(User(
           username: 'admin',
-          password: 'admin',
+          password: Crypt.sha256('admin').toString(),
           userType: UserType.admin.toInt(),
           isActive: 1
         )

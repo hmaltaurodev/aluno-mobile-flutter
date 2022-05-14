@@ -1,4 +1,5 @@
 import 'package:aluno_mobile_flutter/models/models.dart';
+import 'package:crypt/crypt.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:sqflite/utils/utils.dart';
 import 'package:aluno_mobile_flutter/datasources/database.dart';
@@ -6,7 +7,7 @@ import 'package:aluno_mobile_flutter/datasources/database.dart';
 const String userSqlCreate = '''
   CREATE TABLE $userTable (
     $userId INTEGER PRIMARY KEY AUTOINCREMENT,
-    $userUsername TEXT,
+    $userUsername TEXT UNIQUE,
     $userPassword TEXT,
     $userUserType INTEGER,
     $userStudentId INTEGER NULL,
@@ -96,11 +97,11 @@ class UserHelper {
     Database database = await DataBase().getDatabase;
     List users = await database.query(
         userTable,
-        where: '$userUsername = ? AND $userPassword = ?',
-        whereArgs: [username, password]
+        where: '$userUsername = ?',
+        whereArgs: [username]
     );
 
-    if (users.isNotEmpty) {
+    if (users.isNotEmpty && Crypt(User.fromMap(users.first).password).match(password)) {
       return User.fromMap(users.first);
     }
 
