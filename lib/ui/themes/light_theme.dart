@@ -4,7 +4,6 @@ ThemeData lightTheme() {
   const Color primaryColor = Color.fromRGBO(0, 0, 253, 1);
   const Color primaryColorDark = Color.fromRGBO(0, 0, 108, 1);
   const Color primaryColorLight = Color.fromRGBO(124, 124, 255, 1);
-  Color shadeColor = Colors.blueGrey.shade50;
 
   const TextStyle textStyleElevatedButton = TextStyle(
     fontSize: 20,
@@ -16,10 +15,20 @@ ThemeData lightTheme() {
     shape: CircularNotchedRectangle(),
   );
 
+  const FloatingActionButtonThemeData floatingActionButtonThemeData = FloatingActionButtonThemeData(
+    backgroundColor: primaryColor,
+  );
+
+  const AppBarTheme appBarTheme = AppBarTheme(
+    color: primaryColor,
+  );
+
   ElevatedButtonThemeData elevatedButtonThemeData = ElevatedButtonThemeData(
     style: ElevatedButton.styleFrom(
       primary: primaryColor,
-      shape: const StadiumBorder(),
+      shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(5),
+      ),
       textStyle: textStyleElevatedButton,
     ),
   );
@@ -29,13 +38,13 @@ ThemeData lightTheme() {
       borderSide: const BorderSide(
         color: primaryColor,
       ),
-      borderRadius: BorderRadius.circular(30),
+      borderRadius: BorderRadius.circular(5),
     ),
     focusedBorder: OutlineInputBorder(
       borderSide: const BorderSide(
         color: primaryColorDark,
       ),
-      borderRadius: BorderRadius.circular(30),
+      borderRadius: BorderRadius.circular(5),
     ),
   );
 
@@ -44,8 +53,10 @@ ThemeData lightTheme() {
     primaryColorDark: primaryColorDark,
     primaryColorLight: primaryColorLight,
 
+    appBarTheme: appBarTheme,
     bottomAppBarTheme: bottomAppBarTheme,
     elevatedButtonTheme: elevatedButtonThemeData,
     inputDecorationTheme: inputDecorationTheme,
+    floatingActionButtonTheme: floatingActionButtonThemeData,
   );
 }

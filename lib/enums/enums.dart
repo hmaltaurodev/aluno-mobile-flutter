@@ -4,3 +4,4 @@ export 'academic_year.dart';
 export 'bimester.dart';
 export 'semester_period.dart';
 export 'user_type.dart';
+export 'action_type.dart';

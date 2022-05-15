@@ -14,8 +14,5 @@ void main() {
     home: const LoginPage(),
     theme: lightTheme(),
     debugShowCheckedModeBanner: false,
-    /*routes: <String, WidgetBuilder> {
-      "home_page" : (BuildContext context) => const HomePage(),
-    }*/
   ));
 }

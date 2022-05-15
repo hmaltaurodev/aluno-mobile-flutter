@@ -22,8 +22,6 @@ extension AcademicDegreeExtension on AcademicDegree {
         return 'Mestrado';
       case AcademicDegree.doctorate:
         return 'Doutorado';
-      default:
-        return '';
     }
   }
 
@@ -41,8 +39,6 @@ extension AcademicDegreeExtension on AcademicDegree {
         return 5;
       case AcademicDegree.doctorate:
         return 6;
-      default:
-        return 0;
     }
   }
 }
