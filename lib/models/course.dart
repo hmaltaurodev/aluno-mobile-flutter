@@ -10,14 +10,14 @@ class Course {
   int mecId;
   String description;
   int academicDegree;
-  bool isActive;
+  int isActive;
 
   Course({
     this.id,
     required this.mecId,
     required this.description,
     required this.academicDegree,
-    this.isActive = true
+    this.isActive = 1
   });
 
   factory Course.fromMap(Map map) {
@@ -26,7 +26,7 @@ class Course {
       mecId: int.parse(map[courseMecId].toString()),
       description: map[courseDescription].toString(),
       academicDegree: int.parse(map[courseAcademicDegree].toString()),
-      isActive: map[courseIsActive]
+      isActive: int.parse(map[courseIsActive].toString())
     );
   }
 

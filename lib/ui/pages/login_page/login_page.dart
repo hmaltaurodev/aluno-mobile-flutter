@@ -1,9 +1,9 @@
 import 'package:aluno_mobile_flutter/datasources/helpers/helpers.dart';
 import 'package:aluno_mobile_flutter/models/models.dart';
-import 'package:aluno_mobile_flutter/ui/components/w_elevated_button.dart';
-import 'package:aluno_mobile_flutter/ui/pages/home_page.dart';
-import 'package:flutter/material.dart';
+import 'package:aluno_mobile_flutter/ui/components/components.dart';
+import 'package:aluno_mobile_flutter/ui/pages/pages.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:flutter/material.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({ Key? key }) : super(key: key);

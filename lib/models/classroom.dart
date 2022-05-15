@@ -8,13 +8,13 @@ class Classroom {
   int? id;
   int currriculumGrideId;
   int periodYear;
-  bool isActive;
+  int isActive;
 
   Classroom({
     this.id,
     required this.currriculumGrideId,
     required this.periodYear,
-    this.isActive = true
+    this.isActive = 1
   });
 
   factory Classroom.fromMap(Map map) {
@@ -22,7 +22,7 @@ class Classroom {
       id: int.tryParse(map[classroomId].toString()),
       currriculumGrideId: int.parse(map[classroomCurriculumGrideId].toString()),
       periodYear: int.parse(map[classroomPeriodYear].toString()),
-      isActive: map[classroomIsActive]
+      isActive: int.parse(map[classroomIsActive].toString())
     );
   }
 

@@ -12,7 +12,7 @@ class CurriculumGride {
   int academicYear;
   int academicRegime;
   int semesterPeriod;
-  bool isActive;
+  int isActive;
 
   CurriculumGride({
     this.id,
@@ -20,7 +20,7 @@ class CurriculumGride {
     required this.academicYear,
     required this.academicRegime,
     required this.semesterPeriod,
-    this.isActive = true
+    this.isActive = 1
   });
 
   factory CurriculumGride.fromMap(Map map) {
@@ -30,7 +30,7 @@ class CurriculumGride {
       academicYear: int.parse(map[curriculumGrideAcademicYear].toString()),
       academicRegime: int.parse(map[curriculumGrideAcademicRegime].toString()),
       semesterPeriod: int.parse(map[curriculumGrideSemesterPeriod].toString()),
-      isActive: map[curriculumGrideIsActive]
+      isActive: int.parse(map[curriculumGrideIsActive].toString())
     );
   }
 

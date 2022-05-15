@@ -12,7 +12,7 @@ class Discipline {
   int classHours;
   int numberOfClasses;
   int teacherId;
-  bool isActive;
+  int isActive;
 
   Discipline({
     this.id,
@@ -20,7 +20,7 @@ class Discipline {
     required this.classHours,
     required this.numberOfClasses,
     required this.teacherId,
-    this.isActive = true
+    this.isActive = 1
   });
 
   factory Discipline.fromMap(Map map) {
@@ -30,7 +30,7 @@ class Discipline {
       classHours: int.parse(map[disciplineClassHours].toString()),
       numberOfClasses: int.parse(map[disciplineNumberOfClasses].toString()),
       teacherId: int.parse(map[disciplineTeacherId].toString()),
-      isActive: map[disciplineIsActive]
+      isActive: int.parse(map[disciplineIsActive].toString())
     );
   }
 

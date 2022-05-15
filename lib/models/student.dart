@@ -16,7 +16,7 @@ class Student {
   String cpf;
   DateTime birthDate;
   DateTime registrationDate;
-  bool isActive;
+  int isActive;
   bool isPresent = false;
 
   Student({
@@ -26,7 +26,7 @@ class Student {
     required this.cpf,
     required this.birthDate,
     required this.registrationDate,
-    this.isActive = true
+    this.isActive = 1
   });
 
   factory Student.fromMap(Map map) {
@@ -37,7 +37,7 @@ class Student {
       cpf: map[studentCpf].toString(),
       birthDate: DateFormat('dd/MM/yyyy').parse(map[studentBirthDate].toString()),
       registrationDate: DateFormat('dd/MM/yyyy').parse(map[studentRegistrationDate].toString()),
-      isActive: map[studentIsActive]
+      isActive: int.parse(map[studentIsActive].toString())
     );
   }
 

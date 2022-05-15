@@ -1,24 +1,26 @@
 import 'package:flutter/material.dart';
 
-class ListDisciplinePage extends StatefulWidget {
-  const ListDisciplinePage({Key? key}) : super(key: key);
+class CadClassroomPage extends StatefulWidget {
+  const CadClassroomPage({Key? key}) : super(key: key);
 
   @override
-  State<ListDisciplinePage> createState() => _ListDisciplinePageState();
+  State<CadClassroomPage> createState() => _CadClassroomPageState();
 }
 
-class _ListDisciplinePageState extends State<ListDisciplinePage> {
+class _CadClassroomPageState extends State<CadClassroomPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Disciplinas'),
+        title: const Text('Cadastro de Turma'),
+        centerTitle: true,
         automaticallyImplyLeading: false,
       ),
       floatingActionButton: FloatingActionButton(
+        child: const Icon(Icons.save),
         onPressed: () { },
       ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+      floatingActionButtonLocation: FloatingActionButtonLocation.endDocked,
       bottomNavigationBar: const BottomAppBar(
         child: Padding(
           child: Icon(null),

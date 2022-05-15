@@ -26,13 +26,7 @@ class _HomePageState extends State<HomePage> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Container(
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.only(
-                bottomLeft: Radius.elliptical(50, 30),
-                bottomRight: Radius.elliptical(50, 30),
-              ),
-              color: Theme.of(context).primaryColor,
-            ),
+            color: Theme.of(context).primaryColor,
             width: double.infinity,
             height: 200,
             child: Column(

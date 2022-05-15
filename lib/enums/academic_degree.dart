@@ -15,7 +15,7 @@ extension AcademicDegreeExtension on AcademicDegree {
       case AcademicDegree.technological:
         return 'Tecnólogo';
       case AcademicDegree.graduation:
-        return 'Graduação';
+        return 'Licenciatura';
       case AcademicDegree.specialization:
         return 'Especialização';
       case AcademicDegree.master:
