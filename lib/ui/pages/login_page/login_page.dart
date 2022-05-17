@@ -171,7 +171,9 @@ class _LoginPageState extends State<LoginPage> {
     String? userLoggedIn = (await SharedPreferences.getInstance()).getString('user_logged_in');
 
     if (userLoggedIn == null) {
-      _showLoginPage = true;
+      setState(() {
+        _showLoginPage = true;
+      });
     }
     else {
       UserHelper userHelper = UserHelper();

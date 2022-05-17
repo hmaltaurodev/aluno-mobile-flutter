@@ -26,14 +26,15 @@ class _CadDisciplinePageState extends State<CadDisciplinePage> {
   void initState() {
     super.initState();
     _teacherDefalt = widget.teacherDefalt;
-    _loadTeachers();
+    _loadLists();
   }
 
   @override
   Widget build(BuildContext context) {
-    return WScaffoldCad(
+    return WScaffold(
       title: 'Cadastro de Disciplina',
-      onPressed: _save,
+      onPressedFAB: _save,
+      iconFAB: const Icon(Icons.save),
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
@@ -85,29 +86,7 @@ class _CadDisciplinePageState extends State<CadDisciplinePage> {
     );
   }
 
-  Widget teste() {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Cadastro de Disciplina'),
-        centerTitle: true,
-      ),
-      body: Text(''),
-      floatingActionButton: FloatingActionButton(
-        child: const Icon(Icons.save),
-        onPressed: _save,
-      ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.endDocked,
-      bottomNavigationBar: const BottomAppBar(
-        child: Padding(
-          child: Icon(null),
-          padding: EdgeInsets.all(8),
-        ),
-      ),
-      extendBody: true,
-    );
-  }
-
-  void _loadTeachers() async {
+  void _loadLists() async {
     TeacherHelper teacherHelper = TeacherHelper();
     _teachers = (await teacherHelper.getAll());
 

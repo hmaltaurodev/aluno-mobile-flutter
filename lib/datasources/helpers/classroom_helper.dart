@@ -55,7 +55,7 @@ class ClassroomHelper {
 
   Future<List<Classroom>> getAll() async {
     Database database = await DataBase().getDatabase;
-    List classrooms = await database.query(classroomTable);
+    List classrooms = await database.rawQuery(classroomTable);
     return classrooms.map((e) => Classroom.fromMap(e)).toList();
   }
 

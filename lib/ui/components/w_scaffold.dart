@@ -1,14 +1,16 @@
 import 'package:flutter/material.dart';
 
-class WScaffoldCad extends StatelessWidget {
+class WScaffold extends StatelessWidget {
   final String title;
   final Widget body;
-  final void Function() onPressed;
+  final Icon iconFAB;
+  final void Function() onPressedFAB;
 
-  const WScaffoldCad({
+  const WScaffold({
     required this.title,
     required this.body,
-    required this.onPressed,
+    required this.iconFAB,
+    required this.onPressedFAB,
     Key? key
   }) : super(key: key);
 
@@ -21,8 +23,8 @@ class WScaffoldCad extends StatelessWidget {
       ),
       body: body,
       floatingActionButton: FloatingActionButton(
-        child: const Icon(Icons.save),
-        onPressed: onPressed,
+        child: iconFAB,
+        onPressed: onPressedFAB,
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.endDocked,
       bottomNavigationBar: const BottomAppBar(
