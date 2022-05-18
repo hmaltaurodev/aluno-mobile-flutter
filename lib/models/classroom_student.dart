@@ -1,27 +1,37 @@
+import 'package:aluno_mobile_flutter/models/models.dart';
+
 const String classroomStudentTable = 'CLASSROOM_STUDENT';
-const String classroomStudentClassroomId = 'CLASSROOM';
-const String classroomStudentStudentId = 'STUDENT';
+const String classroomStudentId = 'CLS_ID';
+const String classroomStudentClassroom = 'CLS_CLASSROOM';
+const String classroomStudentStudent = 'CLS_STUDENT';
 
 class ClassroomStudent {
-  int classroomId;
-  int studentId;
+  int? id;
+  Classroom classroom;
+  Student student;
 
   ClassroomStudent({
-    required this.classroomId,
-    required this.studentId
+    this.id,
+    required this.classroom,
+    required this.student
   });
 
   factory ClassroomStudent.fromMap(Map map) {
+    Classroom classroom = Classroom.fromMap(map);
+    Student student = Student.fromMap(map);
+
     return ClassroomStudent(
-      classroomId: int.parse(map[classroomStudentClassroomId].toString()),
-      studentId: int.parse(map[classroomStudentStudentId].toString())
+      id: int.tryParse(map[classroomStudentId].toString()),
+      classroom: classroom,
+      student: student
     );
   }
 
   Map<String, dynamic> toMap() {
     return {
-      classroomStudentClassroomId: classroomId,
-      classroomStudentStudentId: studentId
+      classroomStudentId: id,
+      classroomStudentClassroom: classroom.id,
+      classroomStudentStudent: student.id
     };
   }
 }

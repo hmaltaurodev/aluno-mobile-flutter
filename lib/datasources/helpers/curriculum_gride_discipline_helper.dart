@@ -5,15 +5,55 @@ import 'package:aluno_mobile_flutter/datasources/database.dart';
 
 const String curriculumGrideDisciplineSqlCreate = '''
   CREATE TABLE $curriculumGrideDisciplineTable (
-    $curriculumGrideDisciplineCurriculumGrideId INTEGER NOT NULL,
-    $curriculumGrideDisciplineDisciplineId INTEGER NOT NULL,
-    PRIMARY KEY ($curriculumGrideDisciplineCurriculumGrideId, $curriculumGrideDisciplineDisciplineId)
-  );
+    $curriculumGrideDisciplineId INTEGER PRIMARY KEY,
+    $curriculumGrideDisciplineCurriculumGride INTEGER,
+    $curriculumGrideDisciplineDiscipline INTEGER
+  )
+''';
+
+const String curriculumGrideDisciplineSqlSelectAll = '''
+  SELECT
+    $curriculumGrideDisciplineId,
+    $curriculumGrideDisciplineCurriculumGride,
+    $curriculumGrideDisciplineDiscipline,
+    
+    $curriculumGrideId,
+    $curriculumGrideCourse,
+    $curriculumGrideAcademicYear,
+    $curriculumGrideAcademicRegime,
+    $curriculumGrideSemesterPeriod,
+    $curriculumGrideIsActive,
+    
+    $courseId,
+    $courseMecId,
+    $courseDescription,
+    $courseAcademicDegree,
+    $courseIsActive,
+    
+    $disciplineId,
+    $disciplineDescription,
+    $disciplineClassHours,
+    $disciplineNumberOfClasses,
+    $disciplineTeacher,
+    $disciplineIsActive,
+    
+    $teacherId,
+    $teacherRegistrationId,
+    $teacherName,
+    $teacherCpf,
+    $teacherBirthDate,
+    $teacherRegistrationDate,
+    $teacherIsActive
+  FROM $curriculumGrideDisciplineTable
+  INNER JOIN $curriculumGrideTable ON $curriculumGrideTable.$curriculumGrideId = $curriculumGrideDisciplineTable.$curriculumGrideDisciplineCurriculumGride
+  INNER JOIN $courseTable ON $courseTable.$courseId = $curriculumGrideTable.$curriculumGrideCourse
+  INNER JOIN $disciplineTable ON $disciplineTable.$disciplineId = $curriculumGrideDisciplineTable.$curriculumGrideDisciplineDiscipline
+  INNER JOIN $teacherTable ON $teacherTable.$teacherId = $disciplineTable.$disciplineTeacher
 ''';
 
 const String curriculumGrideDisciplineSqlCount = '''
-  SELECT COUNT(*)
-  FROM $curriculumGrideDisciplineTable;
+  SELECT COUNT(1)
+  FROM $curriculumGrideDisciplineTable
 ''';
 
 class CurriculumGrideDisciplineHelper {
@@ -31,17 +71,17 @@ class CurriculumGrideDisciplineHelper {
     return database.update(
         curriculumGrideDisciplineTable,
         curriculumGrideDiscipline.toMap(),
-        where: '$curriculumGrideDisciplineCurriculumGrideId = ?, $curriculumGrideDisciplineDisciplineId = ?',
-        whereArgs: [curriculumGrideDiscipline.curriculumGrideId, curriculumGrideDiscipline.disciplineId]
+        where: '$curriculumGrideDisciplineId = ?',
+        whereArgs: [curriculumGrideDiscipline.id]
     );
   }
 
-  Future<int> delete(int curriculumGrideId, int disciplineId) async {
+  Future<int> delete(int id) async {
     Database database = await DataBase().getDatabase;
     return database.delete(
         curriculumGrideDisciplineTable,
-        where: '$curriculumGrideDisciplineCurriculumGrideId = ?, $curriculumGrideDisciplineDisciplineId = ?',
-        whereArgs: [curriculumGrideId, disciplineId]
+        where: '$curriculumGrideDisciplineId = ?',
+        whereArgs: [id]
     );
   }
 
@@ -54,37 +94,7 @@ class CurriculumGrideDisciplineHelper {
 
   Future<List<CurriculumGrideDiscipline>> getAll() async {
     Database database = await DataBase().getDatabase;
-    List curriculumsGridesDisciplines = await database.query(curriculumGrideDisciplineTable);
+    List curriculumsGridesDisciplines = await database.rawQuery(curriculumGrideDisciplineSqlSelectAll);
     return curriculumsGridesDisciplines.map((e) => CurriculumGrideDiscipline.fromMap(e)).toList();
-  }
-
-  Future<CurriculumGrideDiscipline?> getByCurricumGride(int curriculumGrideId) async {
-    Database database = await DataBase().getDatabase;
-    List curriculumsGridesDisciplines = await database.query(
-        curriculumGrideDisciplineTable,
-        where: '$curriculumGrideDisciplineCurriculumGrideId = ?',
-        whereArgs: [curriculumGrideId]
-    );
-
-    if (curriculumsGridesDisciplines.isNotEmpty) {
-      return CurriculumGrideDiscipline.fromMap(curriculumsGridesDisciplines.first);
-    }
-
-    return null;
-  }
-
-  Future<CurriculumGrideDiscipline?> getByDiscipline(int disciplineId) async {
-    Database database = await DataBase().getDatabase;
-    List curriculumsGridesDisciplines = await database.query(
-        curriculumGrideDisciplineTable,
-        where: '$curriculumGrideDisciplineDisciplineId = ?',
-        whereArgs: [disciplineId]
-    );
-
-    if (curriculumsGridesDisciplines.isNotEmpty) {
-      return CurriculumGrideDiscipline.fromMap(curriculumsGridesDisciplines.first);
-    }
-
-    return null;
   }
 }

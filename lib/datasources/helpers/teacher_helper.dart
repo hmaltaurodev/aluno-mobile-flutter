@@ -12,12 +12,12 @@ const String teacherSqlCreate = '''
     $teacherBirthDate TEXT,
     $teacherRegistrationDate TEXT,
     $teacherIsActive BOOLEAN
-  );
+  )
 ''';
 
 const String teacherSqlCount = '''
-  SELECT COUNT(*)
-  FROM $teacherTable;
+  SELECT COUNT(1)
+  FROM $teacherTable
 ''';
 
 class TeacherHelper {

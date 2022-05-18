@@ -1,6 +1,7 @@
 import 'package:aluno_mobile_flutter/enums/enums.dart';
 import 'package:aluno_mobile_flutter/models/models.dart';
 import 'package:aluno_mobile_flutter/ui/components/components.dart';
+import 'package:aluno_mobile_flutter/ui/pages/pages.dart';
 import 'package:flutter/material.dart';
 
 class HomePage extends StatefulWidget {
@@ -16,8 +17,18 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  User? _user;
   Teacher? _teacher;
   Student? _student;
+
+  @override
+  void initState() {
+    super.initState();
+
+    _user = widget.user;
+    _teacher = _user!.teacher;
+    _student = _user!.student;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -35,6 +46,7 @@ class _HomePageState extends State<HomePage> {
                 Padding(
                   padding: const EdgeInsets.only(top: 30, right: 10),
                   child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.end,
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
                       PopupMenuButton(
@@ -192,5 +204,31 @@ class _HomePageState extends State<HomePage> {
     }
 
     return Icons.admin_panel_settings;
+  }
+
+  void _openAboutPage() {
+    FocusScope.of(context).unfocus();
+
+    Navigator.push(
+        context,
+        MaterialPageRoute(
+            builder: (context) => const AboutPage()
+        )
+    );
+  }
+
+  void _openPasswordPage() {
+    FocusScope.of(context).unfocus();
+
+    Navigator.push(
+        context,
+        MaterialPageRoute(
+            builder: (context) => PasswordPage(user: _user!)
+        )
+    );
+  }
+
+  void _logOut() {
+
   }
 }

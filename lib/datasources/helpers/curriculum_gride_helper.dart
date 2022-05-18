@@ -6,17 +6,45 @@ import 'package:aluno_mobile_flutter/datasources/database.dart';
 const String curriculumGrideSqlCreate = '''
   CREATE TABLE $curriculumGrideTable (
     $curriculumGrideId INTEGER PRIMARY KEY AUTOINCREMENT,
-    $curriculumGrideCourseId INTEGER,
+    $curriculumGrideCourse INTEGER,
     $curriculumGrideAcademicYear INTEGER,
     $curriculumGrideAcademicRegime INTEGER,
     $curriculumGrideSemesterPeriod INTEGER,
     $curriculumGrideIsActive BOOLEAN
-  );
+  )
+''';
+
+const String curriculumGrideSqlSelectAll = '''
+  SELECT
+    $curriculumGrideId,
+    $curriculumGrideCourse,
+    $curriculumGrideAcademicYear,
+    $curriculumGrideAcademicRegime,
+    $curriculumGrideSemesterPeriod,
+    $curriculumGrideIsActive,
+    
+    $courseId,
+    $courseMecId,
+    $courseDescription,
+    $courseAcademicDegree,
+    $courseIsActive
+  FROM $curriculumGrideTable
+  INNER JOIN $courseTable ON $courseTable.$courseId = $curriculumGrideTable.$curriculumGrideCourse  
+''';
+
+const String curriculumGrideSqlSelectById = '''
+  $curriculumGrideSqlSelectAll
+  WHERE $curriculumGrideId = ?
+''';
+
+const String curriculumGrideSqlSelectByCourse = '''
+  $curriculumGrideSqlSelectAll
+  WHERE $curriculumGrideCourse = ?
 ''';
 
 const String curriculumGrideSqlCount = '''
-  SELECT COUNT(*)
-  FROM $curriculumGrideTable;
+  SELECT COUNT(1)
+  FROM $curriculumGrideTable
 ''';
 
 class CurriculumGrideHelper {
@@ -57,16 +85,14 @@ class CurriculumGrideHelper {
 
   Future<List<CurriculumGride>> getAll() async {
     Database database = await DataBase().getDatabase;
-    List curriculumsGrides = await database.query(curriculumGrideTable);
+    List curriculumsGrides = await database.rawQuery(curriculumGrideSqlSelectAll);
     return curriculumsGrides.map((e) => CurriculumGride.fromMap(e)).toList();
   }
 
   Future<CurriculumGride?> getById(int id) async {
     Database database = await DataBase().getDatabase;
-    List curriculumsGrides = await database.query(
-        curriculumGrideTable,
-        where: '$curriculumGrideId = ?',
-        whereArgs: [id]
+    List curriculumsGrides = await database.rawQuery(
+        curriculumGrideSqlSelectById, [id]
     );
 
     if (curriculumsGrides.isNotEmpty) {
@@ -74,5 +100,13 @@ class CurriculumGrideHelper {
     }
 
     return null;
+  }
+
+  Future<List<CurriculumGride>> getByCourse(int courseId) async {
+    Database database = await DataBase().getDatabase;
+    List curriculumsGrides = await database.rawQuery(
+        curriculumGrideSqlSelectByCourse, [courseId]
+    );
+    return curriculumsGrides.map((e) => CurriculumGride.fromMap(e)).toList();
   }
 }

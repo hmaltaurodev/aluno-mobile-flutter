@@ -19,9 +19,9 @@ class _CadCurriculumGridePageState extends State<CadCurriculumGridePage> {
 
   Course? _courseValue;
   Discipline? _disciplineValue;
-  AcademicYear? _academicYear;
-  AcademicRegime? _academicRegime;
-  SemesterPeriod? _semesterPeriod;
+  AcademicYear? _academicYearValue;
+  AcademicRegime? _academicRegimeValue;
+  SemesterPeriod? _semesterPeriodValue;
 
   @override
   void initState() {
@@ -70,10 +70,10 @@ class _CadCurriculumGridePageState extends State<CadCurriculumGridePage> {
 
   void _save() async {
     CurriculumGride curriculumGride = CurriculumGride(
-        courseId: _courseValue!.id!,
-        academicYear: _academicYear!.toInt(),
-        academicRegime: _academicRegime!.toInt(),
-        semesterPeriod: _semesterPeriod!.toInt()
+        course: _courseValue!,
+        academicYear: _academicYearValue!.toInt(),
+        academicRegime: _academicRegimeValue!.toInt(),
+        semesterPeriod: _semesterPeriodValue!.toInt()
     );
 
     CurriculumGrideHelper curriculumGrideHelper = CurriculumGrideHelper();
@@ -82,8 +82,8 @@ class _CadCurriculumGridePageState extends State<CadCurriculumGridePage> {
     CurriculumGrideDisciplineHelper curriculumGrideDisciplineHelper = CurriculumGrideDisciplineHelper();
     for (Discipline discipline in _selectedDisciplines) {
       CurriculumGrideDiscipline curriculumGrideDiscipline = CurriculumGrideDiscipline(
-        curriculumGrideId: curriculumGride.id!,
-        disciplineId: discipline.id!
+        curriculumGride: curriculumGride,
+        discipline: discipline
       );
 
       curriculumGrideDisciplineHelper.insert(curriculumGrideDiscipline);
@@ -132,7 +132,7 @@ class _CadCurriculumGridePageState extends State<CadCurriculumGridePage> {
           right: 30
       ),
       child: DropdownButtonFormField<AcademicYear>(
-        value: _academicYear,
+        value: _academicYearValue,
         decoration: const InputDecoration(
           labelText: 'Ano Acadêmico',
           labelStyle: TextStyle(
@@ -141,7 +141,7 @@ class _CadCurriculumGridePageState extends State<CadCurriculumGridePage> {
         ),
         onChanged: (newValue) {
           setState(() {
-            _academicYear = newValue!;
+            _academicYearValue = newValue!;
           });
         },
         items: AcademicYear.values.map((AcademicYear academicYear) {
@@ -163,7 +163,7 @@ class _CadCurriculumGridePageState extends State<CadCurriculumGridePage> {
           right: 30
       ),
       child: DropdownButtonFormField<AcademicRegime>(
-        value: _academicRegime,
+        value: _academicRegimeValue,
         decoration: const InputDecoration(
           labelText: 'Regime Acadêmico',
           labelStyle: TextStyle(
@@ -172,7 +172,7 @@ class _CadCurriculumGridePageState extends State<CadCurriculumGridePage> {
         ),
         onChanged: (newValue) {
           setState(() {
-            _academicRegime = newValue!;
+            _academicRegimeValue = newValue!;
           });
         },
         items: AcademicRegime.values.map((AcademicRegime academicRegime) {
@@ -187,7 +187,7 @@ class _CadCurriculumGridePageState extends State<CadCurriculumGridePage> {
 
   Widget _dropdownSemesterPeriod() {
     return Visibility(
-      visible: (_academicRegime == AcademicRegime.semiannual),
+      visible: (_academicRegimeValue == AcademicRegime.semiannual),
       child: Padding(
         padding: const EdgeInsets.only(
             top: 10,
@@ -196,7 +196,7 @@ class _CadCurriculumGridePageState extends State<CadCurriculumGridePage> {
             right: 30
         ),
         child: DropdownButtonFormField<SemesterPeriod>(
-          value: _semesterPeriod,
+          value: _semesterPeriodValue,
           decoration: const InputDecoration(
             labelText: 'Semestre Período',
             labelStyle: TextStyle(
@@ -205,7 +205,7 @@ class _CadCurriculumGridePageState extends State<CadCurriculumGridePage> {
           ),
           onChanged: (newValue) {
             setState(() {
-              _semesterPeriod = newValue!;
+              _semesterPeriodValue = newValue!;
             });
           },
           items: SemesterPeriod.values.map((SemesterPeriod semesterPeriod) {

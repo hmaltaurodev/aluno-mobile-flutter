@@ -10,15 +10,55 @@ const String userSqlCreate = '''
     $userUsername TEXT UNIQUE,
     $userPassword TEXT,
     $userUserType INTEGER,
-    $userStudentId INTEGER NULL,
-    $userTeacherId INTEGER NULL,
+    $userStudent INTEGER NULL,
+    $userTeacher INTEGER NULL,
     $userIsActive BOOLEAN
-  );
+  )
+''';
+
+const String userSqlSelectAll = '''
+  SELECT
+    $userId,
+    $userUsername,
+    $userPassword,
+    $userUserType,
+    $userStudent,
+    $userTeacher,
+    $userIsActive,
+    
+    $studentId,
+    $studentRegistrationId,
+    $studentName,
+    $studentCpf,
+    $studentBirthDate,
+    $studentRegistrationDate,
+    $studentIsActive,
+    
+    $teacherId,
+    $teacherRegistrationId,
+    $teacherName,
+    $teacherCpf,
+    $teacherBirthDate,
+    $teacherRegistrationDate,
+    $teacherIsActive
+  FROM $userTable
+  LEFT JOIN $studentTable ON $studentTable.$studentId = $userTable.$userStudent
+  LEFT JOIN $teacherTable ON $teacherTable.$teacherId = $userTable.$userTeacher
+''';
+
+const String userSqlSelectById = '''
+  $userSqlSelectAll
+  WHERE $userId = ?
+''';
+
+const String userSqlSelectByUsername = '''
+  $userSqlSelectAll
+  WHERE $userUsername = ?
 ''';
 
 const String userSqlCount = '''
-  SELECT COUNT(*)
-  FROM $userTable;
+  SELECT COUNT(1)
+  FROM $userTable
 ''';
 
 class UserHelper {
@@ -28,6 +68,7 @@ class UserHelper {
         userTable,
         user.toMap()
     );
+
     return user;
   }
 
@@ -59,16 +100,14 @@ class UserHelper {
 
   Future<List<User>> getAll() async {
     Database database = await DataBase().getDatabase;
-    List users = await database.query(userTable);
+    List users = await database.rawQuery(userSqlSelectAll);
     return users.map((e) => User.fromMap(e)).toList();
   }
 
   Future<User?> getById(int id) async {
     Database database = await DataBase().getDatabase;
-    List users = await database.query(
-        userTable,
-        where: '$userId = ?',
-        whereArgs: [id]
+    List users = await database.rawQuery(
+        userSqlSelectById, [id]
     );
 
     if (users.isNotEmpty) {
@@ -80,10 +119,8 @@ class UserHelper {
 
   Future<User?> getByUsername(String username) async {
     Database database = await DataBase().getDatabase;
-    List users = await database.query(
-        userTable,
-        where: '$userUsername = ?',
-        whereArgs: [username]
+    List users = await database.rawQuery(
+        userSqlSelectByUsername, [username]
     );
 
     if (users.isNotEmpty) {
@@ -95,10 +132,8 @@ class UserHelper {
 
   Future<User?> getByLogin(String username, String password) async {
     Database database = await DataBase().getDatabase;
-    List users = await database.query(
-        userTable,
-        where: '$userUsername = ?',
-        whereArgs: [username]
+    List users = await database.rawQuery(
+        userSqlSelectByUsername, [username]
     );
 
     if (users.isNotEmpty && Crypt(User.fromMap(users.first).password).match(password)) {

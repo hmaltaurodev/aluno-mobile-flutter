@@ -18,11 +18,10 @@ class _CadCoursePageState extends State<CadCoursePage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Cadastro de Curso'),
-        centerTitle: true,
-      ),
+    return WScaffold(
+      title: 'Cadastro de Curso',
+      onPressedFAB: _save,
+      iconFAB: const Icon(Icons.save),
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
@@ -39,18 +38,6 @@ class _CadCoursePageState extends State<CadCoursePage> {
           _dropdownAcademicDegree(),
         ],
       ),
-      floatingActionButton: FloatingActionButton(
-        child: const Icon(Icons.save),
-        onPressed: _save,
-      ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.endDocked,
-      bottomNavigationBar: const BottomAppBar(
-        child: Padding(
-          child: Icon(null),
-          padding: EdgeInsets.all(8),
-        ),
-      ),
-      extendBody: true,
     );
   }
 

@@ -20,12 +20,10 @@ class _CadTeacherPageState extends State<CadTeacherPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Cadastro de Professor'),
-        centerTitle: true,
-        automaticallyImplyLeading: false,
-      ),
+    return WScaffold(
+      title: 'Cadastro de Professor',
+      onPressedFAB: _save,
+      iconFAB: const Icon(Icons.save),
       body: SingleChildScrollView(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.end,
@@ -57,18 +55,6 @@ class _CadTeacherPageState extends State<CadTeacherPage> {
           ],
         ),
       ),
-      floatingActionButton: FloatingActionButton(
-        child: const Icon(Icons.save),
-        onPressed: _save,
-      ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.endDocked,
-      bottomNavigationBar: const BottomAppBar(
-        child: Padding(
-          child: Icon(null),
-          padding: EdgeInsets.all(8),
-        ),
-      ),
-      extendBody: true,
     );
   }
 

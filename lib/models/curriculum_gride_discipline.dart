@@ -1,27 +1,37 @@
+import 'package:aluno_mobile_flutter/models/models.dart';
+
 const String curriculumGrideDisciplineTable = 'CURRICULUM_GRIDE_DISCIPLINE';
-const String curriculumGrideDisciplineCurriculumGrideId = 'CURRICULUM_GRIDE';
-const String curriculumGrideDisciplineDisciplineId = 'DISCIPLINE';
+const String curriculumGrideDisciplineId = 'CGD_ID';
+const String curriculumGrideDisciplineCurriculumGride = 'CGD_CURRICULUM_GRIDE';
+const String curriculumGrideDisciplineDiscipline = 'CGD_DISCIPLINE';
 
 class CurriculumGrideDiscipline {
-  int curriculumGrideId;
-  int disciplineId;
+  int? id;
+  CurriculumGride curriculumGride;
+  Discipline discipline;
 
   CurriculumGrideDiscipline({
-    required this.curriculumGrideId,
-    required this.disciplineId
+    this.id,
+    required this.curriculumGride,
+    required this.discipline
   });
 
   factory CurriculumGrideDiscipline.fromMap(Map map) {
+    CurriculumGride curriculumGride = CurriculumGride.fromMap(map);
+    Discipline discipline = Discipline.fromMap(map);
+
     return CurriculumGrideDiscipline(
-      curriculumGrideId: int.parse(map[curriculumGrideDisciplineCurriculumGrideId].toString()),
-      disciplineId: int.parse(map[curriculumGrideDisciplineDisciplineId].toString())
+      id: int.tryParse(map[curriculumGrideDisciplineId].toString()),
+      curriculumGride: curriculumGride,
+      discipline: discipline
     );
   }
 
   Map<String, dynamic> toMap() {
     return {
-      curriculumGrideDisciplineCurriculumGrideId: curriculumGrideId,
-      curriculumGrideDisciplineDisciplineId: disciplineId
+      curriculumGrideDisciplineId: id,
+      curriculumGrideDisciplineCurriculumGride: curriculumGride.id,
+      curriculumGrideDisciplineDiscipline: discipline.id
     };
   }
 }

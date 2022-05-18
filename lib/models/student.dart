@@ -1,13 +1,13 @@
 import 'package:intl/intl.dart';
 
 const String studentTable = 'STUDENT';
-const String studentId = 'ID';
-const String studentRegistrationId = 'REGISTRATION_ID';
-const String studentName = 'NAME';
-const String studentCpf = 'CPF';
-const String studentBirthDate = 'BIRTH_DATE';
-const String studentRegistrationDate = 'REGISTRATION_DATE';
-const String studentIsActive = 'IS_ACTIVE';
+const String studentId = 'S_ID';
+const String studentRegistrationId = 'S_REGISTRATION_ID';
+const String studentName = 'S_NAME';
+const String studentCpf = 'S_CPF';
+const String studentBirthDate = 'S_BIRTH_DATE';
+const String studentRegistrationDate = 'S_REGISTRATION_DATE';
+const String studentIsActive = 'S_IS_ACTIVE';
 
 class Student {
   int? id;

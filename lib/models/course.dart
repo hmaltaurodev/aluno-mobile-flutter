@@ -1,9 +1,9 @@
 const String courseTable = 'COURSE';
-const String courseId = 'ID';
-const String courseMecId = 'MEC_ID';
-const String courseDescription = 'DESCRIPTION';
-const String courseAcademicDegree = 'ACADEMIC_DEGREE';
-const String courseIsActive = 'IS_ACTIVE';
+const String courseId = 'C_ID';
+const String courseMecId = 'C_MEC_ID';
+const String courseDescription = 'C_DESCRIPTION';
+const String courseAcademicDegree = 'C_ACADEMIC_DEGREE';
+const String courseIsActive = 'C_IS_ACTIVE';
 
 class Course {
   int? id;

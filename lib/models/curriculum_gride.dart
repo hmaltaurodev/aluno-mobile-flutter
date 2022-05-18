@@ -1,14 +1,16 @@
+import 'package:aluno_mobile_flutter/models/models.dart';
+
 const String curriculumGrideTable = 'CURRICULUM_GRIDE';
-const String curriculumGrideId = 'ID';
-const String curriculumGrideCourseId = 'COURSE';
-const String curriculumGrideAcademicYear = 'ACADEMIC_YEAR';
-const String curriculumGrideAcademicRegime = 'ACADEMIC_REGIME';
-const String curriculumGrideSemesterPeriod = 'SEMESTER_PERIOD';
-const String curriculumGrideIsActive = 'IS_ACTIVE';
+const String curriculumGrideId = 'CG_ID';
+const String curriculumGrideCourse = 'CG_COURSE';
+const String curriculumGrideAcademicYear = 'CG_ACADEMIC_YEAR';
+const String curriculumGrideAcademicRegime = 'CG_ACADEMIC_REGIME';
+const String curriculumGrideSemesterPeriod = 'CG_SEMESTER_PERIOD';
+const String curriculumGrideIsActive = 'CG_IS_ACTIVE';
 
 class CurriculumGride {
   int? id;
-  int courseId;
+  Course course;
   int academicYear;
   int academicRegime;
   int semesterPeriod;
@@ -16,7 +18,7 @@ class CurriculumGride {
 
   CurriculumGride({
     this.id,
-    required this.courseId,
+    required this.course,
     required this.academicYear,
     required this.academicRegime,
     required this.semesterPeriod,
@@ -24,9 +26,11 @@ class CurriculumGride {
   });
 
   factory CurriculumGride.fromMap(Map map) {
+    Course course = Course.fromMap(map);
+
     return CurriculumGride(
       id: int.tryParse(map[curriculumGrideId].toString()),
-      courseId: int.parse(map[curriculumGrideCourseId].toString()),
+      course: course,
       academicYear: int.parse(map[curriculumGrideAcademicYear].toString()),
       academicRegime: int.parse(map[curriculumGrideAcademicRegime].toString()),
       semesterPeriod: int.parse(map[curriculumGrideSemesterPeriod].toString()),
@@ -37,7 +41,7 @@ class CurriculumGride {
   Map<String, dynamic> toMap() {
     return {
       curriculumGrideId: id,
-      curriculumGrideCourseId: courseId,
+      curriculumGrideCourse: course.id,
       curriculumGrideAcademicYear: academicYear,
       curriculumGrideAcademicRegime: academicRegime,
       curriculumGrideSemesterPeriod: semesterPeriod,

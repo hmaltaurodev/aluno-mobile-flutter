@@ -98,7 +98,7 @@ class _CadDisciplinePageState extends State<CadDisciplinePage> {
       description: _descriptionController.text,
       classHours: int.parse(_classHoursController.text),
       numberOfClasses: int.parse(_numberOfClassesController.text),
-      teacherId: _teacherDefalt!.id!
+      teacher: _teacherDefalt!
     );
 
     DisciplineHelper disciplineHelper = DisciplineHelper();

@@ -1,5 +1,6 @@
 import 'package:aluno_mobile_flutter/datasources/helpers/helpers.dart';
 import 'package:aluno_mobile_flutter/models/models.dart';
+import 'package:aluno_mobile_flutter/ui/components/components.dart';
 import 'package:aluno_mobile_flutter/ui/pages/pages.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:flutter/material.dart';
@@ -16,11 +17,10 @@ class _ListStudentPageState extends State<ListStudentPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Alunos'),
-        centerTitle: true,
-      ),
+    return WScaffold(
+      title: 'Alunos',
+      onPressedFAB: _openCadPage,
+      iconFAB: const Icon(Icons.add),
       body: FutureBuilder(
         future: _studentHelper.getAll(),
         builder: (context, snapshot) {
@@ -36,18 +36,6 @@ class _ListStudentPageState extends State<ListStudentPage> {
           }
         },
       ),
-      floatingActionButton: FloatingActionButton(
-        child: const Icon(Icons.add),
-        onPressed: _openCadPage,
-      ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.endDocked,
-      bottomNavigationBar: const BottomAppBar(
-        child: Padding(
-          child: Icon(null),
-          padding: EdgeInsets.all(8),
-        ),
-      ),
-      extendBody: true,
     );
   }
 

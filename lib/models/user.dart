@@ -1,23 +1,24 @@
 import 'package:aluno_mobile_flutter/datasources/helpers/helpers.dart';
 import 'package:aluno_mobile_flutter/enums/enums.dart';
+import 'package:aluno_mobile_flutter/models/models.dart';
 import 'package:crypt/crypt.dart';
 
 const String userTable = 'USER';
-const String userId = 'ID';
-const String userUsername = 'USERNAME';
-const String userPassword = 'PASSWORD';
-const String userUserType = 'USER_TYPE';
-const String userStudentId = 'STUDENT';
-const String userTeacherId = 'TEACHER';
-const String userIsActive = 'IS_ACTIVE';
+const String userId = 'U_ID';
+const String userUsername = 'U_USERNAME';
+const String userPassword = 'U_PASSWORD';
+const String userUserType = 'U_USER_TYPE';
+const String userStudent = 'U_STUDENT';
+const String userTeacher = 'U_TEACHER';
+const String userIsActive = 'U_IS_ACTIVE';
 
 class User {
   int? id;
   String username;
   String password;
   int userType;
-  int? studentId;
-  int? teacherId;
+  Student? student;
+  Teacher? teacher;
   int isActive;
 
   User({
@@ -25,19 +26,30 @@ class User {
     required this.username,
     required this.password,
     required this.userType,
-    this.studentId,
-    this.teacherId,
+    this.student,
+    this.teacher,
     this.isActive = 1
   });
 
   factory User.fromMap(Map map) {
+    Student? student;
+    Teacher? teacher;
+
+    if (map[studentId].toString() != 'null') {
+      Student.fromMap(map);
+    }
+
+    if (map[teacherId].toString() != 'null') {
+      Teacher.fromMap(map);
+    }
+
     return User(
       id: int.tryParse(map[userId].toString()),
       username: map[userUsername].toString(),
       password: map[userPassword].toString(),
       userType: int.parse(map[userUserType].toString()),
-      studentId: int.tryParse(map[userStudentId].toString()),
-      teacherId: int.tryParse(map[userTeacherId].toString()),
+      student: student,
+      teacher: teacher,
       isActive: int.parse(map[userIsActive].toString())
     );
   }
@@ -48,8 +60,8 @@ class User {
       userUsername: username,
       userPassword: password,
       userUserType: userType,
-      userStudentId: studentId,
-      userTeacherId: teacherId,
+      userStudent: student?.id,
+      userTeacher: teacher?.id,
       userIsActive: isActive
     };
   }

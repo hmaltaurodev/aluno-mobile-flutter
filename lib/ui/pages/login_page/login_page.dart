@@ -60,46 +60,21 @@ class _LoginPageState extends State<LoginPage> {
                       ],
                     )
                 ),
-                Padding(
-                  padding: const EdgeInsets.only(
-                      top: 50,
-                      bottom: 10,
-                      left: 30,
-                      right: 30
-                  ),
-                  child: TextField(
-                    controller: _usernameController,
-                    decoration: const InputDecoration(
-                      prefixIcon: Icon(
-                        Icons.supervised_user_circle_outlined,
-                      ),
-                      labelText: 'Usuário',
-                      labelStyle: TextStyle(
-                        fontSize: 15,
-                      ),
-                    ),
+                WTextField(
+                  textEditingController: _usernameController,
+                  labelText: 'Usuário',
+                  paddingTop: 50,
+                  prefixIcon: const Icon(
+                    Icons.supervised_user_circle_outlined,
                   ),
                 ),
-                Padding(
-                  padding: const EdgeInsets.only(
-                      top: 10,
-                      bottom: 10,
-                      left: 30,
-                      right: 30
+                WTextField(
+                  textEditingController: _passwordController,
+                  labelText: 'Senha',
+                  prefixIcon: const Icon(
+                    Icons.password,
                   ),
-                  child: TextField(
-                    controller: _passwordController,
-                    obscureText: true,
-                    decoration: const InputDecoration(
-                      prefixIcon: Icon(
-                        Icons.password,
-                      ),
-                      labelText: 'Senha',
-                      labelStyle: TextStyle(
-                        fontSize: 15,
-                      ),
-                    ),
-                  ),
+                  obscureText: true,
                 ),
                 WElevatedButton(
                   padding: const EdgeInsets.only(

@@ -1,19 +1,56 @@
-import 'package:aluno_mobile_flutter/models/models.dart';
-import 'package:sqflite/sqflite.dart';
-import 'package:sqflite/utils/utils.dart';
 import 'package:aluno_mobile_flutter/datasources/database.dart';
+import 'package:aluno_mobile_flutter/models/models.dart';
+import 'package:sqflite/utils/utils.dart';
+import 'package:sqflite/sqflite.dart';
 
 const String classroomStudentSqlCreate = '''
   CREATE TABLE $classroomStudentTable (
-    $classroomStudentClassroomId INTEGER NOT NULL,
-    $classroomStudentStudentId INTEGER NOT NULL,
-    PRIMARY KEY ($classroomStudentClassroomId, $classroomStudentStudentId)
-  );
+    $classroomStudentId INTEGER PRIMARY KEY,
+    $classroomStudentClassroom INTEGER,
+    $classroomStudentStudent INTEGER
+  )
+''';
+
+const String classroomStudentSqlSelectAll = '''
+  SELECT
+    $classroomStudentClassroom,
+    $classroomStudentStudent,
+    
+    $classroomId,
+    $classroomCurriculumGride,
+    $classroomPeriodYear,
+    $classroomIsActive,
+    
+    $curriculumGrideId,
+    $curriculumGrideCourse,
+    $curriculumGrideAcademicYear,
+    $curriculumGrideAcademicRegime,
+    $curriculumGrideSemesterPeriod,
+    $curriculumGrideIsActive,
+    
+    $courseId,
+    $courseMecId,
+    $courseDescription,
+    $courseAcademicDegree,
+    $courseIsActive,
+    
+    $studentId,
+    $studentRegistrationId,
+    $studentName,
+    $studentCpf,
+    $studentBirthDate,
+    $studentRegistrationDate,
+    $studentIsActive
+  FROM $classroomStudentTable
+  INNER JOIN $classroomTable ON $classroomTable.$classroomId = $classroomStudentTable.$classroomStudentClassroom
+  INNER JOIN $curriculumGrideTable ON $curriculumGrideTable.$curriculumGrideId = $classroomTable.$classroomCurriculumGride
+  INNER JOIN $courseTable ON $courseTable.$courseId = $curriculumGrideTable.$curriculumGrideCourse
+  INNER JOIN $studentTable ON $studentTable.$studentId = $classroomStudentTable.$classroomStudentStudent
 ''';
 
 const String classroomStudentSqlCount = '''
-  SELECT COUNT(*)
-  FROM $classroomStudentTable;
+  SELECT COUNT(1)
+  FROM $classroomStudentTable
 ''';
 
 class ClassroomStudentHelper {
@@ -31,17 +68,17 @@ class ClassroomStudentHelper {
     return database.update(
         classroomStudentTable,
         classroomStudent.toMap(),
-        where: '$classroomStudentClassroomId = ?, $classroomStudentStudentId = ?',
-        whereArgs: [classroomStudent.classroomId, classroomStudent.studentId]
+        where: '$classroomStudentId = ?',
+        whereArgs: [classroomStudent.id]
     );
   }
 
-  Future<int> delete(int classroomId, int studentId) async {
+  Future<int> delete(int id) async {
     Database database = await DataBase().getDatabase;
     return database.delete(
         classroomStudentTable,
-        where: '$classroomStudentClassroomId = ?, $classroomStudentStudentId = ?',
-        whereArgs: [classroomId, studentId]
+        where: '$classroomStudentId = ?',
+        whereArgs: [id]
     );
   }
 
@@ -54,37 +91,7 @@ class ClassroomStudentHelper {
 
   Future<List<ClassroomStudent>> getAll() async {
     Database database = await DataBase().getDatabase;
-    List classroomsStudents = await database.query(classroomStudentTable);
+    List classroomsStudents = await database.rawQuery(classroomStudentSqlSelectAll);
     return classroomsStudents.map((e) => ClassroomStudent.fromMap(e)).toList();
-  }
-
-  Future<ClassroomStudent?> getByClassroom(int classroomId) async {
-    Database database = await DataBase().getDatabase;
-    List classroomsStudents = await database.query(
-        classroomStudentTable,
-        where: '$classroomStudentClassroomId = ?',
-        whereArgs: [classroomId]
-    );
-
-    if (classroomsStudents.isNotEmpty) {
-      return ClassroomStudent.fromMap(classroomsStudents.first);
-    }
-
-    return null;
-  }
-
-  Future<ClassroomStudent?> getByStudent(int studentId) async {
-    Database database = await DataBase().getDatabase;
-    List classroomsStudents = await database.query(
-        classroomStudentTable,
-        where: '$classroomStudentStudentId = ?',
-        whereArgs: [studentId]
-    );
-
-    if (classroomsStudents.isNotEmpty) {
-      return ClassroomStudent.fromMap(classroomsStudents.first);
-    }
-
-    return null;
   }
 }

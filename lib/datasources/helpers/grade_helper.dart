@@ -6,16 +6,83 @@ import 'package:aluno_mobile_flutter/datasources/database.dart';
 const String gradeSqlCreate = '''
   CREATE TABLE $gradeTable (
     $gradeId INTEGER PRIMARY KEY AUTOINCREMENT,
-    $gradeClassroomStudentId INTEGER,
-    $gradeDisciplineId INTEGER,
+    $gradeClassroomStudent INTEGER,
+    $gradeDiscipline INTEGER,
     $gradeBimester INTEGER,
     $gradeGrade DECIMAL(10, 2)
-  );
+  )
+''';
+
+const String gradeSqlSelectAll = '''
+  SELECT
+    $gradeId,
+    $gradeClassroomStudent,
+    $gradeDiscipline,
+    $gradeBimester,
+    $gradeGrade,
+    
+    $classroomStudentId,
+    $classroomStudentClassroom,
+    $classroomStudentStudent,
+    
+    $classroomId,
+    $classroomCurriculumGride,
+    $classroomPeriodYear,
+    $classroomIsActive,
+    
+    $curriculumGrideId,
+    $curriculumGrideCourse,
+    $curriculumGrideAcademicYear,
+    $curriculumGrideAcademicRegime,
+    $curriculumGrideSemesterPeriod,
+    $curriculumGrideIsActive,
+    
+    $courseId,
+    $courseMecId,
+    $courseDescription,
+    $courseAcademicDegree,
+    $courseIsActive,
+    
+    $studentId,
+    $studentRegistrationId,
+    $studentName,
+    $studentCpf,
+    $studentBirthDate,
+    $studentRegistrationDate,
+    $studentIsActive,
+    
+    $disciplineId,
+    $disciplineDescription,
+    $disciplineClassHours,
+    $disciplineNumberOfClasses,
+    $disciplineTeacher,
+    $disciplineIsActive,
+    
+    $teacherId,
+    $teacherRegistrationId,
+    $teacherName,
+    $teacherCpf,
+    $teacherBirthDate,
+    $teacherRegistrationDate,
+    $teacherIsActive
+  FROM $gradeTable
+  INNER JOIN $classroomStudentTable ON $classroomStudentTable.$classroomStudentId = $gradeTable.$gradeClassroomStudent
+  INNER JOIN $classroomTable ON $classroomTable.$classroomId = $classroomStudentTable.$classroomStudentClassroom
+  INNER JOIN $curriculumGrideTable ON $curriculumGrideTable.$curriculumGrideId = $classroomTable.$classroomCurriculumGride
+  INNER JOIN $courseTable ON $courseTable.$courseId = $curriculumGrideTable.$curriculumGrideCourse
+  INNER JOIN $studentTable ON $studentTable.$studentId = $classroomStudentTable.$classroomStudentStudent
+  INNER JOIN $disciplineTable ON $disciplineTable.$disciplineId = $gradeTable.$gradeDiscipline
+  INNER JOIN $teacherTable ON $teacherTable.$teacherId = $disciplineTable.$disciplineTeacher
+''';
+
+const String gradeSqlSelectById = '''
+  $gradeSqlSelectAll
+  WHERE $gradeId = ?
 ''';
 
 const String gradeSqlCount = '''
-  SELECT COUNT(*)
-  FROM $gradeTable;
+  SELECT COUNT(1)
+  FROM $gradeTable
 ''';
 
 class GradeHelper {
@@ -56,16 +123,14 @@ class GradeHelper {
 
   Future<List<Grade>> getAll() async {
     Database database = await DataBase().getDatabase;
-    List grades = await database.query(gradeTable);
+    List grades = await database.rawQuery(gradeSqlSelectAll);
     return grades.map((e) => Grade.fromMap(e)).toList();
   }
 
   Future<Grade?> getById(int id) async {
     Database database = await DataBase().getDatabase;
-    List grades = await database.query(
-        gradeTable,
-        where: '$gradeId = ?',
-        whereArgs: [id]
+    List grades = await database.rawQuery(
+        gradeSqlSelectById, [id]
     );
 
     if (grades.isNotEmpty) {

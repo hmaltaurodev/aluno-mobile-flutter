@@ -6,15 +6,44 @@ import 'package:aluno_mobile_flutter/datasources/database.dart';
 const String classroomSqlCreate = '''
   CREATE TABLE $classroomTable (
     $classroomId INTEGER PRIMARY KEY AUTOINCREMENT,
-    $classroomCurriculumGrideId INTEGER,
+    $classroomCurriculumGride INTEGER,
     $classroomPeriodYear INTEGER,
     $classroomIsActive BOOLEAN
-  );
+  )
+''';
+
+const String classroomSqlSelectAll = '''
+  SELECT
+    $classroomId,
+    $classroomCurriculumGride,
+    $classroomPeriodYear,
+    $classroomIsActive,
+    
+    $curriculumGrideId,
+    $curriculumGrideCourse,
+    $curriculumGrideAcademicYear,
+    $curriculumGrideAcademicRegime,
+    $curriculumGrideSemesterPeriod,
+    $curriculumGrideIsActive,
+    
+    $courseId,
+    $courseMecId,
+    $courseDescription,
+    $courseAcademicDegree,
+    $courseIsActive
+  FROM $classroomTable
+  INNER JOIN $curriculumGrideTable ON $curriculumGrideTable.$curriculumGrideId = $classroomTable.$classroomCurriculumGride
+  INNER JOIN $courseTable ON $courseTable.$courseId = $curriculumGrideTable.$curriculumGrideCourse
+''';
+
+const String classroomSqlSelectById = '''
+  $classroomSqlSelectAll
+  WHERE $classroomId = ?
 ''';
 
 const String classroomSqlCount = '''
-  SELECT COUNT(*)
-  FROM $classroomTable;
+  SELECT COUNT(1)
+  FROM $classroomTable
 ''';
 
 class ClassroomHelper {
@@ -55,16 +84,14 @@ class ClassroomHelper {
 
   Future<List<Classroom>> getAll() async {
     Database database = await DataBase().getDatabase;
-    List classrooms = await database.rawQuery(classroomTable);
+    List classrooms = await database.rawQuery(classroomSqlSelectAll);
     return classrooms.map((e) => Classroom.fromMap(e)).toList();
   }
 
   Future<Classroom?> getById(int id) async {
     Database database = await DataBase().getDatabase;
-    List classrooms = await database.query(
-      classroomTable,
-      where: '$classroomId = ?',
-      whereArgs: [id]
+    List classrooms = await database.rawQuery(
+      classroomSqlSelectById, [id]
     );
 
     if (classrooms.isNotEmpty) {

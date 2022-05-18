@@ -16,24 +16,29 @@ class WScaffold extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(title),
-        centerTitle: true,
-      ),
-      body: body,
-      floatingActionButton: FloatingActionButton(
-        child: iconFAB,
-        onPressed: onPressedFAB,
-      ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.endDocked,
-      bottomNavigationBar: const BottomAppBar(
-        child: Padding(
-          child: Icon(null),
-          padding: EdgeInsets.all(8),
+    return GestureDetector(
+      onTap: () {
+        FocusScope.of(context).unfocus();
+      },
+      child: Scaffold(
+        appBar: AppBar(
+          title: Text(title),
+          centerTitle: true,
         ),
+        body: body,
+        floatingActionButton: FloatingActionButton(
+          child: iconFAB,
+          onPressed: onPressedFAB,
+        ),
+        /*floatingActionButtonLocation: FloatingActionButtonLocation.endDocked,
+        bottomNavigationBar: const BottomAppBar(
+          child: Padding(
+            child: Icon(null),
+            padding: EdgeInsets.all(8),
+          ),
+        ),
+        extendBody: true,*/
       ),
-      extendBody: true,
     );
   }
 }

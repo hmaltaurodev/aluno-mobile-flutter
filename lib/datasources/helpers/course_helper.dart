@@ -10,12 +10,12 @@ const String courseSqlCreate = '''
     $courseDescription TEXT,
     $courseAcademicDegree INTEGER,
     $courseIsActive BOOLEAN
-  );
+  )
 ''';
 
 const String courseSqlCount = '''
-  SELECT COUNT(*)
-  FROM $courseTable;
+  SELECT COUNT(1)
+  FROM $courseTable
 ''';
 
 class CourseHelper {

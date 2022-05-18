@@ -9,14 +9,39 @@ const String disciplineSqlCreate = '''
     $disciplineDescription TEXT,
     $disciplineClassHours INTEGER,
     $disciplineNumberOfClasses INTEGER,
-    $disciplineTeacherId INTEGER,
+    $disciplineTeacher INTEGER,
     $disciplineIsActive BOOLEAN
-  );
+  )
+''';
+
+const String disciplineSqlSelectAll = '''
+  SELECT
+    $disciplineId,
+    $disciplineDescription,
+    $disciplineClassHours,
+    $disciplineNumberOfClasses,
+    $disciplineTeacher,
+    $disciplineIsActive,
+    
+    $teacherId,
+    $teacherRegistrationId,
+    $teacherName,
+    $teacherCpf,
+    $teacherBirthDate,
+    $teacherRegistrationDate,
+    $teacherIsActive
+  FROM $disciplineTable
+  INNER JOIN $teacherTable ON $teacherTable.$teacherId = $disciplineTable.$disciplineTeacher
+''';
+
+const String disciplineSqlSelectById = '''
+  $disciplineSqlSelectAll
+  WHERE $disciplineId = ?
 ''';
 
 const String disciplineSqlCount = '''
-  SELECT COUNT(*)
-  FROM $disciplineTable;
+  SELECT COUNT(1)
+  FROM $disciplineTable
 ''';
 
 class DisciplineHelper {
@@ -57,16 +82,14 @@ class DisciplineHelper {
 
   Future<List<Discipline>> getAll() async {
     Database database = await DataBase().getDatabase;
-    List disciplines = await database.query(disciplineTable);
+    List disciplines = await database.rawQuery(disciplineSqlSelectAll);
     return disciplines.map((e) => Discipline.fromMap(e)).toList();
   }
 
   Future<Discipline?> getById(int id) async {
     Database database = await DataBase().getDatabase;
-    List disciplines = await database.query(
-        disciplineTable,
-        where: '$disciplineId = ?',
-        whereArgs: [id]
+    List disciplines = await database.rawQuery(
+        disciplineSqlSelectById, [id]
     );
 
     if (disciplines.isNotEmpty) {

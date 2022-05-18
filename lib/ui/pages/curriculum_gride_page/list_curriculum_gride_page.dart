@@ -1,5 +1,6 @@
 import 'package:aluno_mobile_flutter/datasources/helpers/helpers.dart';
 import 'package:aluno_mobile_flutter/models/models.dart';
+import 'package:aluno_mobile_flutter/ui/components/components.dart';
 import 'package:aluno_mobile_flutter/ui/pages/curriculum_gride_page/cad_curriculum_gride_page.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:flutter/material.dart';
@@ -16,12 +17,10 @@ class _ListCurriculumGridePageState extends State<ListCurriculumGridePage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Grades Curriculares'),
-        centerTitle: true,
-        automaticallyImplyLeading: false,
-      ),
+    return WScaffold(
+      title: 'Grades Curriculares',
+      onPressedFAB: _openCadPage,
+      iconFAB: const Icon(Icons.add),
       body: FutureBuilder(
         future: _curriculumGrideHelper.getAll(),
         builder: (context, snapshot) {
@@ -37,18 +36,6 @@ class _ListCurriculumGridePageState extends State<ListCurriculumGridePage> {
           }
         },
       ),
-      floatingActionButton: FloatingActionButton(
-        child: const Icon(Icons.add),
-        onPressed: _openCadPage,
-      ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.endDocked,
-      bottomNavigationBar: const BottomAppBar(
-        child: Padding(
-          child: Icon(null),
-          padding: EdgeInsets.all(8),
-        ),
-      ),
-      extendBody: true,
     );
   }
 
@@ -74,7 +61,7 @@ class _ListCurriculumGridePageState extends State<ListCurriculumGridePage> {
   Widget _slidable(CurriculumGride curriculumGride) {
     return Slidable(
       child: ListTile(
-        title: Text(curriculumGride.courseId.toString()),
+        title: Text(curriculumGride.course.id.toString()),
       ),
       startActionPane: ActionPane(
         motion: const DrawerMotion(),
@@ -88,17 +75,14 @@ class _ListCurriculumGridePageState extends State<ListCurriculumGridePage> {
               _openCadPage();
             },
           ),
-        ],
-      ),
-      endActionPane: ActionPane(
-        motion: const DrawerMotion(),
-        children: [
           SlidableAction(
             icon: Icons.blur_off,
             label: 'Inativar',
-            backgroundColor: Theme.of(context).primaryColor,
+            backgroundColor: Colors.red,
             foregroundColor: Colors.white,
-            onPressed: (context) {},
+            onPressed: (context) {
+              _openCadPage();
+            },
           ),
         ],
       ),

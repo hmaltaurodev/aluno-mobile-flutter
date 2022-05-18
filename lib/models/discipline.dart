@@ -1,17 +1,19 @@
+import 'package:aluno_mobile_flutter/models/models.dart';
+
 const String disciplineTable = 'DISCIPLINE';
-const String disciplineId = 'ID';
-const String disciplineDescription = 'DESCRIPTION';
-const String disciplineClassHours = 'CLASS_HOURS';
-const String disciplineNumberOfClasses = 'NUMBER_OF_CLASSES';
-const String disciplineTeacherId = 'TEACHER';
-const String disciplineIsActive = 'IS_ACTIVE';
+const String disciplineId = 'D_ID';
+const String disciplineDescription = 'D_DESCRIPTION';
+const String disciplineClassHours = 'D_CLASS_HOURS';
+const String disciplineNumberOfClasses = 'D_NUMBER_OF_CLASSES';
+const String disciplineTeacher = 'D_TEACHER';
+const String disciplineIsActive = 'D_IS_ACTIVE';
 
 class Discipline {
   int? id;
   String description;
   int classHours;
   int numberOfClasses;
-  int teacherId;
+  Teacher teacher;
   int isActive;
 
   Discipline({
@@ -19,17 +21,19 @@ class Discipline {
     required this.description,
     required this.classHours,
     required this.numberOfClasses,
-    required this.teacherId,
+    required this.teacher,
     this.isActive = 1
   });
 
   factory Discipline.fromMap(Map map) {
+    Teacher teacher = Teacher.fromMap(map);
+
     return Discipline(
       id: int.tryParse(map[disciplineId].toString()),
       description: map[disciplineDescription].toString(),
       classHours: int.parse(map[disciplineClassHours].toString()),
       numberOfClasses: int.parse(map[disciplineNumberOfClasses].toString()),
-      teacherId: int.parse(map[disciplineTeacherId].toString()),
+      teacher: teacher,
       isActive: int.parse(map[disciplineIsActive].toString())
     );
   }
@@ -40,7 +44,7 @@ class Discipline {
       disciplineDescription: description,
       disciplineClassHours: classHours,
       disciplineNumberOfClasses: numberOfClasses,
-      disciplineTeacherId: teacherId,
+      disciplineTeacher: teacher.id,
       disciplineIsActive: isActive
     };
   }
