@@ -10,8 +10,6 @@ extension AcademicRegimeExtension on AcademicRegime {
         return 'Semestral';
       case AcademicRegime.yearly:
         return 'Anual';
-      default:
-        return '';
     }
   }
 
@@ -21,8 +19,6 @@ extension AcademicRegimeExtension on AcademicRegime {
         return 1;
       case AcademicRegime.yearly:
         return 2;
-      default:
-        return 0;
     }
   }
 }

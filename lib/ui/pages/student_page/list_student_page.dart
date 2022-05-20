@@ -2,7 +2,6 @@ import 'package:aluno_mobile_flutter/datasources/helpers/helpers.dart';
 import 'package:aluno_mobile_flutter/models/models.dart';
 import 'package:aluno_mobile_flutter/ui/components/components.dart';
 import 'package:aluno_mobile_flutter/ui/pages/pages.dart';
-import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:flutter/material.dart';
 
 class ListStudentPage extends StatefulWidget {
@@ -53,49 +52,12 @@ class _ListStudentPageState extends State<ListStudentPage> {
       padding: const EdgeInsets.all(4),
       itemCount: students.length,
       itemBuilder: (context, index) {
-        return _slidable(students[index]);
+        return WSlidableList(
+          title: students[index].name,
+          functionEdit: _openCadPage,
+          functionInactivate: _openCadPage,
+        );
       },
-    );
-  }
-
-  Widget _slidable(Student student) {
-    return Padding(
-      padding: const EdgeInsets.all(5),
-      child: Card(
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(5),
-        ),
-        color: Colors.blueGrey.shade50,
-        elevation: 0,
-        child: Slidable(
-          child: ListTile(
-            title: Text(student.name),
-          ),
-          startActionPane: ActionPane(
-            motion: const DrawerMotion(),
-            children: [
-              SlidableAction(
-                icon: Icons.edit,
-                label: 'Editar',
-                backgroundColor: Theme.of(context).primaryColor,
-                foregroundColor: Colors.white,
-                onPressed: (context) {
-                  _openCadPage();
-                },
-              ),
-              SlidableAction(
-                icon: Icons.blur_off,
-                label: 'Inativar',
-                backgroundColor: Colors.red,
-                foregroundColor: Colors.white,
-                onPressed: (context) {
-                  _openCadPage();
-                },
-              ),
-            ],
-          ),
-        ),
-      )
     );
   }
 }

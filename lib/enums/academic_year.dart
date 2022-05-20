@@ -19,8 +19,6 @@ extension AcademicYearExtension on AcademicYear {
         return '4º Ano';
       case AcademicYear.fifth:
         return '5º Ano';
-      default:
-        return '';
     }
   }
 
@@ -36,8 +34,6 @@ extension AcademicYearExtension on AcademicYear {
         return 4;
       case AcademicYear.fifth:
         return 5;
-      default:
-        return 0;
     }
   }
 }

@@ -13,8 +13,6 @@ extension UserTypeExtension on UserType {
         return 'Professor';
       case UserType.admin:
         return 'Administrador';
-      default:
-        return '';
     }
   }
 
@@ -26,8 +24,6 @@ extension UserTypeExtension on UserType {
         return 2;
       case UserType.admin:
         return 3;
-      default:
-        return 0;
     }
   }
 }

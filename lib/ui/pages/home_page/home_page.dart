@@ -3,6 +3,7 @@ import 'package:aluno_mobile_flutter/models/models.dart';
 import 'package:aluno_mobile_flutter/ui/components/components.dart';
 import 'package:aluno_mobile_flutter/ui/pages/pages.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class HomePage extends StatefulWidget {
   final User user;
@@ -18,23 +19,18 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   User? _user;
-  Teacher? _teacher;
-  Student? _student;
 
   @override
   void initState() {
     super.initState();
-
     _user = widget.user;
-    _teacher = _user!.teacher;
-    _student = _user!.student;
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           Container(
             color: Theme.of(context).primaryColor,
@@ -50,8 +46,14 @@ class _HomePageState extends State<HomePage> {
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
                       PopupMenuButton(
+                        icon: const Icon(
+                          Icons.settings,
+                          size: 30,
+                          color: Colors.white,
+                        ),
                         itemBuilder: (context) => [
                           PopupMenuItem(
+                            value: 'change_password',
                             child: Row(
                               children: const [
                                 Icon(Icons.password),
@@ -61,15 +63,7 @@ class _HomePageState extends State<HomePage> {
                             ),
                           ),
                           PopupMenuItem(
-                            child: Row(
-                              children: const [
-                                Icon(Icons.logout),
-                                SizedBox(width: 10),
-                                Text('Logout'),
-                              ],
-                            ),
-                          ),
-                          PopupMenuItem(
+                            value: 'about',
                             child: Row(
                               children: const [
                                 Icon(Icons.info_outline),
@@ -78,12 +72,20 @@ class _HomePageState extends State<HomePage> {
                               ],
                             ),
                           ),
+                          PopupMenuItem(
+                            value: 'logout',
+                            child: Row(
+                              children: const [
+                                Icon(Icons.logout),
+                                SizedBox(width: 10),
+                                Text('Logout'),
+                              ],
+                            ),
+                          ),
                         ],
-                        icon: const Icon(
-                          Icons.settings,
-                          size: 30,
-                          color: Colors.white,
-                        ),
+                        onSelected: (result) {
+                          _onSelectedPopup(result);
+                        },
                       ),
                     ],
                   ),
@@ -97,13 +99,13 @@ class _HomePageState extends State<HomePage> {
                       Padding(
                         padding: const EdgeInsets.only(right: 10),
                         child: Icon(
-                          _getIconLoggedIn(),
+                          _user!.getIconLoggedIn(),
                           size: 80,
                           color: Colors.white,
                         ),
                       ),
                       Text(
-                        'Olá, ' + _getUsernameLoggedIn(),
+                        'Olá, ' + _user!.getUsernameLoggedIn(),
                         style: const TextStyle(
                           fontSize: 40,
                           fontWeight: FontWeight.bold,
@@ -117,62 +119,72 @@ class _HomePageState extends State<HomePage> {
             ),
           ),
           Visibility(
-            visible: widget.user.isActive == 1,
-            child: SizedBox(
-              height: 140,
-              child: ListView.separated(
-                scrollDirection: Axis.horizontal,
-                padding: const EdgeInsets.all(10),
-                itemCount: 6,
-                separatorBuilder: (context, index) {
-                  return const SizedBox(width: 10);
-                },
-                itemBuilder: (context, index) {
-                  return WCardActionList(actionType: ActionType.values.elementAt(index));
-                },
-              ),
-            ),
-          ),
-          Visibility(
-            visible: widget.user.isActive != 1,
+            visible: widget.user.userType == 3,
             child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                Padding(
-                  padding: const EdgeInsets.all(10),
-                  child: Card(
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(20),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: const [
+                    WCardAction(
+                      actionType: ActionType.student,
+                      padding: EdgeInsets.only(
+                          top: 10,
+                          left: 10,
+                          right: 5
+                      ),
                     ),
-                    color: Theme.of(context).primaryColorLight,
-                    elevation: 2,
-                    child: SizedBox(
-                        width: double.infinity,
-                        height: 120,
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: const [
-                            Icon(Icons.school),
-                            Text(
-                                'Aluno'
-                            )
-                          ],
-                        )
+                    WCardAction(
+                      actionType: ActionType.teacher,
+                      padding: EdgeInsets.only(
+                          top: 10,
+                          left: 5,
+                          right: 10
+                      ),
                     ),
-                  ),
+                  ],
                 ),
-                Padding(
-                  padding: const EdgeInsets.all(10),
-                  child: SizedBox(
-                      height: 120,
-                      child: Row(
-                        children: const [
-                          WCardAction(),
-                          SizedBox(width: 10),
-                          WCardAction()
-                        ],
-                      )
-                  ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: const [
+                    WCardAction(
+                      actionType: ActionType.discipline,
+                      padding: EdgeInsets.only(
+                          top: 10,
+                          left: 10,
+                          right: 5
+                      ),
+                    ),
+                    WCardAction(
+                      actionType: ActionType.course,
+                      padding: EdgeInsets.only(
+                          top: 10,
+                          left: 5,
+                          right: 10
+                      ),
+                    ),
+                  ],
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: const [
+                    WCardAction(
+                      actionType: ActionType.curriculumGride,
+                      padding: EdgeInsets.only(
+                          top: 10,
+                          left: 10,
+                          right: 5
+                      ),
+                    ),
+                    WCardAction(
+                      actionType: ActionType.classroom,
+                      padding: EdgeInsets.only(
+                          top: 10,
+                          left: 5,
+                          right: 10
+                      ),
+                    ),
+                  ],
                 ),
               ],
             ),
@@ -182,53 +194,32 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  String _getUsernameLoggedIn() {
-    if (_teacher?.name != null) {
-      return _teacher!.name.toUpperCase();
+  void _onSelectedPopup(Object? result) async {
+    if (result == 'change_password') {
+      Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (context) => PasswordPage(user: _user!)
+          )
+      );
     }
-
-    if (_student?.name != null) {
-      return _student!.name.toUpperCase();
+    else if (result == 'about') {
+      Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (context) => const AboutPage()
+          )
+      );
     }
+    else if (result == 'logout') {
+      await (await SharedPreferences.getInstance()).remove('user_logged_in');
 
-    return widget.user.username.toUpperCase();
-  }
-
-  IconData _getIconLoggedIn() {
-    if (_teacher?.name != null) {
-      return Icons.person;
+      Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(
+              builder: (context) => const LoginPage()
+          )
+      );
     }
-
-    if (_student?.name != null) {
-      return Icons.school;
-    }
-
-    return Icons.admin_panel_settings;
-  }
-
-  void _openAboutPage() {
-    FocusScope.of(context).unfocus();
-
-    Navigator.push(
-        context,
-        MaterialPageRoute(
-            builder: (context) => const AboutPage()
-        )
-    );
-  }
-
-  void _openPasswordPage() {
-    FocusScope.of(context).unfocus();
-
-    Navigator.push(
-        context,
-        MaterialPageRoute(
-            builder: (context) => PasswordPage(user: _user!)
-        )
-    );
-  }
-
-  void _logOut() {
-
   }
 }

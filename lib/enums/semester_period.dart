@@ -10,8 +10,6 @@ extension SemesterPeriodExtension on SemesterPeriod {
         return '1º Semestre';
       case SemesterPeriod.second:
         return '2º Semestre';
-      default:
-        return '';
     }
   }
 
@@ -21,8 +19,6 @@ extension SemesterPeriodExtension on SemesterPeriod {
         return 1;
       case SemesterPeriod.second:
         return 2;
-      default:
-        return 0;
     }
   }
 }

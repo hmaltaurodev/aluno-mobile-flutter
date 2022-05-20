@@ -2,6 +2,7 @@ import 'package:aluno_mobile_flutter/datasources/helpers/helpers.dart';
 import 'package:aluno_mobile_flutter/enums/enums.dart';
 import 'package:aluno_mobile_flutter/models/models.dart';
 import 'package:crypt/crypt.dart';
+import 'package:flutter/material.dart';
 
 const String userTable = 'USER';
 const String userId = 'U_ID';
@@ -78,5 +79,29 @@ class User {
         )
       );
     }
+  }
+
+  String getUsernameLoggedIn() {
+    if (teacher?.name != null) {
+      return teacher!.name.toUpperCase();
+    }
+
+    if (student?.name != null) {
+      return student!.name.toUpperCase();
+    }
+
+    return username.toUpperCase();
+  }
+
+  IconData getIconLoggedIn() {
+    if (teacher?.name != null) {
+      return Icons.person;
+    }
+
+    if (student?.name != null) {
+      return Icons.school;
+    }
+
+    return Icons.admin_panel_settings;
   }
 }

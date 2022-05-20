@@ -16,8 +16,6 @@ extension BimesterExtension on Bimester {
         return '3º Bimestre';
       case Bimester.fourth:
         return '4º Bimestre';
-      default:
-        return '';
     }
   }
 
@@ -31,8 +29,6 @@ extension BimesterExtension on Bimester {
         return 3;
       case Bimester.fourth:
         return 4;
-      default:
-        return 0;
     }
   }
 }
