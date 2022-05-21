@@ -1,9 +1,10 @@
 import 'package:aluno_mobile_flutter/datasources/helpers/helpers.dart';
 import 'package:aluno_mobile_flutter/models/models.dart';
 import 'package:aluno_mobile_flutter/ui/components/components.dart';
-import 'package:aluno_mobile_flutter/ui/pages/discipline_page/cad_discipline_page.dart';
-import 'package:flutter_slidable/flutter_slidable.dart';
+import 'package:aluno_mobile_flutter/ui/pages/pages.dart';
+import 'package:aluno_mobile_flutter/utils/utils.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_slidable/flutter_slidable.dart';
 
 class ListDisciplinePage extends StatefulWidget {
   const ListDisciplinePage({Key? key}) : super(key: key);
@@ -19,7 +20,9 @@ class _ListDisciplinePageState extends State<ListDisciplinePage> {
   Widget build(BuildContext context) {
     return WScaffold(
       title: 'Disciplinas',
-      onPressedFAB: _openCadPage,
+      onPressedFAB: () {
+        _openCadPage(null);
+      },
       iconFAB: const Icon(Icons.add),
       body: FutureBuilder(
         future: _disciplineHelper.getAll(),
@@ -29,17 +32,14 @@ class _ListDisciplinePageState extends State<ListDisciplinePage> {
             case ConnectionState.waiting:
               return const CircularProgressIndicator();
             default:
-              if (snapshot.hasError) {
-                return Text('Erro: ${snapshot.error}');
-              }
-              return _listViewBuilder(snapshot.data as List<Discipline>);
+              return _createListViewBuilder(snapshot);
           }
         },
       ),
     );
   }
 
-  void _openCadPage() {
+  void _openCadPage(Discipline? discipline) {
     Navigator.push(
       context,
       MaterialPageRoute(
@@ -48,44 +48,49 @@ class _ListDisciplinePageState extends State<ListDisciplinePage> {
     );
   }
 
-  Widget _listViewBuilder(List<Discipline> disciplines) {
+  void _activateInactivate(Discipline discipline) {
+
+  }
+
+  Widget _createListViewBuilder(AsyncSnapshot snapshot) {
+    if (snapshot.hasError) {
+      return Text('Erro: ${snapshot.error}');
+    }
+
+    List<Discipline> disciplines = (snapshot.data as List<Discipline>);
+
     return ListView.builder(
       padding: const EdgeInsets.all(4),
       itemCount: disciplines.length,
       itemBuilder: (context, index) {
-        return _slidable(disciplines[index]);
+        return WSlidable(
+          title: disciplines[index].toString(),
+          slidablesActions: _createSlidablesActions(disciplines[index]),
+        );
       },
     );
   }
 
-  Widget _slidable(Discipline discipline) {
-    return Slidable(
-      child: ListTile(
-        title: Text(discipline.description),
+  List<Widget> _createSlidablesActions(Discipline discipline) {
+    return [
+      SlidableAction(
+        icon: Icons.edit,
+        label: 'Editar',
+        backgroundColor: Theme.of(context).primaryColor,
+        foregroundColor: Colors.white,
+        onPressed: (context) {
+          _openCadPage(discipline);
+        },
       ),
-      startActionPane: ActionPane(
-        motion: const DrawerMotion(),
-        children: [
-          SlidableAction(
-            icon: Icons.edit,
-            label: 'Editar',
-            backgroundColor: Theme.of(context).primaryColor,
-            foregroundColor: Colors.white,
-            onPressed: (context) {
-              _openCadPage();
-            },
-          ),
-          SlidableAction(
-            icon: Icons.blur_off,
-            label: 'Inativar',
-            backgroundColor: Colors.red,
-            foregroundColor: Colors.white,
-            onPressed: (context) {
-              _openCadPage();
-            },
-          ),
-        ],
+      SlidableAction(
+        icon: Utils.activeInactiveIcon(discipline.isActive == 1),
+        label: Utils.activeInactiveLabel(discipline.isActive == 1),
+        backgroundColor: Utils.activeInactiveColor(discipline.isActive == 1),
+        foregroundColor: Colors.white,
+        onPressed: (context) {
+          _activateInactivate(discipline);
+        },
       ),
-    );
+    ];
   }
 }

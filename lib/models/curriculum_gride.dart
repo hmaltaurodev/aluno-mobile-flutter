@@ -1,4 +1,5 @@
 import 'package:aluno_mobile_flutter/models/models.dart';
+import 'package:aluno_mobile_flutter/enums/enums.dart';
 
 const String curriculumGrideTable = 'CURRICULUM_GRIDE';
 const String curriculumGrideId = 'CG_ID';
@@ -47,5 +48,22 @@ class CurriculumGride {
       curriculumGrideSemesterPeriod: semesterPeriod,
       curriculumGrideIsActive: isActive
     };
+  }
+
+  @override
+  String toString() {
+    if (semesterPeriod != 0) {
+      return academicYear.toString() + '/' + semesterPeriod.toString() + ' - ' + course.description;
+    }
+
+    return academicYear.toString() + ' - ' + course.description;
+  }
+
+  String toStringNoCourse() {
+    if (semesterPeriod != 0) {
+      return academicYear.toString() + '/' + semesterPeriod.toString();
+    }
+
+    return academicYear.toString();
   }
 }

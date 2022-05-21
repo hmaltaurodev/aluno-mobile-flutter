@@ -38,4 +38,9 @@ class Classroom {
       classroomIsActive: isActive
     };
   }
+
+  @override
+  String toString() {
+    return periodYear.toString() + ' - ' + currriculumGride.toString();
+  }
 }

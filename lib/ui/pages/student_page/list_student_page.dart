@@ -2,7 +2,9 @@ import 'package:aluno_mobile_flutter/datasources/helpers/helpers.dart';
 import 'package:aluno_mobile_flutter/models/models.dart';
 import 'package:aluno_mobile_flutter/ui/components/components.dart';
 import 'package:aluno_mobile_flutter/ui/pages/pages.dart';
+import 'package:aluno_mobile_flutter/utils/utils.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_slidable/flutter_slidable.dart';
 
 class ListStudentPage extends StatefulWidget {
   const ListStudentPage({Key? key}) : super(key: key);
@@ -18,7 +20,9 @@ class _ListStudentPageState extends State<ListStudentPage> {
   Widget build(BuildContext context) {
     return WScaffold(
       title: 'Alunos',
-      onPressedFAB: _openCadPage,
+      onPressedFAB: () {
+        _openCadPage(null);
+      },
       iconFAB: const Icon(Icons.add),
       body: FutureBuilder(
         future: _studentHelper.getAll(),
@@ -28,17 +32,14 @@ class _ListStudentPageState extends State<ListStudentPage> {
             case ConnectionState.waiting:
               return const CircularProgressIndicator();
             default:
-              if (snapshot.hasError) {
-                return Text('Erro: ${snapshot.error}');
-              }
-              return _listViewBuilder(snapshot.data as List<Student>);
+              return _createListViewBuilder(snapshot);
           }
         },
       ),
     );
   }
 
-  void _openCadPage() {
+  void _openCadPage(Student? student) {
     Navigator.push(
         context,
         MaterialPageRoute(
@@ -47,17 +48,49 @@ class _ListStudentPageState extends State<ListStudentPage> {
     );
   }
 
-  Widget _listViewBuilder(List<Student> students) {
+  void _activateInactivate(Student student) {
+
+  }
+
+  Widget _createListViewBuilder(AsyncSnapshot snapshot) {
+    if (snapshot.hasError) {
+      return Text('Erro: ${snapshot.error}');
+    }
+
+    List<Student> students = (snapshot.data as List<Student>);
+
     return ListView.builder(
       padding: const EdgeInsets.all(4),
       itemCount: students.length,
       itemBuilder: (context, index) {
-        return WSlidableList(
-          title: students[index].name,
-          functionEdit: _openCadPage,
-          functionInactivate: _openCadPage,
+        return WSlidable(
+          title: students[index].toString(),
+          slidablesActions: _createSlidablesActions(students[index]),
         );
       },
     );
+  }
+
+  List<Widget> _createSlidablesActions(Student student) {
+    return [
+      SlidableAction(
+        icon: Icons.edit,
+        label: 'Editar',
+        backgroundColor: Theme.of(context).primaryColor,
+        foregroundColor: Colors.white,
+        onPressed: (context) {
+          _openCadPage(student);
+        },
+      ),
+      SlidableAction(
+        icon: Utils.activeInactiveIcon(student.isActive == 1),
+        label: Utils.activeInactiveLabel(student.isActive == 1),
+        backgroundColor: Utils.activeInactiveColor(student.isActive == 1),
+        foregroundColor: Colors.white,
+        onPressed: (context) {
+          _activateInactivate(student);
+        },
+      ),
+    ];
   }
 }

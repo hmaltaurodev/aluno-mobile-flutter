@@ -120,73 +120,79 @@ class _HomePageState extends State<HomePage> {
           ),
           Visibility(
             visible: widget.user.userType == 3,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: const [
-                    WCardAction(
-                      actionType: ActionType.student,
-                      padding: EdgeInsets.only(
-                          top: 10,
-                          left: 10,
-                          right: 5
-                      ),
+            child: Expanded(
+              child: SingleChildScrollView(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: const [
+                        WCardAction(
+                          actionType: ActionType.student,
+                          padding: EdgeInsets.only(
+                              top: 10,
+                              left: 10,
+                              right: 5
+                          ),
+                        ),
+                        WCardAction(
+                          actionType: ActionType.teacher,
+                          padding: EdgeInsets.only(
+                              top: 10,
+                              left: 5,
+                              right: 10
+                          ),
+                        ),
+                      ],
                     ),
-                    WCardAction(
-                      actionType: ActionType.teacher,
-                      padding: EdgeInsets.only(
-                          top: 10,
-                          left: 5,
-                          right: 10
-                      ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: const [
+                        WCardAction(
+                          actionType: ActionType.discipline,
+                          padding: EdgeInsets.only(
+                              top: 10,
+                              left: 10,
+                              right: 5
+                          ),
+                        ),
+                        WCardAction(
+                          actionType: ActionType.course,
+                          padding: EdgeInsets.only(
+                              top: 10,
+                              left: 5,
+                              right: 10
+                          ),
+                        ),
+                      ],
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: const [
+                        WCardAction(
+                          actionType: ActionType.curriculumGride,
+                          padding: EdgeInsets.only(
+                              top: 10,
+                              left: 10,
+                              bottom: 10,
+                              right: 5
+                          ),
+                        ),
+                        WCardAction(
+                          actionType: ActionType.classroom,
+                          padding: EdgeInsets.only(
+                              top: 10,
+                              left: 5,
+                              bottom: 10,
+                              right: 10
+                          ),
+                        ),
+                      ],
                     ),
                   ],
                 ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: const [
-                    WCardAction(
-                      actionType: ActionType.discipline,
-                      padding: EdgeInsets.only(
-                          top: 10,
-                          left: 10,
-                          right: 5
-                      ),
-                    ),
-                    WCardAction(
-                      actionType: ActionType.course,
-                      padding: EdgeInsets.only(
-                          top: 10,
-                          left: 5,
-                          right: 10
-                      ),
-                    ),
-                  ],
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: const [
-                    WCardAction(
-                      actionType: ActionType.curriculumGride,
-                      padding: EdgeInsets.only(
-                          top: 10,
-                          left: 10,
-                          right: 5
-                      ),
-                    ),
-                    WCardAction(
-                      actionType: ActionType.classroom,
-                      padding: EdgeInsets.only(
-                          top: 10,
-                          left: 5,
-                          right: 10
-                      ),
-                    ),
-                  ],
-                ),
-              ],
+              ),
             ),
           ),
         ],

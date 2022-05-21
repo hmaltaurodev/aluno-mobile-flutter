@@ -1,6 +1,8 @@
 import 'package:aluno_mobile_flutter/datasources/helpers/helpers.dart';
+import 'package:aluno_mobile_flutter/enums/enums.dart';
 import 'package:aluno_mobile_flutter/models/models.dart';
 import 'package:aluno_mobile_flutter/ui/components/components.dart';
+import 'package:crypt/crypt.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
@@ -58,7 +60,7 @@ class _CadStudentPageState extends State<CadStudentPage> {
     );
   }
 
-  void _save() {
+  void _save() async {
     Student student = Student(
       registrationId: int.parse(_registrationIdController.text),
       name: _nameController.text,
@@ -68,7 +70,18 @@ class _CadStudentPageState extends State<CadStudentPage> {
     );
 
     StudentHelper studentHelper = StudentHelper();
-    studentHelper.insert(student);
+    student = await studentHelper.insert(student);
+
+    User user = User(
+      username: student.registrationId.toString().padLeft(8, '0'),
+      password: Crypt.sha256(student.registrationId.toString().padLeft(8, '0')).toString(),
+      userType: UserType.student.toInt(),
+      student: student,
+      isActive: 1
+    );
+
+    UserHelper userHelper = UserHelper();
+    userHelper.insert(user);
 
     Navigator.pop(context);
   }

@@ -19,13 +19,13 @@ class _CadDisciplinePageState extends State<CadDisciplinePage> {
   final TextEditingController _descriptionController = TextEditingController();
   final TextEditingController _classHoursController = TextEditingController();
   final TextEditingController _numberOfClassesController = TextEditingController();
-  Teacher? _teacherDefalt;
+  Teacher? _teacher;
   List<Teacher> _teachers = List<Teacher>.empty();
 
   @override
   void initState() {
     super.initState();
-    _teacherDefalt = widget.teacherDefalt;
+    _teacher = widget.teacherDefalt;
     _loadLists();
   }
 
@@ -53,34 +53,7 @@ class _CadDisciplinePageState extends State<CadDisciplinePage> {
             textEditingController: _numberOfClassesController,
             textInputType: TextInputType.number,
           ),
-          Padding(
-            padding: const EdgeInsets.only(
-                top: 10,
-                bottom: 10,
-                left: 30,
-                right: 30
-            ),
-            child: DropdownButtonFormField<Teacher>(
-              value: _teacherDefalt,
-              decoration: const InputDecoration(
-                labelText: 'Professor',
-                labelStyle: TextStyle(
-                  fontSize: 15,
-                ),
-              ),
-              onChanged: (newValue) {
-                setState(() {
-                  _teacherDefalt = newValue!;
-                });
-              },
-              items: _teachers.map((Teacher teacher) {
-                return DropdownMenuItem<Teacher>(
-                  value: teacher,
-                  child: Text(teacher.name),
-                );
-              }).toList(),
-            ),
-          ),
+          _createDropdownTeachers(),
         ],
       ),
     );
@@ -98,12 +71,45 @@ class _CadDisciplinePageState extends State<CadDisciplinePage> {
       description: _descriptionController.text,
       classHours: int.parse(_classHoursController.text),
       numberOfClasses: int.parse(_numberOfClassesController.text),
-      teacher: _teacherDefalt!
+      teacher: _teacher!
     );
 
     DisciplineHelper disciplineHelper = DisciplineHelper();
     disciplineHelper.insert(discipline);
 
     Navigator.pop(context);
+  }
+
+  Widget _createDropdownTeachers() {
+    return Padding(
+      padding: const EdgeInsets.only(
+          top: 10,
+          bottom: 10,
+          left: 30,
+          right: 30
+      ),
+      child: DropdownButtonFormField<Teacher>(
+        value: _teacher,
+        decoration: const InputDecoration(
+          label: WLabelInputDecoration(
+            labelText: 'Professor',
+          ),
+          labelStyle: TextStyle(
+            fontSize: 15,
+          ),
+        ),
+        onChanged: (newValue) {
+          setState(() {
+            _teacher = newValue!;
+          });
+        },
+        items: _teachers.map((Teacher teacher) {
+          return DropdownMenuItem<Teacher>(
+            value: teacher,
+            child: Text(teacher.name),
+          );
+        }).toList(),
+      ),
+    );
   }
 }

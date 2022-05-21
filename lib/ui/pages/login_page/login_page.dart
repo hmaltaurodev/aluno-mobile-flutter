@@ -120,8 +120,8 @@ class _LoginPageState extends State<LoginPage> {
     FocusScope.of(context).unfocus();
     UserHelper userHelper = UserHelper();
     User? user = await userHelper.getByLogin(
-      _usernameController.text,
-      _passwordController.text
+      _usernameController.text.trim(),
+      _passwordController.text.trim()
     );
 
     if (user != null) {

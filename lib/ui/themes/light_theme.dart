@@ -34,15 +34,17 @@ ThemeData lightTheme() {
   );
 
   InputDecorationTheme inputDecorationTheme = InputDecorationTheme(
+    filled: true,
+    fillColor: Colors.white,
     enabledBorder: OutlineInputBorder(
       borderSide: const BorderSide(
-        color: primaryColor,
+        color: Colors.white,
       ),
       borderRadius: BorderRadius.circular(5),
     ),
     focusedBorder: OutlineInputBorder(
       borderSide: const BorderSide(
-        color: primaryColorDark,
+        color: Colors.white,
       ),
       borderRadius: BorderRadius.circular(5),
     ),
@@ -58,5 +60,6 @@ ThemeData lightTheme() {
     elevatedButtonTheme: elevatedButtonThemeData,
     inputDecorationTheme: inputDecorationTheme,
     floatingActionButtonTheme: floatingActionButtonThemeData,
+    scaffoldBackgroundColor: Colors.blueGrey.shade50,
   );
 }

@@ -136,8 +136,12 @@ class UserHelper {
         userSqlSelectByUsername, [username]
     );
 
-    if (users.isNotEmpty && Crypt(User.fromMap(users.first).password).match(password)) {
-      return User.fromMap(users.first);
+    if (users.isNotEmpty) {
+      User user = User.fromMap(users.first);
+
+      if (Crypt(user.password).match(password)) {
+        return user;
+      }
     }
 
     return null;

@@ -2,6 +2,7 @@ import 'package:aluno_mobile_flutter/datasources/helpers/helpers.dart';
 import 'package:aluno_mobile_flutter/models/models.dart';
 import 'package:aluno_mobile_flutter/ui/components/components.dart';
 import 'package:aluno_mobile_flutter/ui/pages/curriculum_gride_page/cad_curriculum_gride_page.dart';
+import 'package:aluno_mobile_flutter/utils/utils.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:flutter/material.dart';
 
@@ -19,7 +20,9 @@ class _ListCurriculumGridePageState extends State<ListCurriculumGridePage> {
   Widget build(BuildContext context) {
     return WScaffold(
       title: 'Grades Curriculares',
-      onPressedFAB: _openCadPage,
+      onPressedFAB: () {
+        _openCadPage(null);
+      },
       iconFAB: const Icon(Icons.add),
       body: FutureBuilder(
         future: _curriculumGrideHelper.getAll(),
@@ -29,17 +32,14 @@ class _ListCurriculumGridePageState extends State<ListCurriculumGridePage> {
             case ConnectionState.waiting:
               return const CircularProgressIndicator();
             default:
-              if (snapshot.hasError) {
-                return Text('Erro: ${snapshot.error}');
-              }
-              return _listViewBuilder(snapshot.data as List<CurriculumGride>);
+              return _createListViewBuilder(snapshot);
           }
         },
       ),
     );
   }
 
-  void _openCadPage() {
+  void _openCadPage(CurriculumGride? curriculumGride) {
     Navigator.push(
         context,
         MaterialPageRoute(
@@ -48,44 +48,49 @@ class _ListCurriculumGridePageState extends State<ListCurriculumGridePage> {
     );
   }
 
-  Widget _listViewBuilder(List<CurriculumGride> curriculumsGrides) {
+  void _activateInactivate(CurriculumGride curriculumGride) {
+
+  }
+
+  Widget _createListViewBuilder(AsyncSnapshot snapshot) {
+    if (snapshot.hasError) {
+      return Text('Erro: ${snapshot.error}');
+    }
+
+    List<CurriculumGride> curriculumGrides = (snapshot.data as List<CurriculumGride>);
+
     return ListView.builder(
       padding: const EdgeInsets.all(4),
-      itemCount: curriculumsGrides.length,
+      itemCount: curriculumGrides.length,
       itemBuilder: (context, index) {
-        return _slidable(curriculumsGrides[index]);
+        return WSlidable(
+          title: curriculumGrides[index].toString(),
+          slidablesActions: _createSlidablesActions(curriculumGrides[index]),
+        );
       },
     );
   }
 
-  Widget _slidable(CurriculumGride curriculumGride) {
-    return Slidable(
-      child: ListTile(
-        title: Text(curriculumGride.course.id.toString()),
+  List<Widget> _createSlidablesActions(CurriculumGride curriculumGride) {
+    return [
+      SlidableAction(
+        icon: Icons.edit,
+        label: 'Editar',
+        backgroundColor: Theme.of(context).primaryColor,
+        foregroundColor: Colors.white,
+        onPressed: (context) {
+          _openCadPage(curriculumGride);
+        },
       ),
-      startActionPane: ActionPane(
-        motion: const DrawerMotion(),
-        children: [
-          SlidableAction(
-            icon: Icons.edit,
-            label: 'Editar',
-            backgroundColor: Theme.of(context).primaryColor,
-            foregroundColor: Colors.white,
-            onPressed: (context) {
-              _openCadPage();
-            },
-          ),
-          SlidableAction(
-            icon: Icons.blur_off,
-            label: 'Inativar',
-            backgroundColor: Colors.red,
-            foregroundColor: Colors.white,
-            onPressed: (context) {
-              _openCadPage();
-            },
-          ),
-        ],
+      SlidableAction(
+        icon: Utils.activeInactiveIcon(curriculumGride.isActive == 1),
+        label: Utils.activeInactiveLabel(curriculumGride.isActive == 1),
+        backgroundColor: Utils.activeInactiveColor(curriculumGride.isActive == 1),
+        foregroundColor: Colors.white,
+        onPressed: (context) {
+          _activateInactivate(curriculumGride);
+        },
       ),
-    );
+    ];
   }
 }

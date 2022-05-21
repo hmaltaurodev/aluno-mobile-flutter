@@ -39,4 +39,9 @@ class Course {
       courseIsActive: isActive
     };
   }
+
+  @override
+  String toString() {
+    return mecId.toString() + ' - ' + description;
+  }
 }

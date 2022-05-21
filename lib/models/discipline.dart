@@ -48,4 +48,9 @@ class Discipline {
       disciplineIsActive: isActive
     };
   }
+
+  @override
+  String toString() {
+    return description;
+  }
 }

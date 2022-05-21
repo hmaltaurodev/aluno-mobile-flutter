@@ -12,7 +12,7 @@ class CadCoursePage extends StatefulWidget {
 }
 
 class _CadCoursePageState extends State<CadCoursePage> {
-  AcademicDegree _academicDegree = AcademicDegree.bachelor;
+  AcademicDegree? _academicDegree;
   final TextEditingController _mecIdController = TextEditingController();
   final TextEditingController _descriptionController = TextEditingController();
 
@@ -45,7 +45,7 @@ class _CadCoursePageState extends State<CadCoursePage> {
     Course course = Course(
       mecId: int.parse(_mecIdController.text),
       description: _descriptionController.text,
-      academicDegree: _academicDegree.toInt()
+      academicDegree: _academicDegree!.toInt()
     );
 
     CourseHelper courseHelper = CourseHelper();
@@ -65,14 +65,16 @@ class _CadCoursePageState extends State<CadCoursePage> {
       child: DropdownButtonFormField<AcademicDegree>(
         value: _academicDegree,
         decoration: const InputDecoration(
-          labelText: 'Grau Acadêmico',
+          label: WLabelInputDecoration(
+            labelText: 'Grau Acadêmico',
+          ),
           labelStyle: TextStyle(
             fontSize: 15,
           ),
         ),
         onChanged: (newValue) {
           setState(() {
-            _academicDegree = newValue!;
+            _academicDegree = newValue;
           });
         },
         items: AcademicDegree.values.map((AcademicDegree academicDegree) {

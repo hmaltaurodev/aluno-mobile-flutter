@@ -39,23 +39,15 @@ class _CadClassroomPageState extends State<CadClassroomPage> {
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          _dropdownCourses(),
-          _dropdownCurriculumsGrides(),
+          _createDropdownCourses(),
+          _createDropdownCurriculumsGrides(),
           WTextField(
             labelText: 'Ano Período',
             textEditingController: _periodYearController,
             textInputType: TextInputType.number,
           ),
-          _dropdownDisciplines(),
-          Expanded(
-            child: ListView.builder(
-              padding: const EdgeInsets.all(4),
-              itemCount: _selectedStudents.length,
-              itemBuilder: (context, index) {
-                return _slidable(_selectedStudents[index]);
-              },
-            ),
-          )
+          _createDropdownDisciplines(),
+          _createListViewBuilder(),
         ],
       )
     );
@@ -103,7 +95,7 @@ class _CadClassroomPageState extends State<CadClassroomPage> {
     Navigator.pop(context);
   }
 
-  Widget _dropdownCourses() {
+  Widget _createDropdownCourses() {
     return Padding(
       padding: const EdgeInsets.only(
           top: 20,
@@ -114,7 +106,9 @@ class _CadClassroomPageState extends State<CadClassroomPage> {
       child: DropdownButtonFormField<Course>(
         value: _course,
         decoration: const InputDecoration(
-          labelText: 'Curso',
+          label: WLabelInputDecoration(
+            labelText: 'Curso',
+          ),
           labelStyle: TextStyle(
             fontSize: 15,
           ),
@@ -132,7 +126,7 @@ class _CadClassroomPageState extends State<CadClassroomPage> {
     );
   }
 
-  Widget _dropdownCurriculumsGrides() {
+  Widget _createDropdownCurriculumsGrides() {
     return Padding(
       padding: const EdgeInsets.only(
           top: 10,
@@ -143,7 +137,9 @@ class _CadClassroomPageState extends State<CadClassroomPage> {
       child: DropdownButtonFormField<CurriculumGride>(
         value: _curriculumGride,
         decoration: const InputDecoration(
-          labelText: 'Grade Curricular',
+          label: WLabelInputDecoration(
+            labelText: 'Grade Curricular',
+          ),
           labelStyle: TextStyle(
             fontSize: 15,
           ),
@@ -163,7 +159,7 @@ class _CadClassroomPageState extends State<CadClassroomPage> {
     );
   }
 
-  Widget _dropdownDisciplines() {
+  Widget _createDropdownDisciplines() {
     return Row(
       mainAxisAlignment: MainAxisAlignment.start,
       children: [
@@ -178,7 +174,9 @@ class _CadClassroomPageState extends State<CadClassroomPage> {
             child: DropdownButtonFormField<Student>(
               value: _student,
               decoration: const InputDecoration(
-                labelText: 'Selecione um Aluno',
+                label: WLabelInputDecoration(
+                  labelText: 'Selecione os Alunos',
+                ),
                 labelStyle: TextStyle(
                   fontSize: 15,
                 ),
@@ -218,6 +216,45 @@ class _CadClassroomPageState extends State<CadClassroomPage> {
         ),
       ],
     );
+  }
+
+  Widget _createListViewBuilder() {
+    return Expanded(
+      child: ListView.builder(
+        padding: const EdgeInsets.all(4),
+        itemCount: _selectedStudents.length,
+        itemBuilder: (context, index) {
+          return WSlidable(
+            title: _selectedStudents[index].name,
+            slidablesActions: _createSlidablesActions(_selectedStudents[index]),
+            padding: const EdgeInsets.only(
+                top: 2.5,
+                bottom: 2.5,
+                left: 30,
+                right: 30
+            ),
+          );
+        },
+      ),
+    );
+  }
+
+  List<Widget> _createSlidablesActions(Student student) {
+    return [
+      SlidableAction(
+        icon: Icons.delete,
+        label: 'Remover',
+        backgroundColor: Colors.red,
+        foregroundColor: Colors.white,
+        onPressed: (context) {
+          setState(() {
+            _students = _students.toList();
+            _students.add(student);
+            _selectedStudents.remove(student);
+          });
+        },
+      ),
+    ];
   }
 
   Widget _slidable(Student student) {

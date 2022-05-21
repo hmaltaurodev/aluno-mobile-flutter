@@ -39,20 +39,12 @@ class _CadCurriculumGridePageState extends State<CadCurriculumGridePage> {
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          _dropdownCourses(),
-          _dropdownAcademicYear(),
-          _dropdownAcademicRegime(),
-          _dropdownSemesterPeriod(),
-          _dropdownDisciplines(),
-          Expanded(
-            child: ListView.builder(
-              padding: const EdgeInsets.all(4),
-              itemCount: _selectedDisciplines.length,
-              itemBuilder: (context, index) {
-                return _slidable(_selectedDisciplines[index]);
-              },
-            ),
-          )
+          _createDropdownCourses(),
+          _createDropdownAcademicYear(),
+          _createDropdownAcademicRegime(),
+          _createDropdownSemesterPeriod(),
+          _createDropdownDisciplines(),
+          _createListViewBuilder(),
         ],
       ),
     );
@@ -92,7 +84,7 @@ class _CadCurriculumGridePageState extends State<CadCurriculumGridePage> {
     Navigator.pop(context);
   }
 
-  Widget _dropdownCourses() {
+  Widget _createDropdownCourses() {
     return Padding(
       padding: const EdgeInsets.only(
           top: 20,
@@ -103,7 +95,9 @@ class _CadCurriculumGridePageState extends State<CadCurriculumGridePage> {
       child: DropdownButtonFormField<Course>(
         value: _courseValue,
         decoration: const InputDecoration(
-          labelText: 'Curso',
+          label: WLabelInputDecoration(
+            labelText: 'Curso',
+          ),
           labelStyle: TextStyle(
             fontSize: 15,
           ),
@@ -116,14 +110,14 @@ class _CadCurriculumGridePageState extends State<CadCurriculumGridePage> {
         items: _courses.map((Course course) {
           return DropdownMenuItem<Course>(
             value: course,
-            child: Text(course.description),
+            child: Text(course.toString()),
           );
         }).toList(),
       ),
     );
   }
 
-  Widget _dropdownAcademicYear() {
+  Widget _createDropdownAcademicYear() {
     return Padding(
       padding: const EdgeInsets.only(
           top: 10,
@@ -134,7 +128,9 @@ class _CadCurriculumGridePageState extends State<CadCurriculumGridePage> {
       child: DropdownButtonFormField<AcademicYear>(
         value: _academicYearValue,
         decoration: const InputDecoration(
-          labelText: 'Ano Acadêmico',
+          label: WLabelInputDecoration(
+            labelText: 'Ano Acadêmico',
+          ),
           labelStyle: TextStyle(
             fontSize: 15,
           ),
@@ -154,7 +150,7 @@ class _CadCurriculumGridePageState extends State<CadCurriculumGridePage> {
     );
   }
 
-  Widget _dropdownAcademicRegime() {
+  Widget _createDropdownAcademicRegime() {
     return Padding(
       padding: const EdgeInsets.only(
           top: 10,
@@ -165,7 +161,9 @@ class _CadCurriculumGridePageState extends State<CadCurriculumGridePage> {
       child: DropdownButtonFormField<AcademicRegime>(
         value: _academicRegimeValue,
         decoration: const InputDecoration(
-          labelText: 'Regime Acadêmico',
+          label: WLabelInputDecoration(
+            labelText: 'Regime Acadêmico',
+          ),
           labelStyle: TextStyle(
             fontSize: 15,
           ),
@@ -185,7 +183,7 @@ class _CadCurriculumGridePageState extends State<CadCurriculumGridePage> {
     );
   }
 
-  Widget _dropdownSemesterPeriod() {
+  Widget _createDropdownSemesterPeriod() {
     return Visibility(
       visible: (_academicRegimeValue == AcademicRegime.semiannual),
       child: Padding(
@@ -198,7 +196,9 @@ class _CadCurriculumGridePageState extends State<CadCurriculumGridePage> {
         child: DropdownButtonFormField<SemesterPeriod>(
           value: _semesterPeriodValue,
           decoration: const InputDecoration(
-            labelText: 'Semestre Período',
+            label: WLabelInputDecoration(
+              labelText: 'Semestre Período',
+            ),
             labelStyle: TextStyle(
               fontSize: 15,
             ),
@@ -219,7 +219,7 @@ class _CadCurriculumGridePageState extends State<CadCurriculumGridePage> {
     );
   }
 
-  Widget _dropdownDisciplines() {
+  Widget _createDropdownDisciplines() {
     return Row(
       mainAxisAlignment: MainAxisAlignment.start,
       children: [
@@ -234,7 +234,9 @@ class _CadCurriculumGridePageState extends State<CadCurriculumGridePage> {
             child: DropdownButtonFormField<Discipline>(
               value: _disciplineValue,
               decoration: const InputDecoration(
-                labelText: 'Selecione uma Disciplina',
+                label: WLabelInputDecoration(
+                  labelText: 'Selecione as Disciplinas',
+                ),
                 labelStyle: TextStyle(
                   fontSize: 15,
                 ),
@@ -276,44 +278,42 @@ class _CadCurriculumGridePageState extends State<CadCurriculumGridePage> {
     );
   }
 
-  Widget _slidable(Discipline discipline) {
-    return Padding(
-      padding: const EdgeInsets.only(
-          top: 2.5,
-          bottom: 2.5,
-          left: 30,
-          right: 30
-      ),
-      child: Card(
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(5),
-        ),
-        color: Colors.blueGrey.shade50,
-        elevation: 0,
-        child: Slidable(
-          child: ListTile(
-            title: Text(discipline.description),
-          ),
-          startActionPane: ActionPane(
-            motion: const DrawerMotion(),
-            children: [
-              SlidableAction(
-                icon: Icons.delete,
-                label: 'Remover',
-                backgroundColor: Colors.red,
-                foregroundColor: Colors.white,
-                onPressed: (context) {
-                  setState(() {
-                    _disciplines = _disciplines.toList();
-                    _disciplines.add(discipline);
-                    _selectedDisciplines.remove(discipline);
-                  });
-                },
-              ),
-            ],
-          ),
-        ),
+  Widget _createListViewBuilder() {
+    return Expanded(
+      child: ListView.builder(
+        padding: const EdgeInsets.all(4),
+        itemCount: _selectedDisciplines.length,
+        itemBuilder: (context, index) {
+          return WSlidable(
+            title: _selectedDisciplines[index].description,
+            slidablesActions: _createSlidablesActions(_selectedDisciplines[index]),
+            padding: const EdgeInsets.only(
+                top: 2.5,
+                bottom: 2.5,
+                left: 30,
+                right: 30
+            ),
+          );
+        },
       ),
     );
+  }
+
+  List<Widget> _createSlidablesActions(Discipline discipline) {
+    return [
+      SlidableAction(
+        icon: Icons.delete,
+        label: 'Remover',
+        backgroundColor: Colors.red,
+        foregroundColor: Colors.white,
+        onPressed: (context) {
+          setState(() {
+            _disciplines = _disciplines.toList();
+            _disciplines.add(discipline);
+            _selectedDisciplines.remove(discipline);
+          });
+        },
+      ),
+    ];
   }
 }

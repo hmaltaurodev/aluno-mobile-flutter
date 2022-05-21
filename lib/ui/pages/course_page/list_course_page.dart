@@ -2,6 +2,7 @@ import 'package:aluno_mobile_flutter/datasources/helpers/helpers.dart';
 import 'package:aluno_mobile_flutter/models/models.dart';
 import 'package:aluno_mobile_flutter/ui/components/components.dart';
 import 'package:aluno_mobile_flutter/ui/pages/pages.dart';
+import 'package:aluno_mobile_flutter/utils/utils.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:flutter/material.dart';
 
@@ -19,7 +20,9 @@ class _ListCoursePageState extends State<ListCoursePage> {
   Widget build(BuildContext context) {
     return WScaffold(
       title: 'Cursos',
-      onPressedFAB: _openCadPage,
+      onPressedFAB: () {
+        _openCadPage(null);
+      },
       iconFAB: const Icon(Icons.add),
       body: FutureBuilder(
         future: _courseHelper.getAll(),
@@ -29,17 +32,14 @@ class _ListCoursePageState extends State<ListCoursePage> {
             case ConnectionState.waiting:
               return const CircularProgressIndicator();
             default:
-              if (snapshot.hasError) {
-                return Text('Erro: ${snapshot.error}');
-              }
-              return _listViewBuilder(snapshot.data as List<Course>);
+              return _createListViewBuilder(snapshot);
           }
         },
       ),
     );
   }
 
-  void _openCadPage() {
+  void _openCadPage(Course? course) {
     Navigator.push(
         context,
         MaterialPageRoute(
@@ -48,44 +48,49 @@ class _ListCoursePageState extends State<ListCoursePage> {
     );
   }
 
-  Widget _listViewBuilder(List<Course> courses) {
+  void _activateInactivate(Course course) {
+
+  }
+
+  Widget _createListViewBuilder(AsyncSnapshot snapshot) {
+    if (snapshot.hasError) {
+      return Text('Erro: ${snapshot.error}');
+    }
+
+    List<Course> courses = (snapshot.data as List<Course>);
+
     return ListView.builder(
       padding: const EdgeInsets.all(4),
       itemCount: courses.length,
       itemBuilder: (context, index) {
-        return _slidable(courses[index]);
+        return WSlidable(
+          title: courses[index].toString(),
+          slidablesActions: _createSlidablesActions(courses[index]),
+        );
       },
     );
   }
 
-  Widget _slidable(Course course) {
-    return Slidable(
-      child: ListTile(
-        title: Text(course.description),
+  List<Widget> _createSlidablesActions(Course course) {
+    return [
+      SlidableAction(
+        icon: Icons.edit,
+        label: 'Editar',
+        backgroundColor: Theme.of(context).primaryColor,
+        foregroundColor: Colors.white,
+        onPressed: (context) {
+          _openCadPage(course);
+        },
       ),
-      startActionPane: ActionPane(
-        motion: const DrawerMotion(),
-        children: [
-          SlidableAction(
-            icon: Icons.edit,
-            label: 'Editar',
-            backgroundColor: Theme.of(context).primaryColor,
-            foregroundColor: Colors.white,
-            onPressed: (context) {
-              _openCadPage();
-            },
-          ),
-          SlidableAction(
-            icon: Icons.blur_off,
-            label: 'Inativar',
-            backgroundColor: Colors.red,
-            foregroundColor: Colors.white,
-            onPressed: (context) {
-              _openCadPage();
-            },
-          ),
-        ],
+      SlidableAction(
+        icon: Utils.activeInactiveIcon(course.isActive == 1),
+        label: Utils.activeInactiveLabel(course.isActive == 1),
+        backgroundColor: Utils.activeInactiveColor(course.isActive == 1),
+        foregroundColor: Colors.white,
+        onPressed: (context) {
+          _activateInactivate(course);
+        },
       ),
-    );
+    ];
   }
 }

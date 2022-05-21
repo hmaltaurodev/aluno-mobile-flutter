@@ -51,4 +51,13 @@ class Teacher {
       teacherIsActive: isActive
     };
   }
+
+  @override
+  String toString() {
+    return registrationId.toString().padLeft(8, '0') + ' - ' + name;
+  }
+
+  String getFirstName() {
+    return name.split(' ')[0];
+  }
 }

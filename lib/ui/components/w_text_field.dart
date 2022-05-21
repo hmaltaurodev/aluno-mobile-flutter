@@ -1,3 +1,4 @@
+import 'package:aluno_mobile_flutter/ui/components/components.dart';
 import 'package:flutter/material.dart';
 
 class WTextField extends StatelessWidget {
@@ -39,7 +40,9 @@ class WTextField extends StatelessWidget {
         obscureText: obscureText,
         decoration: InputDecoration(
           prefixIcon: prefixIcon,
-          labelText: labelText,
+          label: WLabelInputDecoration(
+            labelText: labelText
+          ),
           labelStyle: const TextStyle(
             fontSize: 15,
           ),

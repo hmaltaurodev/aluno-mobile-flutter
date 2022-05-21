@@ -37,11 +37,11 @@ class User {
     Teacher? teacher;
 
     if (map[studentId].toString() != 'null') {
-      Student.fromMap(map);
+      student = Student.fromMap(map);
     }
 
     if (map[teacherId].toString() != 'null') {
-      Teacher.fromMap(map);
+      teacher = Teacher.fromMap(map);
     }
 
     return User(
@@ -83,11 +83,11 @@ class User {
 
   String getUsernameLoggedIn() {
     if (teacher?.name != null) {
-      return teacher!.name.toUpperCase();
+      return teacher!.getFirstName().toUpperCase();
     }
 
     if (student?.name != null) {
-      return student!.name.toUpperCase();
+      return student!.getFirstName().toUpperCase();
     }
 
     return username.toUpperCase();
