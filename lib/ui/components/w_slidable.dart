@@ -3,12 +3,12 @@ import 'package:flutter_slidable/flutter_slidable.dart';
 
 class WSlidable extends StatelessWidget {
   final String title;
-  final List<Widget> slidablesActions;
+  final List<Widget> slideableActions;
   final EdgeInsets padding;
 
   const WSlidable({
     required this.title,
-    required this.slidablesActions,
+    required this.slideableActions,
     this.padding = const EdgeInsets.all(5),
     Key? key
   }) : super(key: key);
@@ -29,7 +29,7 @@ class WSlidable extends StatelessWidget {
             ),
             startActionPane: ActionPane(
               motion: const DrawerMotion(),
-              children: slidablesActions,
+              children: slideableActions,
             ),
           ),
         )

@@ -28,7 +28,7 @@ extension ActionTypeExtension on ActionType {
       case ActionType.classroom:
         return 'Turma';
       case ActionType.classroomDetails:
-        return 'Detalhes da Turma';
+        return 'Detalhes das Turmas';
       case ActionType.frequency:
         return 'Frequencia';
       case ActionType.grade:

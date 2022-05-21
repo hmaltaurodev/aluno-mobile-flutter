@@ -36,7 +36,25 @@ ThemeData lightTheme() {
   InputDecorationTheme inputDecorationTheme = InputDecorationTheme(
     filled: true,
     fillColor: Colors.white,
+    errorBorder: OutlineInputBorder(
+      borderSide: const BorderSide(
+        color: Colors.red,
+      ),
+      borderRadius: BorderRadius.circular(5),
+    ),
+    focusedErrorBorder: OutlineInputBorder(
+      borderSide: const BorderSide(
+        color: Colors.red,
+      ),
+      borderRadius: BorderRadius.circular(5),
+    ),
     enabledBorder: OutlineInputBorder(
+      borderSide: const BorderSide(
+        color: Colors.white,
+      ),
+      borderRadius: BorderRadius.circular(5),
+    ),
+    disabledBorder: OutlineInputBorder(
       borderSide: const BorderSide(
         color: Colors.white,
       ),

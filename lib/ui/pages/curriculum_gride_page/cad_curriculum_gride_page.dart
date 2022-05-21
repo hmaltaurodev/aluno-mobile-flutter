@@ -36,16 +36,18 @@ class _CadCurriculumGridePageState extends State<CadCurriculumGridePage> {
       title: 'Cadastro de Grade Curricular',
       onPressedFAB: _save,
       iconFAB: const Icon(Icons.save),
-      body: Column(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          _createDropdownCourses(),
-          _createDropdownAcademicYear(),
-          _createDropdownAcademicRegime(),
-          _createDropdownSemesterPeriod(),
-          _createDropdownDisciplines(),
-          _createListViewBuilder(),
-        ],
+      body: SingleChildScrollView(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            _createDropdownCourses(),
+            _createDropdownAcademicYear(),
+            _createDropdownAcademicRegime(),
+            _createDropdownSemesterPeriod(),
+            _createDropdownDisciplines(),
+            _createListViewBuilder(),
+          ],
+        ),
       ),
     );
   }
@@ -269,6 +271,8 @@ class _CadCurriculumGridePageState extends State<CadCurriculumGridePage> {
                   _selectedDisciplines.add(_disciplineValue!);
                   _disciplines.remove(_disciplineValue!);
                   _disciplineValue = null;
+
+                  FocusScope.of(context).unfocus();
                 });
               }
             },
@@ -279,14 +283,17 @@ class _CadCurriculumGridePageState extends State<CadCurriculumGridePage> {
   }
 
   Widget _createListViewBuilder() {
-    return Expanded(
+    return SizedBox(
       child: ListView.builder(
+        primary: false,
+        shrinkWrap: true,
+        physics: const NeverScrollableScrollPhysics(),
         padding: const EdgeInsets.all(4),
         itemCount: _selectedDisciplines.length,
         itemBuilder: (context, index) {
           return WSlidable(
             title: _selectedDisciplines[index].description,
-            slidablesActions: _createSlidablesActions(_selectedDisciplines[index]),
+            slideableActions: _createSlidablesActions(_selectedDisciplines[index]),
             padding: const EdgeInsets.only(
                 top: 2.5,
                 bottom: 2.5,

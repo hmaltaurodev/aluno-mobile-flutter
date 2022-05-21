@@ -65,7 +65,7 @@ class _ListCurriculumGridePageState extends State<ListCurriculumGridePage> {
       itemBuilder: (context, index) {
         return WSlidable(
           title: curriculumGrides[index].toString(),
-          slidablesActions: _createSlidablesActions(curriculumGrides[index]),
+          slideableActions: _createSlidablesActions(curriculumGrides[index]),
         );
       },
     );

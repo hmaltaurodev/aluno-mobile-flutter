@@ -67,7 +67,7 @@ class _ListTeacherPageState extends State<ListTeacherPage> {
       itemBuilder: (context, index) {
         return WSlidable(
           title: teachers[index].toString(),
-          slidablesActions: _createSlidablesActions(teachers[index]),
+          slideableActions: _createSlidablesActions(teachers[index]),
         );
       },
     );

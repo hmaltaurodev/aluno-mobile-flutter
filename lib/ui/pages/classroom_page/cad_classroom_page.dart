@@ -36,20 +36,22 @@ class _CadClassroomPageState extends State<CadClassroomPage> {
       title: 'Cadastro de Turma',
       onPressedFAB: _save,
       iconFAB: const Icon(Icons.save),
-      body: Column(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          _createDropdownCourses(),
-          _createDropdownCurriculumsGrides(),
-          WTextField(
-            labelText: 'Ano Período',
-            textEditingController: _periodYearController,
-            textInputType: TextInputType.number,
-          ),
-          _createDropdownDisciplines(),
-          _createListViewBuilder(),
-        ],
-      )
+      body: SingleChildScrollView(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            _createDropdownCourses(),
+            _createDropdownCurriculumsGrides(),
+            WTextField(
+              labelText: 'Ano Período',
+              textEditingController: _periodYearController,
+              textInputType: TextInputType.number,
+            ),
+            _createDropdownDisciplines(),
+            _createListViewBuilder(),
+          ],
+        ),
+      ),
     );
   }
 
@@ -209,6 +211,8 @@ class _CadClassroomPageState extends State<CadClassroomPage> {
                   _selectedStudents.add(_student!);
                   _students.remove(_student!);
                   _student = null;
+
+                  FocusScope.of(context).unfocus();
                 });
               }
             },
@@ -219,14 +223,17 @@ class _CadClassroomPageState extends State<CadClassroomPage> {
   }
 
   Widget _createListViewBuilder() {
-    return Expanded(
+    return SizedBox(
       child: ListView.builder(
+        primary: false,
+        shrinkWrap: true,
+        physics: const NeverScrollableScrollPhysics(),
         padding: const EdgeInsets.all(4),
         itemCount: _selectedStudents.length,
         itemBuilder: (context, index) {
           return WSlidable(
             title: _selectedStudents[index].name,
-            slidablesActions: _createSlidablesActions(_selectedStudents[index]),
+            slideableActions: _createSlidablesActions(_selectedStudents[index]),
             padding: const EdgeInsets.only(
                 top: 2.5,
                 bottom: 2.5,
@@ -255,46 +262,5 @@ class _CadClassroomPageState extends State<CadClassroomPage> {
         },
       ),
     ];
-  }
-
-  Widget _slidable(Student student) {
-    return Padding(
-      padding: const EdgeInsets.only(
-          top: 2.5,
-          bottom: 2.5,
-          left: 30,
-          right: 30
-      ),
-      child: Card(
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(5),
-        ),
-        color: Colors.blueGrey.shade50,
-        elevation: 0,
-        child: Slidable(
-          child: ListTile(
-            title: Text(student.name),
-          ),
-          startActionPane: ActionPane(
-            motion: const DrawerMotion(),
-            children: [
-              SlidableAction(
-                icon: Icons.delete,
-                label: 'Remover',
-                backgroundColor: Colors.red,
-                foregroundColor: Colors.white,
-                onPressed: (context) {
-                  setState(() {
-                    _students = _students.toList();
-                    _students.add(student);
-                    _selectedStudents.remove(student);
-                  });
-                },
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
   }
 }

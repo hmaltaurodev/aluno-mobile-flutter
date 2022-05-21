@@ -39,13 +39,15 @@ class _ListStudentPageState extends State<ListStudentPage> {
     );
   }
 
-  void _openCadPage(Student? student) {
-    Navigator.push(
+  void _openCadPage(Student? student) async {
+    await Navigator.push(
         context,
         MaterialPageRoute(
-            builder: (context) => const CadStudentPage()
+            builder: (context) => CadStudentPage(student: student)
         )
     );
+
+    setState(() {});
   }
 
   void _activateInactivate(Student student) {
@@ -65,7 +67,7 @@ class _ListStudentPageState extends State<ListStudentPage> {
       itemBuilder: (context, index) {
         return WSlidable(
           title: students[index].toString(),
-          slidablesActions: _createSlidablesActions(students[index]),
+          slideableActions: _createSlidablesActions(students[index]),
         );
       },
     );

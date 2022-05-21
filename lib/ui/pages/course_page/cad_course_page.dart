@@ -22,21 +22,23 @@ class _CadCoursePageState extends State<CadCoursePage> {
       title: 'Cadastro de Curso',
       onPressedFAB: _save,
       iconFAB: const Icon(Icons.save),
-      body: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          WTextField(
-            labelText: 'Mec id',
-            textEditingController: _mecIdController,
-            textInputType: TextInputType.number,
-            paddingTop: 20,
-          ),
-          WTextField(
-            labelText: 'Descrição',
-            textEditingController: _descriptionController,
-          ),
-          _dropdownAcademicDegree(),
-        ],
+      body: SingleChildScrollView(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            WTextField(
+              labelText: 'Mec id',
+              textEditingController: _mecIdController,
+              textInputType: TextInputType.number,
+              paddingTop: 20,
+            ),
+            WTextField(
+              labelText: 'Descrição',
+              textEditingController: _descriptionController,
+            ),
+            _dropdownAcademicDegree(),
+          ],
+        ),
       ),
     );
   }

@@ -35,26 +35,28 @@ class _CadDisciplinePageState extends State<CadDisciplinePage> {
       title: 'Cadastro de Disciplina',
       onPressedFAB: _save,
       iconFAB: const Icon(Icons.save),
-      body: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          WTextField(
-            labelText: 'Descrição',
-            textEditingController: _descriptionController,
-            paddingTop: 20,
-          ),
-          WTextField(
-            labelText: 'Horas Aulas',
-            textEditingController: _classHoursController,
-            textInputType: TextInputType.number,
-          ),
-          WTextField(
-            labelText: 'Número de Aulas',
-            textEditingController: _numberOfClassesController,
-            textInputType: TextInputType.number,
-          ),
-          _createDropdownTeachers(),
-        ],
+      body: SingleChildScrollView(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            WTextField(
+              labelText: 'Descrição',
+              textEditingController: _descriptionController,
+              paddingTop: 20,
+            ),
+            WTextField(
+              labelText: 'Horas Aulas',
+              textEditingController: _classHoursController,
+              textInputType: TextInputType.number,
+            ),
+            WTextField(
+              labelText: 'Número de Aulas',
+              textEditingController: _numberOfClassesController,
+              textInputType: TextInputType.number,
+            ),
+            _createDropdownTeachers(),
+          ],
+        ),
       ),
     );
   }

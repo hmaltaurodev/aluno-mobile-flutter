@@ -29,93 +29,76 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        toolbarHeight: 100.0,
+        actions: [
+          _createPopupMenuButton(),
+        ],
+        title: Row(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            Padding(
+              padding: const EdgeInsets.only(right: 10),
+              child: Icon(
+                _user!.getIconLoggedIn(),
+                size: 80,
+                color: Colors.white,
+              ),
+            ),
+            Text(
+              'Olá, ' + _user!.getUsernameLoggedIn(),
+              style: const TextStyle(
+                fontSize: 35,
+                fontWeight: FontWeight.bold,
+                color: Colors.white,
+              ),
+            ),
+          ],
+        ),
+      ),
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          Container(
-            color: Theme.of(context).primaryColor,
-            width: double.infinity,
-            height: 200,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Padding(
-                  padding: const EdgeInsets.only(top: 30, right: 10),
-                  child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.end,
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                      PopupMenuButton(
-                        icon: const Icon(
-                          Icons.settings,
-                          size: 30,
-                          color: Colors.white,
+          Padding(
+            padding: const EdgeInsets.only(
+              top: 10,
+              left: 10,
+              right: 10,
+            ),
+            child: SizedBox(
+              width: double.infinity,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.all(10),
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.only(right: 10),
+                          child: Icon(
+                            _user!.getIconLoggedIn(),
+                            size: 80,
+                            color: Theme.of(context).primaryColor,
+                          ),
                         ),
-                        itemBuilder: (context) => [
-                          PopupMenuItem(
-                            value: 'change_password',
-                            child: Row(
-                              children: const [
-                                Icon(Icons.password),
-                                SizedBox(width: 10),
-                                Text('Mudar senha'),
-                              ],
-                            ),
+                        Text(
+                          'Olá, ' + _user!.getUsernameLoggedIn(),
+                          style: TextStyle(
+                            fontSize: 35,
+                            fontWeight: FontWeight.bold,
+                            color: Theme.of(context).primaryColor,
                           ),
-                          PopupMenuItem(
-                            value: 'about',
-                            child: Row(
-                              children: const [
-                                Icon(Icons.info_outline),
-                                SizedBox(width: 10),
-                                Text('Sobre'),
-                              ],
-                            ),
-                          ),
-                          PopupMenuItem(
-                            value: 'logout',
-                            child: Row(
-                              children: const [
-                                Icon(Icons.logout),
-                                SizedBox(width: 10),
-                                Text('Logout'),
-                              ],
-                            ),
-                          ),
-                        ],
-                        onSelected: (result) {
-                          _onSelectedPopup(result);
-                        },
-                      ),
-                    ],
+                        ),
+                      ],
+                    ),
                   ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.all(10),
-                  child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.only(right: 10),
-                        child: Icon(
-                          _user!.getIconLoggedIn(),
-                          size: 80,
-                          color: Colors.white,
-                        ),
-                      ),
-                      Text(
-                        'Olá, ' + _user!.getUsernameLoggedIn(),
-                        style: const TextStyle(
-                          fontSize: 40,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.white,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ],
+                  _createPopupMenuButton(),
+                ],
+              ),
             ),
           ),
           Visibility(
@@ -195,8 +178,98 @@ class _HomePageState extends State<HomePage> {
               ),
             ),
           ),
+          Visibility(
+            visible: widget.user.userType == 2,
+            child: Expanded(
+              child: SingleChildScrollView(
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: const [
+                    WCardAction(
+                      actionType: ActionType.frequency,
+                      padding: EdgeInsets.only(
+                          top: 10,
+                          left: 10,
+                          right: 5
+                      ),
+                    ),
+                    WCardAction(
+                      actionType: ActionType.grade,
+                      padding: EdgeInsets.only(
+                          top: 10,
+                          left: 5,
+                          right: 10
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+          Visibility(
+            visible: widget.user.userType == 1,
+            child: Expanded(
+              child: SingleChildScrollView(
+
+              ),
+            )
+          ),
         ],
       ),
+    );
+  }
+
+  Widget _createPopupMenuButton() {
+    return PopupMenuButton(
+      icon: Icon(
+        Icons.settings,
+        size: 30,
+        color: Theme.of(context).primaryColor,
+      ),
+      itemBuilder: (context) => [
+        PopupMenuItem(
+          value: 'change_password',
+          child: Row(
+            children: const [
+              Icon(
+                Icons.password,
+                color: Colors.black,
+              ),
+              SizedBox(width: 10),
+              Text('Mudar senha'),
+            ],
+          ),
+        ),
+        PopupMenuItem(
+          value: 'about',
+          child: Row(
+            children: const [
+              Icon(
+                Icons.info_outline,
+                color: Colors.black,
+              ),
+              SizedBox(width: 10),
+              Text('Sobre'),
+            ],
+          ),
+        ),
+        PopupMenuItem(
+          value: 'logout',
+          child: Row(
+            children: const [
+              Icon(
+                Icons.logout,
+                color: Colors.black,
+              ),
+              SizedBox(width: 10),
+              Text('Sair'),
+            ],
+          ),
+        ),
+      ],
+      onSelected: (result) {
+        _onSelectedPopup(result);
+      },
     );
   }
 

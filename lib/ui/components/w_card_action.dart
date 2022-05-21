@@ -25,8 +25,8 @@ class WCardAction extends StatelessWidget {
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(20),
             ),
-            color: Theme.of(context).primaryColor,
-            elevation: 2,
+            color: Colors.white,
+            elevation: 0,
             child: SizedBox(
                 height: 150,
                 width: double.infinity,
@@ -36,7 +36,7 @@ class WCardAction extends StatelessWidget {
                   children: [
                     Icon(
                       actionType.getIcon(),
-                      color: Colors.white,
+                      color: Theme.of(context).primaryColor,
                       size: 40,
                     ),
                     Padding(
@@ -47,10 +47,10 @@ class WCardAction extends StatelessWidget {
                       ),
                       child: Text(
                         actionType.getLabel(),
-                        style: const TextStyle(
+                        style: TextStyle(
                           fontSize: 20,
                           fontWeight: FontWeight.bold,
-                          color: Colors.white,
+                          color: Theme.of(context).primaryColor,
                         ),
                         textAlign: TextAlign.center,
                       ),
@@ -83,8 +83,17 @@ class WCardAction extends StatelessWidget {
       case ActionType.curriculumGride:
         listPage = (context) => const ListCurriculumGridePage();
         break;
-      default:
+      case ActionType.classroom:
         listPage = (context) => const ListClassroomPage();
+        break;
+      case ActionType.classroomDetails:
+        listPage = (context) => const DetailClassroomPage();
+        break;
+      case ActionType.frequency:
+        listPage = (context) => const LancFrequencyPage();
+        break;
+      case ActionType.grade:
+        listPage = (context) => const LancGradePage();
         break;
     }
 
