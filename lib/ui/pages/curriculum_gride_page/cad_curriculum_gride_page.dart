@@ -42,8 +42,10 @@ class _CadCurriculumGridePageState extends State<CadCurriculumGridePage> {
   Widget build(BuildContext context) {
     return WScaffold(
       title: 'Cadastro de Grade Curricular',
-      onPressedFAB: _save,
-      iconFAB: const Icon(Icons.save),
+      floatingActionButton: FloatingActionButton(
+        child: const Icon(Icons.save),
+        onPressed: _save,
+      ),
       body: SingleChildScrollView(
         child: Form(
           key: _formKey,
@@ -276,7 +278,9 @@ class _CadCurriculumGridePageState extends State<CadCurriculumGridePage> {
         itemCount: _selectedDisciplines.length,
         itemBuilder: (context, index) {
           return WSlidable(
-            title: _selectedDisciplines[index].description,
+            child: ListTile(
+              title: Text(_selectedDisciplines[index].description),
+            ),
             slideableActions: _createSlidablesActions(_selectedDisciplines[index]),
             padding: const EdgeInsets.only(
                 top: 2.5,

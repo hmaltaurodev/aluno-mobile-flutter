@@ -20,10 +20,12 @@ class _ListTeacherPageState extends State<ListTeacherPage> {
   Widget build(BuildContext context) {
     return WScaffold(
       title: 'Professores',
-      onPressedFAB: () {
-        _openCadPage();
-      },
-      iconFAB: const Icon(Icons.add),
+      floatingActionButton: FloatingActionButton(
+        child: const Icon(Icons.add),
+        onPressed: () {
+          _openCadPage();
+        },
+      ),
       body: FutureBuilder(
         future: _teacherHelper.getAll(),
         builder: (context, snapshot) {
@@ -71,7 +73,9 @@ class _ListTeacherPageState extends State<ListTeacherPage> {
       itemCount: teachers.length,
       itemBuilder: (context, index) {
         return WSlidable(
-          title: teachers[index].toString(),
+          child: ListTile(
+            title: Text(teachers[index].toString()),
+          ),
           slideableActions: _createSlidablesActions(teachers[index]),
         );
       },

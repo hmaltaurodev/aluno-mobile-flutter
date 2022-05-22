@@ -1,9 +1,6 @@
-import 'dart:developer';
-
 import 'package:aluno_mobile_flutter/datasources/helpers/helpers.dart';
 import 'package:aluno_mobile_flutter/models/models.dart';
 import 'package:aluno_mobile_flutter/ui/components/components.dart';
-import 'package:aluno_mobile_flutter/ui/components/w_card_list.dart';
 import 'package:flutter/material.dart';
 
 class LancFrequencyPage extends StatefulWidget {
@@ -26,6 +23,7 @@ class _LancFrequencyPageState extends State<LancFrequencyPage> {
   Classroom? _classroom;
   Discipline? _discipline;
   int? _lessonNumber;
+  bool _frequencyDuplicate = false;
 
   @override
   void initState() {
@@ -37,8 +35,10 @@ class _LancFrequencyPageState extends State<LancFrequencyPage> {
   Widget build(BuildContext context) {
     return WScaffold(
       title: 'Lançamento de Frequencias',
-      onPressedFAB: _save,
-      iconFAB: const Icon(Icons.save),
+      floatingActionButton: FloatingActionButton(
+        child: const Icon(Icons.save),
+        onPressed: _save,
+      ),
       body: SingleChildScrollView(
         child: Form(
           key: _formKey,
@@ -91,7 +91,7 @@ class _LancFrequencyPageState extends State<LancFrequencyPage> {
   Widget _createDropdownClassrooms() {
     return Padding(
       padding: const EdgeInsets.only(
-        top: 20,
+        top: 10,
         bottom: 10,
         left: 30,
         right: 30
@@ -123,7 +123,7 @@ class _LancFrequencyPageState extends State<LancFrequencyPage> {
   Widget _createDropdownDisciplines() {
     return Padding(
       padding: const EdgeInsets.only(
-        top: 20,
+        top: 10,
         bottom: 10,
         left: 30,
         right: 30
@@ -155,7 +155,7 @@ class _LancFrequencyPageState extends State<LancFrequencyPage> {
   Widget _createDropdownLessonsNumbers() {
     return Padding(
       padding: const EdgeInsets.only(
-        top: 20,
+        top: 10,
         bottom: 10,
         left: 30,
         right: 30
@@ -172,7 +172,9 @@ class _LancFrequencyPageState extends State<LancFrequencyPage> {
           ),
         ),
         onChanged: (newValue) {
-          _lessonNumber = newValue;
+          setState(() {
+            _lessonNumber = newValue;
+          });
         },
         items: _lessonsNumbers.map((int lesson) {
           return DropdownMenuItem<int>(
@@ -220,8 +222,12 @@ class _LancFrequencyPageState extends State<LancFrequencyPage> {
   void _save() async {
     FocusScope.of(context).unfocus();
 
+    FrequencyHelper frequencyHelper = FrequencyHelper();
+    if (_students.isNotEmpty) {
+      _frequencyDuplicate = await frequencyHelper.isDuplicate(_classroom?.id, _students[0].id, _discipline?.id, _lessonNumber);
+    }
+
     if (_formKey.currentState!.validate()) {
-      FrequencyHelper frequencyHelper = FrequencyHelper();
       ClassroomStudentHelper classroomStudentHelper = ClassroomStudentHelper();
 
       for (Student student in _students) {
@@ -249,6 +255,17 @@ class _LancFrequencyPageState extends State<LancFrequencyPage> {
   }
 
   void _loadClassrooms(Course? course) async {
+    setState(() {
+      _classroom = null;
+      _discipline = null;
+      _lessonNumber = null;
+
+      _classrooms = [];
+      _disciplines = [];
+      _lessonsNumbers = [];
+      _students = [];
+    });
+
     ClassroomHelper classroomHelper = ClassroomHelper();
     _classrooms = (await classroomHelper.getByCourse(course!.id!));
 
@@ -258,6 +275,15 @@ class _LancFrequencyPageState extends State<LancFrequencyPage> {
   }
 
   void _loadDisciplinesStudents(Classroom? classroom) async {
+    setState(() {
+      _discipline = null;
+      _lessonNumber = null;
+
+      _disciplines = [];
+      _lessonsNumbers = [];
+      _students = [];
+    });
+
     DisciplineHelper disciplineHelper = DisciplineHelper();
     StudentHelper studentHelper = StudentHelper();
 
@@ -310,6 +336,10 @@ class _LancFrequencyPageState extends State<LancFrequencyPage> {
   String? _validateLesson(int? lesson) {
     if (lesson == null) {
       return 'Selecione uma Aula';
+    }
+
+    if (_frequencyDuplicate) {
+      return 'Essa frequência já foi lançada';
     }
 
     return null;

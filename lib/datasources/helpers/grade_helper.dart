@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:aluno_mobile_flutter/models/models.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:sqflite/utils/utils.dart';
@@ -75,6 +77,23 @@ const String gradeSqlSelectAll = '''
   INNER JOIN $teacherTable ON $teacherTable.$teacherId = $disciplineTable.$disciplineTeacher
 ''';
 
+const String gradeSqlSelectDuplicate = '''
+  SELECT COUNT(1)
+  FROM $gradeTable
+  INNER JOIN $classroomStudentTable ON $classroomStudentTable.$classroomStudentId = $gradeTable.$gradeClassroomStudent
+  WHERE $classroomStudentClassroom = ?
+  AND $classroomStudentStudent = ?
+  AND $gradeDiscipline = ?
+  AND $gradeBimester = ?
+''';
+
+const String gradeSqlSelectStudentGrades = '''
+  $gradeSqlSelectAll
+  WHERE $gradeClassroomStudent = ?
+  AND $gradeDiscipline = ?
+  ORDER BY $gradeBimester ASC
+''';
+
 const String gradeSqlSelectById = '''
   $gradeSqlSelectAll
   WHERE $gradeId = ?
@@ -89,35 +108,36 @@ class GradeHelper {
   Future<Grade> insert(Grade grade) async {
     Database database = await DataBase().getDatabase;
     grade.id = await database.insert(
-        gradeTable,
-        grade.toMap()
+      gradeTable,
+      grade.toMap()
     );
+
     return grade;
   }
 
   Future<int> update(Grade grade) async {
     Database database = await DataBase().getDatabase;
     return database.update(
-        gradeTable,
-        grade.toMap(),
-        where: '$gradeId = ?',
-        whereArgs: [grade.id]
+      gradeTable,
+      grade.toMap(),
+      where: '$gradeId = ?',
+      whereArgs: [grade.id]
     );
   }
 
   Future<int> delete(int id) async {
     Database database = await DataBase().getDatabase;
     return database.delete(
-        gradeTable,
-        where: '$gradeId = ?',
-        whereArgs: [id]
+      gradeTable,
+      where: '$gradeId = ?',
+      whereArgs: [id]
     );
   }
 
   Future<int?> count() async {
     Database database = await DataBase().getDatabase;
     return firstIntValue(
-        await database.query(gradeSqlCount)
+      await database.rawQuery(gradeSqlCount)
     );
   }
 
@@ -130,7 +150,7 @@ class GradeHelper {
   Future<Grade?> getById(int id) async {
     Database database = await DataBase().getDatabase;
     List grades = await database.rawQuery(
-        gradeSqlSelectById, [id]
+      gradeSqlSelectById, [id]
     );
 
     if (grades.isNotEmpty) {
@@ -138,5 +158,25 @@ class GradeHelper {
     }
 
     return null;
+  }
+
+  Future<bool> isDuplicate(int? idClassroom, int? idStudent, int? idDiscipline, int? bimester) async {
+    Database database = await DataBase().getDatabase;
+    int count = firstIntValue(
+      await database.rawQuery(
+        gradeSqlSelectDuplicate, [idClassroom, idStudent, idDiscipline, bimester]
+      )
+    )!;
+
+    return count >= 1;
+  }
+
+  Future<List<Grade>> getByClassroomStudent(int? idClassroomStudent, int? idDiscipline) async {
+    Database database = await DataBase().getDatabase;
+    List grades = await database.rawQuery(
+      gradeSqlSelectStudentGrades, [idClassroomStudent, idDiscipline]
+    );
+
+    return grades.map((e) => Grade.fromMap(e)).toList();
   }
 }

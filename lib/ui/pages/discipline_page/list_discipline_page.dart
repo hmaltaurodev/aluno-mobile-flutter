@@ -20,10 +20,12 @@ class _ListDisciplinePageState extends State<ListDisciplinePage> {
   Widget build(BuildContext context) {
     return WScaffold(
       title: 'Disciplinas',
-      onPressedFAB: () {
-        _openCadPage(null);
-      },
-      iconFAB: const Icon(Icons.add),
+      floatingActionButton: FloatingActionButton(
+        child: const Icon(Icons.add),
+        onPressed: () {
+          _openCadPage(null);
+        },
+      ),
       body: FutureBuilder(
         future: _disciplineHelper.getAll(),
         builder: (context, snapshot) {
@@ -71,7 +73,9 @@ class _ListDisciplinePageState extends State<ListDisciplinePage> {
       itemCount: disciplines.length,
       itemBuilder: (context, index) {
         return WSlidable(
-          title: disciplines[index].toString(),
+          child: ListTile(
+            title: Text(disciplines[index].toString()),
+          ),
           slideableActions: _createSlidablesActions(disciplines[index]),
         );
       },

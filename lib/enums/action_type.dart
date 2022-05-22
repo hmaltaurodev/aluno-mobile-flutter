@@ -7,7 +7,6 @@ enum ActionType {
   course,
   curriculumGride,
   classroom,
-  classroomDetails,
   frequency,
   grade
 }
@@ -27,8 +26,6 @@ extension ActionTypeExtension on ActionType {
         return 'Grade Curricular';
       case ActionType.classroom:
         return 'Turma';
-      case ActionType.classroomDetails:
-        return 'Detalhes das Turmas';
       case ActionType.frequency:
         return 'Frequencia';
       case ActionType.grade:
@@ -49,7 +46,6 @@ extension ActionTypeExtension on ActionType {
       case ActionType.curriculumGride:
         return Icons.grid_view;
       case ActionType.classroom:
-      case ActionType.classroomDetails:
         return Icons.people;
       case ActionType.frequency:
         return Icons.checklist_sharp;

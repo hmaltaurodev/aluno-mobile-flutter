@@ -3,6 +3,7 @@ export 'classroom_student_helper.dart';
 export 'course_helper.dart';
 export 'curriculum_gride_discipline_helper.dart';
 export 'curriculum_gride_helper.dart';
+export 'detail_discipline_helper.dart';
 export 'discipline_helper.dart';
 export 'frequency_helper.dart';
 export 'grade_helper.dart';

@@ -1,3 +1,6 @@
+import 'dart:developer';
+
+import 'package:aluno_mobile_flutter/datasources/helpers/helpers.dart';
 import 'package:aluno_mobile_flutter/enums/enums.dart';
 import 'package:aluno_mobile_flutter/models/models.dart';
 import 'package:aluno_mobile_flutter/ui/components/components.dart';
@@ -18,6 +21,7 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  final ClassroomHelper _classroomHelper = ClassroomHelper();
   User? _user;
 
   @override
@@ -61,7 +65,7 @@ class _HomePageState extends State<HomePage> {
           ),
         ),
         body: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             Visibility(
               visible: widget.user.userType == 3,
@@ -141,7 +145,7 @@ class _HomePageState extends State<HomePage> {
               ),
             ),
             Visibility(
-              visible: widget.user.userType != 3,
+              visible: widget.user.userType == 2,
               child: Expanded(
                 child: SingleChildScrollView(
                   child: Row(
@@ -169,16 +173,50 @@ class _HomePageState extends State<HomePage> {
               ),
             ),
             Visibility(
-                visible: widget.user.userType == 1,
-                child: Expanded(
-                  child: SingleChildScrollView(
-
-                  ),
-                )
+              visible: widget.user.userType == 1,
+              child: Expanded(
+                child: FutureBuilder(
+                  future: _classroomHelper.getByStudent(_user!.student?.id),
+                  builder: (context, snapshot) {
+                    switch (snapshot.connectionState) {
+                      case ConnectionState.none:
+                      case ConnectionState.waiting:
+                        return const CircularProgressIndicator();
+                      default:
+                        return _listViewBuilder(snapshot);
+                    }
+                  },
+                ),
+              ),
             ),
           ],
         ),
       ),
+    );
+  }
+
+  Widget _listViewBuilder(AsyncSnapshot snapshot) {
+    if (snapshot.hasError) {
+      return Text('Erro: ${snapshot.error}');
+    }
+
+    List<Classroom> classrooms = (snapshot.data as List<Classroom>);
+
+    return ListView.builder(
+      padding: const EdgeInsets.all(4),
+      itemCount: classrooms.length,
+      itemBuilder: (context, index) {
+        return GestureDetector(
+          onTap: () {
+            _openDetailClassroom(classrooms[index]);
+          },
+          child: WSlidable(
+            child: ListTile(
+              title: Text(classrooms[index].toStringWithCourse()),
+            ),
+          ),
+        );
+      },
     );
   }
 
@@ -278,5 +316,17 @@ class _HomePageState extends State<HomePage> {
           )
       );
     }
+  }
+
+  void _openDetailClassroom(Classroom classroom) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => DetailDisciplinePage(
+          classroom: classroom,
+          student: _user!.student!,
+        ),
+      )
+    );
   }
 }

@@ -1,5 +1,6 @@
 import 'package:aluno_mobile_flutter/models/models.dart';
 import 'package:aluno_mobile_flutter/enums/enums.dart';
+import 'package:aluno_mobile_flutter/utils/utils.dart';
 
 const String curriculumGrideTable = 'CURRICULUM_GRIDE';
 const String curriculumGrideId = 'CG_ID';
@@ -52,14 +53,14 @@ class CurriculumGride {
 
   @override
   String toString() {
-    return toStringNoCourse() + ' - ' + course.description;
+    return toStringWithoutCourse() + ' - ' + course.description;
   }
 
-  String toStringNoCourse() {
+  String toStringWithoutCourse() {
     if (semesterPeriod != 0) {
-      return academicYear.toString() + '/' + semesterPeriod.toString();
+      return Utils.academicYearByInt(academicYear)!.getDescription() + '/' + Utils.semesterPeriodByInt(semesterPeriod)!.getDescription();
     }
 
-    return academicYear.toString();
+    return Utils.academicYearByInt(academicYear)!.getDescription();
   }
 }

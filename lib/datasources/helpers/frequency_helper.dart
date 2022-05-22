@@ -75,6 +75,38 @@ const String frequencySqlSelectAll = '''
   INNER JOIN $teacherTable ON $teacherTable.$teacherId = $disciplineTable.$disciplineTeacher
 ''';
 
+const String frequencySqlSelectDuplicate = '''
+  SELECT COUNT(1)
+  FROM $frequencyTable
+  INNER JOIN $classroomStudentTable ON $classroomStudentTable.$classroomStudentId = $frequencyTable.$frequencyClassroomStudent
+  WHERE $classroomStudentClassroom = ?
+  AND $classroomStudentStudent = ?
+  AND $frequencyDiscipline = ?
+  AND $frequencyLessonNumber = ?
+''';
+
+const String frequencySqlSelectTaughtClasses = '''
+  SELECT
+    MIN($frequencyId),
+    MIN($frequencyClassroomStudent),
+    $frequencyDiscipline,
+    $frequencyLessonNumber,
+    MIN($frequencyPresence)
+  FROM $frequencyTable
+  INNER JOIN $classroomStudentTable ON $classroomStudentTable.$classroomStudentId = $frequencyTable.$frequencyClassroomStudent
+  WHERE $classroomStudentClassroom = ?
+  AND $frequencyDiscipline = ?
+  GROUP BY $frequencyDiscipline, $frequencyLessonNumber
+''';
+
+const String frequencySqlSelectPresencesClasses = '''
+  SELECT COUNT(1)
+  FROM $frequencyTable
+  WHERE $frequencyClassroomStudent = ?
+  AND $frequencyDiscipline = ?
+  AND $frequencyPresence = 1
+''';
+
 const String frequencySqlSelectById = '''
   $frequencySqlSelectAll
   WHERE $frequencyId = ?
@@ -89,35 +121,36 @@ class FrequencyHelper {
   Future<Frequency> insert(Frequency frequency) async {
     Database database = await DataBase().getDatabase;
     frequency.id = await database.insert(
-        frequencyTable,
-        frequency.toMap()
+      frequencyTable,
+      frequency.toMap()
     );
+
     return frequency;
   }
 
   Future<int> update(Frequency frequency) async {
     Database database = await DataBase().getDatabase;
     return database.update(
-        frequencyTable,
-        frequency.toMap(),
-        where: '$frequencyId = ?',
-        whereArgs: [frequency.id]
+      frequencyTable,
+      frequency.toMap(),
+      where: '$frequencyId = ?',
+      whereArgs: [frequency.id]
     );
   }
 
   Future<int> delete(int id) async {
     Database database = await DataBase().getDatabase;
     return database.delete(
-        frequencyTable,
-        where: '$frequencyId = ?',
-        whereArgs: [id]
+      frequencyTable,
+      where: '$frequencyId = ?',
+      whereArgs: [id]
     );
   }
 
   Future<int?> count() async {
     Database database = await DataBase().getDatabase;
     return firstIntValue(
-        await database.query(frequencySqlCount)
+      await database.query(frequencySqlCount)
     );
   }
 
@@ -130,7 +163,7 @@ class FrequencyHelper {
   Future<Frequency?> getById(int id) async {
     Database database = await DataBase().getDatabase;
     List frequencies = await database.rawQuery(
-        frequencySqlSelectById, [id]
+      frequencySqlSelectById, [id]
     );
 
     if (frequencies.isNotEmpty) {
@@ -138,5 +171,32 @@ class FrequencyHelper {
     }
 
     return null;
+  }
+
+  Future<bool> isDuplicate(int? idClassroom, int? idStudent, int? idDiscipline, int? lessonNumber) async {
+    Database database = await DataBase().getDatabase;
+    int count = firstIntValue(
+      await database.rawQuery(
+        frequencySqlSelectDuplicate, [idClassroom, idStudent, idDiscipline, lessonNumber]
+      )
+    )!;
+
+    return count >= 1;
+  }
+
+  Future<int> getTaughtClasses(int? idClassroom, int? idDiscipline) async {
+    Database database = await DataBase().getDatabase;
+    return (await database.rawQuery(
+      frequencySqlSelectTaughtClasses, [idClassroom, idDiscipline]
+    )).length;
+  }
+
+  Future<int> getPrecensesClasses(int? idClassroomStudent, int? idDiscipline) async {
+    Database database = await DataBase().getDatabase;
+    return firstIntValue(
+      await database.rawQuery(
+        frequencySqlSelectPresencesClasses, [idClassroomStudent, idDiscipline]
+      )
+    )!;
   }
 }

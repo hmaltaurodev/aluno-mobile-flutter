@@ -19,8 +19,10 @@ class _PasswordPageState extends State<PasswordPage> {
   Widget build(BuildContext context) {
     return WScaffold(
       title: 'Alteração de senha',
-      onPressedFAB: _save,
-      iconFAB: const Icon(Icons.add),
+      floatingActionButton: FloatingActionButton(
+        child: const Icon(Icons.save),
+        onPressed: _save,
+      ),
       body: Container(
 
       ),

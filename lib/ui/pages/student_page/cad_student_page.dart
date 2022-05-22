@@ -39,8 +39,10 @@ class _CadStudentPageState extends State<CadStudentPage> {
   Widget build(BuildContext context) {
     return WScaffold(
       title: 'Cadastro de Aluno',
-      onPressedFAB: _save,
-      iconFAB: const Icon(Icons.save),
+      floatingActionButton: FloatingActionButton(
+        child: const Icon(Icons.save),
+        onPressed: _save,
+      ),
       body: SingleChildScrollView(
         child: Form(
           key: _formKey,

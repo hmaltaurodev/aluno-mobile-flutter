@@ -46,6 +46,32 @@ const String classroomSqlSelectById = '''
   AND $classroomId = ?
 ''';
 
+const String classroomSqlSelectByStudent = '''
+  SELECT DISTINCT
+    $classroomId,
+    $classroomCurriculumGride,
+    $classroomPeriodYear,
+    $classroomIsActive,
+    
+    $curriculumGrideId,
+    $curriculumGrideCourse,
+    $curriculumGrideAcademicYear,
+    $curriculumGrideAcademicRegime,
+    $curriculumGrideSemesterPeriod,
+    $curriculumGrideIsActive,
+    
+    $courseId,
+    $courseMecId,
+    $courseDescription,
+    $courseAcademicDegree,
+    $courseIsActive
+  FROM $classroomTable
+  INNER JOIN $curriculumGrideTable ON $curriculumGrideTable.$curriculumGrideId = $classroomTable.$classroomCurriculumGride
+  INNER JOIN $courseTable ON $courseTable.$courseId = $curriculumGrideTable.$curriculumGrideCourse
+  INNER JOIN $classroomStudentTable ON $classroomStudentTable.$classroomStudentClassroom = $classroomTable.$classroomId
+  WHERE $classroomStudentTable.$classroomStudentStudent = ?
+''';
+
 const String classroomSqlSelectByCourse = '''
   $classroomSqlSelectAllActive
   AND $courseId = ?
@@ -115,6 +141,15 @@ class ClassroomHelper {
     }
 
     return null;
+  }
+
+  Future<List<Classroom>> getByStudent(int? idStudent) async {
+    Database database = await DataBase().getDatabase;
+    List classrooms = await database.rawQuery(
+        classroomSqlSelectByStudent, [idStudent]
+    );
+
+    return classrooms.map((e) => Classroom.fromMap(e)).toList();
   }
 
   Future<List<Classroom>> getByCourse(int idCourse) async {

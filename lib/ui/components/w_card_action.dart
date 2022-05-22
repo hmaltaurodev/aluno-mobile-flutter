@@ -41,9 +41,9 @@ class WCardAction extends StatelessWidget {
                     ),
                     Padding(
                       padding: const EdgeInsets.only(
-                          right: 5,
-                          left: 5,
-                          top: 5
+                        right: 5,
+                        left: 5,
+                        top: 5
                       ),
                       child: Text(
                         actionType.getLabel(),
@@ -86,9 +86,6 @@ class WCardAction extends StatelessWidget {
       case ActionType.classroom:
         listPage = (context) => const ListClassroomPage();
         break;
-      case ActionType.classroomDetails:
-        listPage = (context) => const DetailClassroomPage();
-        break;
       case ActionType.frequency:
         listPage = (context) => const LancFrequencyPage();
         break;
@@ -98,10 +95,10 @@ class WCardAction extends StatelessWidget {
     }
 
     Navigator.push(
-        context,
-        MaterialPageRoute(
-            builder: listPage
-        )
+      context,
+      MaterialPageRoute(
+        builder: listPage
+      )
     );
   }
 }

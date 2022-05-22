@@ -35,8 +35,10 @@ class _CadDisciplinePageState extends State<CadDisciplinePage> {
   Widget build(BuildContext context) {
     return WScaffold(
       title: 'Cadastro de Disciplina',
-      onPressedFAB: _save,
-      iconFAB: const Icon(Icons.save),
+      floatingActionButton: FloatingActionButton(
+        child: const Icon(Icons.save),
+        onPressed: _save,
+      ),
       body: SingleChildScrollView(
         child: Form(
           key: _formKey,

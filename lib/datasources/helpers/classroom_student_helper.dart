@@ -13,6 +13,7 @@ const String classroomStudentSqlCreate = '''
 
 const String classroomStudentSqlSelectAll = '''
   SELECT
+    $classroomStudentId,
     $classroomStudentClassroom,
     $classroomStudentStudent,
     

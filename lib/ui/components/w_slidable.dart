@@ -2,12 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 
 class WSlidable extends StatelessWidget {
-  final String title;
+  final Widget child;
   final List<Widget>? slideableActions;
   final EdgeInsets padding;
 
   const WSlidable({
-    required this.title,
+    required this.child,
     this.slideableActions,
     this.padding = const EdgeInsets.all(5),
     Key? key
@@ -24,9 +24,7 @@ class WSlidable extends StatelessWidget {
         color: Colors.white,
         elevation: 0,
         child: Slidable(
-          child: ListTile(
-            title: Text(title),
-          ),
+          child: child,
           startActionPane: _createStartActionPane(),
         ),
       )

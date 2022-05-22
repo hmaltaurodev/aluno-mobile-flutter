@@ -20,10 +20,12 @@ class _ListCoursePageState extends State<ListCoursePage> {
   Widget build(BuildContext context) {
     return WScaffold(
       title: 'Cursos',
-      onPressedFAB: () {
-        _openCadPage(null);
-      },
-      iconFAB: const Icon(Icons.add),
+      floatingActionButton: FloatingActionButton(
+        child: const Icon(Icons.add),
+        onPressed: () {
+          _openCadPage(null);
+        },
+      ),
       body: FutureBuilder(
         future: _courseHelper.getAll(),
         builder: (context, snapshot) {
@@ -71,7 +73,9 @@ class _ListCoursePageState extends State<ListCoursePage> {
       itemCount: courses.length,
       itemBuilder: (context, index) {
         return WSlidable(
-          title: courses[index].toString(),
+          child: ListTile(
+            title: Text(courses[index].toString()),
+          ),
           slideableActions: _createSlidablesActions(courses[index]),
         );
       },

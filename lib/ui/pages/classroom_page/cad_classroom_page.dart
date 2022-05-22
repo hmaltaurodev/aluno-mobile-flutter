@@ -41,8 +41,10 @@ class _CadClassroomPageState extends State<CadClassroomPage> {
   Widget build(BuildContext context) {
     return WScaffold(
       title: 'Cadastro de Turma',
-      onPressedFAB: _save,
-      iconFAB: const Icon(Icons.save),
+      floatingActionButton: FloatingActionButton(
+        child: const Icon(Icons.save),
+        onPressed: _save,
+      ),
       body: SingleChildScrollView(
         child: Form(
           key: _formKey,
@@ -125,7 +127,7 @@ class _CadClassroomPageState extends State<CadClassroomPage> {
         items: _curriculumGrides.map((CurriculumGride curriculumGride) {
           return DropdownMenuItem<CurriculumGride>(
             value: curriculumGride,
-            child: Text(curriculumGride.toStringNoCourse()),
+            child: Text(curriculumGride.toStringWithoutCourse()),
           );
         }).toList(),
       ),
@@ -206,7 +208,9 @@ class _CadClassroomPageState extends State<CadClassroomPage> {
         itemCount: _selectedStudents.length,
         itemBuilder: (context, index) {
           return WSlidable(
-            title: _selectedStudents[index].name,
+            child: ListTile(
+              title: Text(_selectedStudents[index].name),
+            ),
             slideableActions: _createSlidablesActions(_selectedStudents[index]),
             padding: const EdgeInsets.only(
               top: 2.5,

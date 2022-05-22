@@ -41,6 +41,10 @@ class Classroom {
 
   @override
   String toString() {
-    return periodYear.toString() + ' - ' + curriculumGride.toStringNoCourse();
+    return periodYear.toString() + ' - ' + curriculumGride.toStringWithoutCourse();
+  }
+
+  String toStringWithCourse() {
+    return periodYear.toString() + ' - ' + curriculumGride.toString();
   }
 }
