@@ -52,11 +52,7 @@ class CurriculumGride {
 
   @override
   String toString() {
-    if (semesterPeriod != 0) {
-      return academicYear.toString() + '/' + semesterPeriod.toString() + ' - ' + course.description;
-    }
-
-    return academicYear.toString() + ' - ' + course.description;
+    return toStringNoCourse() + ' - ' + course.description;
   }
 
   String toStringNoCourse() {

@@ -13,6 +13,26 @@ const String courseSqlCreate = '''
   )
 ''';
 
+const String courseSqlSelectAll = '''
+  SELECT
+    $courseId,
+    $courseMecId,
+    $courseDescription,
+    $courseAcademicDegree,
+    $courseIsActive
+  FROM $courseTable
+''';
+
+const String courseSqlSelectAllActive = '''
+  $courseSqlSelectAll
+  WHERE $courseIsActive = 1
+''';
+
+const String courseSqlSelectById = '''
+  $courseSqlSelectAllActive
+  AND $courseId = 1
+''';
+
 const String courseSqlCount = '''
   SELECT COUNT(1)
   FROM $courseTable
@@ -60,12 +80,16 @@ class CourseHelper {
     return courses.map((e) => Course.fromMap(e)).toList();
   }
 
+  Future<List<Course>> getAllActive() async {
+    Database database = await DataBase().getDatabase;
+    List courses = await database.rawQuery(courseSqlSelectAllActive);
+    return courses.map((e) => Course.fromMap(e)).toList();
+  }
+
   Future<Course?> getById(int id) async {
     Database database = await DataBase().getDatabase;
-    List courses = await database.query(
-        courseTable,
-        where: '$courseId = ?',
-        whereArgs: [id]
+    List courses = await database.rawQuery(
+        courseSqlSelectById, [id]
     );
 
     if (courses.isNotEmpty) {

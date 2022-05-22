@@ -15,6 +15,28 @@ const String teacherSqlCreate = '''
   )
 ''';
 
+const String teacherSqlSelectAll = '''
+  SELECT
+    $teacherId,
+    $teacherRegistrationId,
+    $teacherName,
+    $teacherCpf,
+    $teacherBirthDate,
+    $teacherRegistrationDate,
+    $teacherIsActive
+  FROM $teacherTable
+''';
+
+const String teacherSqlSelectAllActive = '''
+  $teacherSqlSelectAll
+  WHERE $teacherIsActive = 1
+''';
+
+const String teacherSqlSelectById = '''
+  $teacherSqlSelectAllActive
+  AND $teacherId = ?
+''';
+
 const String teacherSqlCount = '''
   SELECT COUNT(1)
   FROM $teacherTable
@@ -62,12 +84,16 @@ class TeacherHelper {
     return teachers.map((e) => Teacher.fromMap(e)).toList();
   }
 
+  Future<List<Teacher>> getAllActive() async {
+    Database database = await DataBase().getDatabase;
+    List teachers = await database.rawQuery(teacherSqlSelectAllActive);
+    return teachers.map((e) => Teacher.fromMap(e)).toList();
+  }
+
   Future<Teacher?> getById(int id) async {
     Database database = await DataBase().getDatabase;
-    List teachers = await database.query(
-        teacherTable,
-        where: '$teacherId = ?',
-        whereArgs: [id]
+    List teachers = await database.rawQuery(
+        teacherSqlSelectById, [id]
     );
 
     if (teachers.isNotEmpty) {

@@ -20,9 +20,9 @@ class _CadDisciplinePageState extends State<CadDisciplinePage> {
   final TextEditingController _descriptionController = TextEditingController();
   final TextEditingController _classHoursController = TextEditingController();
   final TextEditingController _numberOfClassesController = TextEditingController();
+  List<Teacher> _teachers = List<Teacher>.empty();
   Teacher? _teacher;
   Discipline? _discipline;
-  List<Teacher> _teachers = List<Teacher>.empty();
 
   @override
   void initState() {
@@ -74,10 +74,10 @@ class _CadDisciplinePageState extends State<CadDisciplinePage> {
   Widget _createDropdownTeachers() {
     return Padding(
       padding: const EdgeInsets.only(
-          top: 10,
-          bottom: 10,
-          left: 30,
-          right: 30
+        top: 10,
+        bottom: 10,
+        left: 30,
+        right: 30
       ),
       child: DropdownButtonFormField<Teacher>(
         value: _teacher,
@@ -136,7 +136,7 @@ class _CadDisciplinePageState extends State<CadDisciplinePage> {
 
   void _loadLists() async {
     TeacherHelper teacherHelper = TeacherHelper();
-    _teachers = (await teacherHelper.getAll());
+    _teachers = (await teacherHelper.getAllActive());
 
     setState(() {
       _loadDiscipline();
@@ -145,6 +145,10 @@ class _CadDisciplinePageState extends State<CadDisciplinePage> {
 
   void _loadDiscipline() {
     if (_discipline != null) {
+      if (_teachers.isEmpty) {
+        _teachers = [ _discipline!.teacher ];
+      }
+
       _descriptionController.text = _discipline!.description;
       _classHoursController.text = _discipline!.classHours.toString();
       _numberOfClassesController.text = _discipline!.numberOfClasses.toString();

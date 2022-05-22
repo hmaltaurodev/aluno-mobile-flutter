@@ -53,7 +53,10 @@ class _ListStudentPageState extends State<ListStudentPage> {
   }
 
   void _activateInactivate(Student student) {
-
+    setState(() {
+      student.isActive = (student.isActive == 1) ? 0 : 1;
+      _studentHelper.update(student);
+    });
   }
 
   Widget _createListViewBuilder(AsyncSnapshot snapshot) {

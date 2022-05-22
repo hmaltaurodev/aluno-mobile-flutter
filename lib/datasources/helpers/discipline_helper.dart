@@ -34,8 +34,26 @@ const String disciplineSqlSelectAll = '''
   INNER JOIN $teacherTable ON $teacherTable.$teacherId = $disciplineTable.$disciplineTeacher
 ''';
 
-const String disciplineSqlSelectById = '''
+const String disciplineSqlSelectAllActive = '''
   $disciplineSqlSelectAll
+  WHERE $disciplineIsActive = 1
+''';
+
+const String disciplineSqlSelectById = '''
+  $disciplineSqlSelectAllActive
+  AND $disciplineId = ?
+''';
+
+const String disciplineSqlSelectByCurriculumGride = '''
+  $disciplineSqlSelectAll
+  INNER JOIN $curriculumGrideDisciplineTable ON $curriculumGrideDisciplineTable.$curriculumGrideDisciplineDiscipline = $disciplineTable.$disciplineId
+  WHERE $disciplineIsActive = 1
+  AND $curriculumGrideDisciplineCurriculumGride = ?
+''';
+
+const String disciplineSqlSelectNumberOfClasses = '''
+  SELECT $disciplineNumberOfClasses
+  FROM $disciplineTable
   WHERE $disciplineId = ?
 ''';
 
@@ -48,35 +66,36 @@ class DisciplineHelper {
   Future<Discipline> insert(Discipline discipline) async {
     Database database = await DataBase().getDatabase;
     discipline.id = await database.insert(
-        disciplineTable,
-        discipline.toMap()
+      disciplineTable,
+      discipline.toMap()
     );
+
     return discipline;
   }
 
   Future<int> update(Discipline discipline) async {
     Database database = await DataBase().getDatabase;
     return database.update(
-        disciplineTable,
-        discipline.toMap(),
-        where: '$disciplineId = ?',
-        whereArgs: [discipline.id]
+      disciplineTable,
+      discipline.toMap(),
+      where: '$disciplineId = ?',
+      whereArgs: [discipline.id]
     );
   }
 
   Future<int> delete(int id) async {
     Database database = await DataBase().getDatabase;
     return database.delete(
-        disciplineTable,
-        where: '$disciplineId = ?',
-        whereArgs: [id]
+      disciplineTable,
+      where: '$disciplineId = ?',
+      whereArgs: [id]
     );
   }
 
   Future<int?> count() async {
     Database database = await DataBase().getDatabase;
     return firstIntValue(
-        await database.query(disciplineSqlCount)
+      await database.query(disciplineSqlCount)
     );
   }
 
@@ -86,10 +105,24 @@ class DisciplineHelper {
     return disciplines.map((e) => Discipline.fromMap(e)).toList();
   }
 
+  Future<List<Discipline>> getAllActive() async {
+    Database database = await DataBase().getDatabase;
+    List disciplines = await database.rawQuery(disciplineSqlSelectAllActive);
+    return disciplines.map((e) => Discipline.fromMap(e)).toList();
+  }
+
+  Future<List<Discipline>> getByCurriculumGride(int idCurriculumGride) async {
+    Database database = await DataBase().getDatabase;
+    List disciplines = await database.rawQuery(
+      disciplineSqlSelectByCurriculumGride, [idCurriculumGride]
+    );
+    return disciplines.map((e) => Discipline.fromMap(e)).toList();
+  }
+
   Future<Discipline?> getById(int id) async {
     Database database = await DataBase().getDatabase;
     List disciplines = await database.rawQuery(
-        disciplineSqlSelectById, [id]
+      disciplineSqlSelectById, [id]
     );
 
     if (disciplines.isNotEmpty) {
@@ -97,5 +130,12 @@ class DisciplineHelper {
     }
 
     return null;
+  }
+
+  Future<int?> getNumberOfClasses(int id) async {
+    Database database = await DataBase().getDatabase;
+    return firstIntValue(
+      await database.rawQuery(disciplineSqlSelectNumberOfClasses, [id])
+    );
   }
 }

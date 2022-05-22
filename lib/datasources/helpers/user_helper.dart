@@ -46,14 +46,19 @@ const String userSqlSelectAll = '''
   LEFT JOIN $teacherTable ON $teacherTable.$teacherId = $userTable.$userTeacher
 ''';
 
-const String userSqlSelectById = '''
+const String userSqlSelectAllActive = '''
   $userSqlSelectAll
-  WHERE $userId = ?
+  WHERE $userIsActive = 1
+''';
+
+const String userSqlSelectById = '''
+  $userSqlSelectAllActive
+  AND $userId = ?
 ''';
 
 const String userSqlSelectByUsername = '''
-  $userSqlSelectAll
-  WHERE $userUsername = ?
+  $userSqlSelectAllActive
+  AND $userUsername = ?
 ''';
 
 const String userSqlCount = '''
@@ -79,15 +84,6 @@ class UserHelper {
         user.toMap(),
         where: '$userId = ?',
         whereArgs: [user.id]
-    );
-  }
-
-  Future<int> delete(int id) async {
-    Database database = await DataBase().getDatabase;
-    return database.delete(
-        userTable,
-        where: '$userId = ?',
-        whereArgs: [id]
     );
   }
 

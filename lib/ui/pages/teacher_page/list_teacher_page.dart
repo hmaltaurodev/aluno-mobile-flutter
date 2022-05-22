@@ -49,11 +49,14 @@ class _ListTeacherPageState extends State<ListTeacherPage> {
       )
     );
 
-    setState(() { });
+    setState(() {});
   }
 
   void _activateInactivate(Teacher teacher) {
-
+    setState(() {
+      teacher.isActive = (teacher.isActive == 1) ? 0 : 1;
+      _teacherHelper.update(teacher);
+    });
   }
 
   Widget _createListViewBuilder(AsyncSnapshot snapshot) {

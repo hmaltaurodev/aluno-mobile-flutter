@@ -48,6 +48,12 @@ const String classroomStudentSqlSelectAll = '''
   INNER JOIN $studentTable ON $studentTable.$studentId = $classroomStudentTable.$classroomStudentStudent
 ''';
 
+const String classroomStudentSqlSelectByClassroomStudent = '''
+  $classroomStudentSqlSelectAll
+  WHERE $classroomStudentClassroom = ?
+  AND $classroomStudentStudent = ?
+''';
+
 const String classroomStudentSqlCount = '''
   SELECT COUNT(1)
   FROM $classroomStudentTable
@@ -57,35 +63,36 @@ class ClassroomStudentHelper {
   Future<ClassroomStudent> insert(ClassroomStudent classroomStudent) async {
     Database database = await DataBase().getDatabase;
     await database.insert(
-        classroomStudentTable,
-        classroomStudent.toMap()
+      classroomStudentTable,
+      classroomStudent.toMap()
     );
+
     return classroomStudent;
   }
 
   Future<int> update(ClassroomStudent classroomStudent) async {
     Database database = await DataBase().getDatabase;
     return database.update(
-        classroomStudentTable,
-        classroomStudent.toMap(),
-        where: '$classroomStudentId = ?',
-        whereArgs: [classroomStudent.id]
+      classroomStudentTable,
+      classroomStudent.toMap(),
+      where: '$classroomStudentId = ?',
+      whereArgs: [classroomStudent.id]
     );
   }
 
   Future<int> delete(int id) async {
     Database database = await DataBase().getDatabase;
     return database.delete(
-        classroomStudentTable,
-        where: '$classroomStudentId = ?',
-        whereArgs: [id]
+      classroomStudentTable,
+      where: '$classroomStudentId = ?',
+      whereArgs: [id]
     );
   }
 
   Future<int?> count() async {
     Database database = await DataBase().getDatabase;
     return firstIntValue(
-        await database.query(classroomStudentSqlCount)
+      await database.query(classroomStudentSqlCount)
     );
   }
 
@@ -93,5 +100,18 @@ class ClassroomStudentHelper {
     Database database = await DataBase().getDatabase;
     List classroomsStudents = await database.rawQuery(classroomStudentSqlSelectAll);
     return classroomsStudents.map((e) => ClassroomStudent.fromMap(e)).toList();
+  }
+
+  Future<ClassroomStudent?> getByClassroomStudent(int idClassroom, int idStudent) async {
+    Database database = await DataBase().getDatabase;
+    List classroomsStudents = await database.rawQuery(
+      classroomStudentSqlSelectByClassroomStudent, [idClassroom, idStudent]
+    );
+
+    if (classroomsStudents.isNotEmpty) {
+      return ClassroomStudent.fromMap(classroomsStudents.first);
+    }
+
+    return null;
   }
 }

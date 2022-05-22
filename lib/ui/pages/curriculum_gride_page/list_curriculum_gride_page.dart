@@ -53,7 +53,10 @@ class _ListCurriculumGridePageState extends State<ListCurriculumGridePage> {
   }
 
   void _activateInactivate(CurriculumGride curriculumGride) {
-
+    setState(() {
+      curriculumGride.isActive = (curriculumGride.isActive == 1) ? 0 : 1;
+      _curriculumGrideHelper.update(curriculumGride);
+    });
   }
 
   Widget _createListViewBuilder(AsyncSnapshot snapshot) {

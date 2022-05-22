@@ -53,7 +53,10 @@ class _ListDisciplinePageState extends State<ListDisciplinePage> {
   }
 
   void _activateInactivate(Discipline discipline) {
-
+    setState(() {
+      discipline.isActive = (discipline.isActive == 1) ? 0 : 1;
+      _disciplineHelper.update(discipline);
+    });
   }
 
   Widget _createListViewBuilder(AsyncSnapshot snapshot) {

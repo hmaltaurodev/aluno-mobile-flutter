@@ -8,13 +8,13 @@ const String classroomIsActive = 'CL_IS_ACTIVE';
 
 class Classroom {
   int? id;
-  CurriculumGride currriculumGride;
+  CurriculumGride curriculumGride;
   int periodYear;
   int isActive;
 
   Classroom({
     this.id,
-    required this.currriculumGride,
+    required this.curriculumGride,
     required this.periodYear,
     this.isActive = 1
   });
@@ -24,7 +24,7 @@ class Classroom {
 
     return Classroom(
       id: int.tryParse(map[classroomId].toString()),
-      currriculumGride: curriculumGride,
+      curriculumGride: curriculumGride,
       periodYear: int.parse(map[classroomPeriodYear].toString()),
       isActive: int.parse(map[classroomIsActive].toString())
     );
@@ -33,7 +33,7 @@ class Classroom {
   Map<String, dynamic> toMap() {
     return {
       classroomId: id,
-      classroomCurriculumGride: currriculumGride.id,
+      classroomCurriculumGride: curriculumGride.id,
       classroomPeriodYear: periodYear,
       classroomIsActive: isActive
     };
@@ -41,6 +41,6 @@ class Classroom {
 
   @override
   String toString() {
-    return periodYear.toString() + ' - ' + currriculumGride.toString();
+    return periodYear.toString() + ' - ' + curriculumGride.toStringNoCourse();
   }
 }

@@ -32,14 +32,19 @@ const String curriculumGrideSqlSelectAll = '''
   INNER JOIN $courseTable ON $courseTable.$courseId = $curriculumGrideTable.$curriculumGrideCourse  
 ''';
 
-const String curriculumGrideSqlSelectById = '''
+const String curriculumGrideSqlSelectAllActive= '''
   $curriculumGrideSqlSelectAll
-  WHERE $curriculumGrideId = ?
+  WHERE $curriculumGrideIsActive = 1
+''';
+
+const String curriculumGrideSqlSelectById = '''
+  $curriculumGrideSqlSelectAllActive
+  AND $curriculumGrideId = ?
 ''';
 
 const String curriculumGrideSqlSelectByCourse = '''
-  $curriculumGrideSqlSelectAll
-  WHERE $curriculumGrideCourse = ?
+  $curriculumGrideSqlSelectAllActive
+  AND $curriculumGrideCourse = ?
 ''';
 
 const String curriculumGrideSqlCount = '''
@@ -89,6 +94,12 @@ class CurriculumGrideHelper {
     return curriculumsGrides.map((e) => CurriculumGride.fromMap(e)).toList();
   }
 
+  Future<List<CurriculumGride>> getAllActive() async {
+    Database database = await DataBase().getDatabase;
+    List curriculumsGrides = await database.rawQuery(curriculumGrideSqlSelectAllActive);
+    return curriculumsGrides.map((e) => CurriculumGride.fromMap(e)).toList();
+  }
+
   Future<CurriculumGride?> getById(int id) async {
     Database database = await DataBase().getDatabase;
     List curriculumsGrides = await database.rawQuery(
@@ -107,6 +118,7 @@ class CurriculumGrideHelper {
     List curriculumsGrides = await database.rawQuery(
         curriculumGrideSqlSelectByCourse, [courseId]
     );
+
     return curriculumsGrides.map((e) => CurriculumGride.fromMap(e)).toList();
   }
 }

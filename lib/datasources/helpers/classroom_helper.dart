@@ -36,9 +36,19 @@ const String classroomSqlSelectAll = '''
   INNER JOIN $courseTable ON $courseTable.$courseId = $curriculumGrideTable.$curriculumGrideCourse
 ''';
 
-const String classroomSqlSelectById = '''
+const String classroomSqlSelectAllActive = '''
   $classroomSqlSelectAll
-  WHERE $classroomId = ?
+  WHERE $classroomIsActive = 1
+''';
+
+const String classroomSqlSelectById = '''
+  $classroomSqlSelectAllActive
+  AND $classroomId = ?
+''';
+
+const String classroomSqlSelectByCourse = '''
+  $classroomSqlSelectAllActive
+  AND $courseId = ?
 ''';
 
 const String classroomSqlCount = '''
@@ -88,6 +98,12 @@ class ClassroomHelper {
     return classrooms.map((e) => Classroom.fromMap(e)).toList();
   }
 
+  Future<List<Classroom>> getAllActive() async {
+    Database database = await DataBase().getDatabase;
+    List classrooms = await database.rawQuery(classroomSqlSelectAllActive);
+    return classrooms.map((e) => Classroom.fromMap(e)).toList();
+  }
+
   Future<Classroom?> getById(int id) async {
     Database database = await DataBase().getDatabase;
     List classrooms = await database.rawQuery(
@@ -99,5 +115,14 @@ class ClassroomHelper {
     }
 
     return null;
+  }
+
+  Future<List<Classroom>> getByCourse(int idCourse) async {
+    Database database = await DataBase().getDatabase;
+    List classrooms = await database.rawQuery(
+        classroomSqlSelectByCourse, [idCourse]
+    );
+
+    return classrooms.map((e) => Classroom.fromMap(e)).toList();
   }
 }

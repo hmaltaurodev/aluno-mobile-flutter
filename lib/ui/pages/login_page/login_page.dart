@@ -134,7 +134,7 @@ class _LoginPageState extends State<LoginPage> {
 
     if (_formKey.currentState!.validate()) {
       if (_user != null) {
-        await (await SharedPreferences.getInstance()).setString('user_logged_in', _user!.username);
+        await (await SharedPreferences.getInstance()).setInt('user_logged_in', _user!.id!);
         Navigator.pushReplacement(
             context,
             MaterialPageRoute(
@@ -146,7 +146,7 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   void _validateUserLoggedIn() async {
-    String? userLoggedIn = (await SharedPreferences.getInstance()).getString('user_logged_in');
+    int? userLoggedIn = (await SharedPreferences.getInstance()).getInt('user_logged_in');
 
     if (userLoggedIn == null) {
       setState(() {
@@ -155,7 +155,7 @@ class _LoginPageState extends State<LoginPage> {
     }
     else {
       UserHelper userHelper = UserHelper();
-      User? user = await userHelper.getByUsername(userLoggedIn);
+      User? user = await userHelper.getById(userLoggedIn);
 
       Navigator.pushReplacement(
         context,

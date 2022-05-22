@@ -10,15 +10,15 @@ extension AcademicYearExtension on AcademicYear {
   String getDescription() {
     switch (this) {
       case AcademicYear.first:
-        return '1º Ano';
+        return '1º Série';
       case AcademicYear.second:
-        return '2º Ano';
+        return '2º Série';
       case AcademicYear.third:
-        return '3º Ano';
+        return '3º Série';
       case AcademicYear.fourth:
-        return '4º Ano';
+        return '4º Série';
       case AcademicYear.fifth:
-        return '5º Ano';
+        return '5º Série';
     }
   }
 

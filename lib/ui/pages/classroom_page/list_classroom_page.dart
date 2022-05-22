@@ -39,17 +39,24 @@ class _ListClassroomPageState extends State<ListClassroomPage> {
     );
   }
 
-  void _openCadPage(Classroom? classroom) {
-    Navigator.push(
-        context,
-        MaterialPageRoute(
-            builder: (context) => const CadClassroomPage()
+  void _openCadPage(Classroom? classroom) async {
+    await Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => CadClassroomPage(
+          classroom: classroom,
         )
+      )
     );
+
+    setState(() {});
   }
 
   void _activateInactivate(Classroom classroom) {
-
+    setState(() {
+      classroom.isActive = (classroom.isActive == 1) ? 0 : 1;
+      _classroomHelper.update(classroom);
+    });
   }
 
   Widget _listViewBuilder(AsyncSnapshot snapshot) {

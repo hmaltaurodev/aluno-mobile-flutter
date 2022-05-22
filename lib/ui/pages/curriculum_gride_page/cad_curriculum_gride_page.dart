@@ -25,11 +25,11 @@ class _CadCurriculumGridePageState extends State<CadCurriculumGridePage> {
   List<Discipline> _selectedDisciplines = [];
 
   CurriculumGride? _curriculumGride;
-  Course? _courseValue;
-  Discipline? _disciplineValue;
-  AcademicYear? _academicYearValue;
-  AcademicRegime? _academicRegimeValue;
-  SemesterPeriod? _semesterPeriodValue;
+  Course? _course;
+  Discipline? _discipline;
+  AcademicYear? _academicYear;
+  AcademicRegime? _academicRegime;
+  SemesterPeriod? _semesterPeriod;
 
   @override
   void initState() {
@@ -66,13 +66,14 @@ class _CadCurriculumGridePageState extends State<CadCurriculumGridePage> {
   Widget _createDropdownCourses() {
     return Padding(
       padding: const EdgeInsets.only(
-          top: 20,
-          bottom: 10,
-          left: 30,
-          right: 30
+        top: 20,
+        bottom: 10,
+        left: 30,
+        right: 30
       ),
       child: DropdownButtonFormField<Course>(
-        value: _courseValue,
+        value: _course,
+        validator: _validateCourse,
         decoration: const InputDecoration(
           label: WLabelInputDecoration(
             labelText: 'Curso',
@@ -81,9 +82,9 @@ class _CadCurriculumGridePageState extends State<CadCurriculumGridePage> {
             fontSize: 15,
           ),
         ),
-        onChanged: (newValue) {
+        onChanged: _curriculumGride != null ? null : (newValue) {
           setState(() {
-            _courseValue = newValue!;
+            _course = newValue!;
           });
         },
         items: _courses.map((Course course) {
@@ -99,16 +100,17 @@ class _CadCurriculumGridePageState extends State<CadCurriculumGridePage> {
   Widget _createDropdownAcademicYear() {
     return Padding(
       padding: const EdgeInsets.only(
-          top: 10,
-          bottom: 10,
-          left: 30,
-          right: 30
+        top: 10,
+        bottom: 10,
+        left: 30,
+        right: 30
       ),
       child: DropdownButtonFormField<AcademicYear>(
-        value: _academicYearValue,
+        value: _academicYear,
+        validator: _validateAcademicYear,
         decoration: const InputDecoration(
           label: WLabelInputDecoration(
-            labelText: 'Ano Acadêmico',
+            labelText: 'Série Acadêmica',
           ),
           labelStyle: TextStyle(
             fontSize: 15,
@@ -116,7 +118,7 @@ class _CadCurriculumGridePageState extends State<CadCurriculumGridePage> {
         ),
         onChanged: (newValue) {
           setState(() {
-            _academicYearValue = newValue!;
+            _academicYear = newValue!;
           });
         },
         items: AcademicYear.values.map((AcademicYear academicYear) {
@@ -132,13 +134,14 @@ class _CadCurriculumGridePageState extends State<CadCurriculumGridePage> {
   Widget _createDropdownAcademicRegime() {
     return Padding(
       padding: const EdgeInsets.only(
-          top: 10,
-          bottom: 10,
-          left: 30,
-          right: 30
+        top: 10,
+        bottom: 10,
+        left: 30,
+        right: 30
       ),
       child: DropdownButtonFormField<AcademicRegime>(
-        value: _academicRegimeValue,
+        value: _academicRegime,
+        validator: _validateAcademicRegime,
         decoration: const InputDecoration(
           label: WLabelInputDecoration(
             labelText: 'Regime Acadêmico',
@@ -147,9 +150,9 @@ class _CadCurriculumGridePageState extends State<CadCurriculumGridePage> {
             fontSize: 15,
           ),
         ),
-        onChanged: (newValue) {
+        onChanged: _curriculumGride != null ? null : (newValue) {
           setState(() {
-            _academicRegimeValue = newValue!;
+            _academicRegime = newValue!;
           });
         },
         items: AcademicRegime.values.map((AcademicRegime academicRegime) {
@@ -164,16 +167,17 @@ class _CadCurriculumGridePageState extends State<CadCurriculumGridePage> {
 
   Widget _createDropdownSemesterPeriod() {
     return Visibility(
-      visible: (_academicRegimeValue == AcademicRegime.semiannual),
+      visible: (_academicRegime == AcademicRegime.semiannual),
       child: Padding(
         padding: const EdgeInsets.only(
-            top: 10,
-            bottom: 10,
-            left: 30,
-            right: 30
+          top: 10,
+          bottom: 10,
+          left: 30,
+          right: 30
         ),
         child: DropdownButtonFormField<SemesterPeriod>(
-          value: _semesterPeriodValue,
+          value: _semesterPeriod,
+          validator: _validateSemesterPeriod,
           decoration: const InputDecoration(
             label: WLabelInputDecoration(
               labelText: 'Semestre Período',
@@ -182,9 +186,9 @@ class _CadCurriculumGridePageState extends State<CadCurriculumGridePage> {
               fontSize: 15,
             ),
           ),
-          onChanged: (newValue) {
+          onChanged: _curriculumGride != null ? null : (newValue) {
             setState(() {
-              _semesterPeriodValue = newValue!;
+              _semesterPeriod = newValue!;
             });
           },
           items: SemesterPeriod.values.map((SemesterPeriod semesterPeriod) {
@@ -205,13 +209,16 @@ class _CadCurriculumGridePageState extends State<CadCurriculumGridePage> {
         Expanded(
           child: Padding(
             padding: const EdgeInsets.only(
-                top: 10,
-                bottom: 10,
-                left: 30,
-                right: 5
+              top: 10,
+              bottom: 10,
+              left: 30,
+              right: 5
             ),
             child: DropdownButtonFormField<Discipline>(
-              value: _disciplineValue,
+              value: _discipline,
+              validator: (discipline) {
+                return _validateDisciplines();
+              },
               decoration: const InputDecoration(
                 label: WLabelInputDecoration(
                   labelText: 'Selecione as Disciplinas',
@@ -222,7 +229,7 @@ class _CadCurriculumGridePageState extends State<CadCurriculumGridePage> {
               ),
               onChanged: (newValue) {
                 setState(() {
-                  _disciplineValue = newValue!;
+                  _discipline = newValue!;
                 });
               },
               items: _disciplines.map((Discipline discipline) {
@@ -236,18 +243,18 @@ class _CadCurriculumGridePageState extends State<CadCurriculumGridePage> {
         ),
         Padding(
           padding: const EdgeInsets.only(
-              left: 5,
-              right: 30
+            left: 5,
+            right: 30
           ),
           child: WElevatedButton(
             child: const Icon(Icons.add),
             onPressed: () {
-              if (_disciplineValue != null) {
+              if (_discipline != null) {
                 setState(() {
                   _selectedDisciplines = _selectedDisciplines.toList();
-                  _selectedDisciplines.add(_disciplineValue!);
-                  _disciplines.remove(_disciplineValue!);
-                  _disciplineValue = null;
+                  _selectedDisciplines.add(_discipline!);
+                  _disciplines.remove(_discipline!);
+                  _discipline = null;
 
                   FocusScope.of(context).unfocus();
                 });
@@ -283,7 +290,7 @@ class _CadCurriculumGridePageState extends State<CadCurriculumGridePage> {
     );
   }
 
-  List<Widget> _createSlidablesActions(Discipline discipline) {
+  List<Widget>? _createSlidablesActions(Discipline discipline) {
     if (_curriculumGride == null) {
       return [
         SlidableAction(
@@ -302,7 +309,7 @@ class _CadCurriculumGridePageState extends State<CadCurriculumGridePage> {
       ];
     }
 
-    return [];
+    return null;
   }
 
   void _save() async {
@@ -313,10 +320,10 @@ class _CadCurriculumGridePageState extends State<CadCurriculumGridePage> {
 
       if (_curriculumGride == null) {
         CurriculumGride curriculumGride = CurriculumGride(
-          course: _courseValue!,
-          academicYear: _academicYearValue!.toInt(),
-          academicRegime: _academicRegimeValue!.toInt(),
-          semesterPeriod: _semesterPeriodValue!.toInt()
+          course: _course!,
+          academicYear: _academicYear!.toInt(),
+          academicRegime: _academicRegime!.toInt(),
+          semesterPeriod: _semesterPeriod!.toInt()
         );
 
         curriculumGride = (await curriculumGrideHelper.insert(curriculumGride));
@@ -332,10 +339,10 @@ class _CadCurriculumGridePageState extends State<CadCurriculumGridePage> {
         }
       }
       else {
-        _curriculumGride!.course = _courseValue!;
-        _curriculumGride!.academicYear = _academicYearValue!.toInt();
-        _curriculumGride!.academicRegime = _academicRegimeValue!.toInt();
-        _curriculumGride!.semesterPeriod = _semesterPeriodValue!.toInt();
+        _curriculumGride!.course = _course!;
+        _curriculumGride!.academicYear = _academicYear!.toInt();
+        _curriculumGride!.academicRegime = _academicRegime!.toInt();
+        _curriculumGride!.semesterPeriod = _semesterPeriod!.toInt();
 
         curriculumGrideHelper.update(_curriculumGride!);
       }
@@ -345,11 +352,13 @@ class _CadCurriculumGridePageState extends State<CadCurriculumGridePage> {
   }
 
   void _loadLists() async {
-    CourseHelper courseHelper = CourseHelper();
-    DisciplineHelper disciplineHelper = DisciplineHelper();
+    if (_curriculumGride == null) {
+      CourseHelper courseHelper = CourseHelper();
+      DisciplineHelper disciplineHelper = DisciplineHelper();
 
-    _courses = (await courseHelper.getAll());
-    _disciplines = (await disciplineHelper.getAll());
+      _courses = (await courseHelper.getAllActive());
+      _disciplines = (await disciplineHelper.getAllActive());
+    }
 
     setState(() {
       _loadCurriculumGride();
@@ -358,11 +367,53 @@ class _CadCurriculumGridePageState extends State<CadCurriculumGridePage> {
 
   void _loadCurriculumGride() async {
     if (_curriculumGride != null) {
-      _courseValue = _courses.isEmpty ? _curriculumGride?.course : _courses.firstWhere((course) => course.id == _curriculumGride?.course.id);
-      _academicYearValue = Utils.academicYearByInt(_curriculumGride!.academicYear.toInt());
-      _academicRegimeValue = Utils.academicRegimeByInt(_curriculumGride!.academicRegime.toInt());
-      _semesterPeriodValue = Utils.semesterPeriodByInt(_curriculumGride!.semesterPeriod.toInt());
       _disciplines = [];
+      _courses = [ _curriculumGride!.course ];
+
+      _course = _courses.isEmpty ? _curriculumGride?.course : _courses.firstWhere((course) => course.id == _curriculumGride?.course.id);
+      _academicYear = Utils.academicYearByInt(_curriculumGride!.academicYear.toInt());
+      _academicRegime = Utils.academicRegimeByInt(_curriculumGride!.academicRegime.toInt());
+      _semesterPeriod = Utils.semesterPeriodByInt(_curriculumGride!.semesterPeriod.toInt());
     }
+  }
+
+  String? _validateCourse(Course? course) {
+    if (course == null) {
+      return 'Selecione um Curso';
+    }
+
+    return null;
+  }
+
+  String? _validateAcademicYear(AcademicYear? academicYear) {
+    if (academicYear == null) {
+      return 'Selecione uma Série Acadêmica';
+    }
+
+    return null;
+  }
+
+  String? _validateAcademicRegime(AcademicRegime? academicRegime) {
+    if (academicRegime == null) {
+      return 'Selecione um Regime Acadêmico';
+    }
+
+    return null;
+  }
+
+  String? _validateSemesterPeriod(SemesterPeriod? semesterPeriod) {
+    if (_academicRegime == null && semesterPeriod == null) {
+      return 'Selecione um Semestre Perído';
+    }
+
+    return null;
+  }
+
+  String? _validateDisciplines() {
+    if (_selectedDisciplines.isEmpty) {
+      return 'Adicione ou menos uma Disciplina';
+    }
+
+    return null;
   }
 }

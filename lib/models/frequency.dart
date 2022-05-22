@@ -12,7 +12,7 @@ class Frequency {
   ClassroomStudent classroomStudent;
   Discipline discipline;
   int lessonNumber;
-  bool presence;
+  int presence;
 
   Frequency({
     this.id,
@@ -31,7 +31,7 @@ class Frequency {
       classroomStudent: classroomStudent,
       discipline: discipline,
       lessonNumber: int.parse(map[frequencyLessonNumber].toString()),
-      presence: map[frequencyPresence]
+      presence: int.parse(map[frequencyPresence].toString())
     );
   }
 

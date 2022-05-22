@@ -53,7 +53,10 @@ class _ListCoursePageState extends State<ListCoursePage> {
   }
 
   void _activateInactivate(Course course) {
-
+    setState(() {
+      course.isActive = (course.isActive == 1) ? 0 : 1;
+      _courseHelper.update(course);
+    });
   }
 
   Widget _createListViewBuilder(AsyncSnapshot snapshot) {
