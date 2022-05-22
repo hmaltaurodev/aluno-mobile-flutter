@@ -4,6 +4,7 @@ ThemeData lightTheme() {
   const Color primaryColor = Color.fromRGBO(0, 0, 253, 1);
   const Color primaryColorDark = Color.fromRGBO(0, 0, 108, 1);
   const Color primaryColorLight = Color.fromRGBO(124, 124, 255, 1);
+  const Color errorColor = Color.fromRGBO(255, 0, 0, 1);
 
   const TextStyle textStyleElevatedButton = TextStyle(
     fontSize: 20,
@@ -36,15 +37,22 @@ ThemeData lightTheme() {
   InputDecorationTheme inputDecorationTheme = InputDecorationTheme(
     filled: true,
     fillColor: Colors.white,
+    labelStyle: TextStyle(
+      fontSize: 15,
+      color: Colors.grey.shade700,
+    ),
+    errorStyle: const TextStyle(
+      color: errorColor, // or any other color
+    ),
     errorBorder: OutlineInputBorder(
       borderSide: const BorderSide(
-        color: Colors.red,
+        color: Colors.white,
       ),
       borderRadius: BorderRadius.circular(5),
     ),
     focusedErrorBorder: OutlineInputBorder(
       borderSide: const BorderSide(
-        color: Colors.red,
+        color: Colors.white,
       ),
       borderRadius: BorderRadius.circular(5),
     ),

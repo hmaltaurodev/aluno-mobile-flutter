@@ -23,7 +23,7 @@ class WCardAction extends StatelessWidget {
           },
           child: Card(
             shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(20),
+              borderRadius: BorderRadius.circular(5),
             ),
             color: Colors.white,
             elevation: 0,

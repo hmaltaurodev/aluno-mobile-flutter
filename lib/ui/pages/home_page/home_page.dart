@@ -28,193 +28,156 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        toolbarHeight: 100.0,
-        actions: [
-          _createPopupMenuButton(),
-        ],
-        title: Row(
+    return WAnnotatedRegion(
+      scaffold: Scaffold(
+        appBar: AppBar(
+          toolbarHeight: 100.0,
+          shadowColor: Colors.transparent,
+          backgroundColor: Colors.blueGrey.shade50,
+          actions: [
+            _createPopupMenuButton(),
+          ],
+          title: Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              Padding(
+                padding: const EdgeInsets.only(right: 10),
+                child: Icon(
+                  _user!.getIconLoggedIn(),
+                  size: 80,
+                  color: Theme.of(context).primaryColor,
+                ),
+              ),
+              Text(
+                'Olá, ' + _user!.getUsernameLoggedIn(),
+                style: TextStyle(
+                  fontSize: 35,
+                  fontWeight: FontWeight.bold,
+                  color: Theme.of(context).primaryColor,
+                ),
+              ),
+            ],
+          ),
+        ),
+        body: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
-          mainAxisAlignment: MainAxisAlignment.start,
           children: [
-            Padding(
-              padding: const EdgeInsets.only(right: 10),
-              child: Icon(
-                _user!.getIconLoggedIn(),
-                size: 80,
-                color: Colors.white,
+            Visibility(
+              visible: widget.user.userType == 3,
+              child: Expanded(
+                child: SingleChildScrollView(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: const [
+                          WCardAction(
+                            actionType: ActionType.student,
+                            padding: EdgeInsets.only(
+                                top: 10,
+                                left: 10,
+                                right: 5
+                            ),
+                          ),
+                          WCardAction(
+                            actionType: ActionType.teacher,
+                            padding: EdgeInsets.only(
+                                top: 10,
+                                left: 5,
+                                right: 10
+                            ),
+                          ),
+                        ],
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: const [
+                          WCardAction(
+                            actionType: ActionType.discipline,
+                            padding: EdgeInsets.only(
+                                top: 10,
+                                left: 10,
+                                right: 5
+                            ),
+                          ),
+                          WCardAction(
+                            actionType: ActionType.course,
+                            padding: EdgeInsets.only(
+                                top: 10,
+                                left: 5,
+                                right: 10
+                            ),
+                          ),
+                        ],
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: const [
+                          WCardAction(
+                            actionType: ActionType.curriculumGride,
+                            padding: EdgeInsets.only(
+                                top: 10,
+                                left: 10,
+                                bottom: 10,
+                                right: 5
+                            ),
+                          ),
+                          WCardAction(
+                            actionType: ActionType.classroom,
+                            padding: EdgeInsets.only(
+                                top: 10,
+                                left: 5,
+                                bottom: 10,
+                                right: 10
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
               ),
             ),
-            Text(
-              'Olá, ' + _user!.getUsernameLoggedIn(),
-              style: const TextStyle(
-                fontSize: 35,
-                fontWeight: FontWeight.bold,
-                color: Colors.white,
+            Visibility(
+              visible: widget.user.userType != 3,
+              child: Expanded(
+                child: SingleChildScrollView(
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: const [
+                      WCardAction(
+                        actionType: ActionType.frequency,
+                        padding: EdgeInsets.only(
+                            top: 10,
+                            left: 10,
+                            right: 5
+                        ),
+                      ),
+                      WCardAction(
+                        actionType: ActionType.grade,
+                        padding: EdgeInsets.only(
+                            top: 10,
+                            left: 5,
+                            right: 10
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
               ),
+            ),
+            Visibility(
+                visible: widget.user.userType == 1,
+                child: Expanded(
+                  child: SingleChildScrollView(
+
+                  ),
+                )
             ),
           ],
         ),
-      ),
-      body: Column(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          Padding(
-            padding: const EdgeInsets.only(
-              top: 10,
-              left: 10,
-              right: 10,
-            ),
-            child: SizedBox(
-              width: double.infinity,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.all(10),
-                    child: Row(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.only(right: 10),
-                          child: Icon(
-                            _user!.getIconLoggedIn(),
-                            size: 80,
-                            color: Theme.of(context).primaryColor,
-                          ),
-                        ),
-                        Text(
-                          'Olá, ' + _user!.getUsernameLoggedIn(),
-                          style: TextStyle(
-                            fontSize: 35,
-                            fontWeight: FontWeight.bold,
-                            color: Theme.of(context).primaryColor,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  _createPopupMenuButton(),
-                ],
-              ),
-            ),
-          ),
-          Visibility(
-            visible: widget.user.userType == 3,
-            child: Expanded(
-              child: SingleChildScrollView(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: const [
-                        WCardAction(
-                          actionType: ActionType.student,
-                          padding: EdgeInsets.only(
-                              top: 10,
-                              left: 10,
-                              right: 5
-                          ),
-                        ),
-                        WCardAction(
-                          actionType: ActionType.teacher,
-                          padding: EdgeInsets.only(
-                              top: 10,
-                              left: 5,
-                              right: 10
-                          ),
-                        ),
-                      ],
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: const [
-                        WCardAction(
-                          actionType: ActionType.discipline,
-                          padding: EdgeInsets.only(
-                              top: 10,
-                              left: 10,
-                              right: 5
-                          ),
-                        ),
-                        WCardAction(
-                          actionType: ActionType.course,
-                          padding: EdgeInsets.only(
-                              top: 10,
-                              left: 5,
-                              right: 10
-                          ),
-                        ),
-                      ],
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: const [
-                        WCardAction(
-                          actionType: ActionType.curriculumGride,
-                          padding: EdgeInsets.only(
-                              top: 10,
-                              left: 10,
-                              bottom: 10,
-                              right: 5
-                          ),
-                        ),
-                        WCardAction(
-                          actionType: ActionType.classroom,
-                          padding: EdgeInsets.only(
-                              top: 10,
-                              left: 5,
-                              bottom: 10,
-                              right: 10
-                          ),
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          ),
-          Visibility(
-            visible: widget.user.userType == 2,
-            child: Expanded(
-              child: SingleChildScrollView(
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: const [
-                    WCardAction(
-                      actionType: ActionType.frequency,
-                      padding: EdgeInsets.only(
-                          top: 10,
-                          left: 10,
-                          right: 5
-                      ),
-                    ),
-                    WCardAction(
-                      actionType: ActionType.grade,
-                      padding: EdgeInsets.only(
-                          top: 10,
-                          left: 5,
-                          right: 10
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          ),
-          Visibility(
-            visible: widget.user.userType == 1,
-            child: Expanded(
-              child: SingleChildScrollView(
-
-              ),
-            )
-          ),
-        ],
       ),
     );
   }
@@ -230,39 +193,54 @@ class _HomePageState extends State<HomePage> {
         PopupMenuItem(
           value: 'change_password',
           child: Row(
-            children: const [
+            children: [
               Icon(
                 Icons.password,
-                color: Colors.black,
+                color: Colors.grey.shade700,
               ),
-              SizedBox(width: 10),
-              Text('Mudar senha'),
+              const SizedBox(width: 10),
+              Text(
+                'Mudar senha',
+                style: TextStyle(
+                  color: Colors.grey.shade700,
+                ),
+              ),
             ],
           ),
         ),
         PopupMenuItem(
           value: 'about',
           child: Row(
-            children: const [
+            children: [
               Icon(
                 Icons.info_outline,
-                color: Colors.black,
+                color: Colors.grey.shade700,
               ),
-              SizedBox(width: 10),
-              Text('Sobre'),
+              const SizedBox(width: 10),
+              Text(
+                'Sobre',
+                style: TextStyle(
+                  color: Colors.grey.shade700,
+                ),
+              ),
             ],
           ),
         ),
         PopupMenuItem(
           value: 'logout',
           child: Row(
-            children: const [
+            children: [
               Icon(
                 Icons.logout,
-                color: Colors.black,
+                color: Colors.grey.shade700,
               ),
-              SizedBox(width: 10),
-              Text('Sair'),
+              const SizedBox(width: 10),
+              Text(
+                'Sair',
+                style: TextStyle(
+                  color: Colors.grey.shade700,
+                ),
+              ),
             ],
           ),
         ),

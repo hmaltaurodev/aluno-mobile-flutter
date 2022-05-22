@@ -2,6 +2,7 @@ import 'package:aluno_mobile_flutter/datasources/helpers/helpers.dart';
 import 'package:aluno_mobile_flutter/enums/enums.dart';
 import 'package:aluno_mobile_flutter/models/models.dart';
 import 'package:aluno_mobile_flutter/ui/components/components.dart';
+import 'package:aluno_mobile_flutter/utils/utils.dart';
 import 'package:crypt/crypt.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -49,7 +50,7 @@ class _CadStudentPageState extends State<CadStudentPage> {
               WTextField(
                 labelText: 'R.A.',
                 textEditingController: _registrationIdController,
-                validator: validateRegistrationId,
+                validator: _validateRegistrationId,
                 textInputType: TextInputType.number,
                 paddingTop: 20,
                 readOnly: _student != null,
@@ -58,25 +59,33 @@ class _CadStudentPageState extends State<CadStudentPage> {
               WTextField(
                 labelText: 'Nome',
                 textEditingController: _nameController,
-                validator: validateName,
+                validator: _validateName,
               ),
               WTextField(
                 labelText: 'CPF',
                 textEditingController: _cpfController,
-                validator: validateCPF,
+                validator: _validateCPF,
               ),
-              WTextField(
-                labelText: 'Data de Nascimento',
-                textEditingController: _birthDateController,
-                textInputType: TextInputType.datetime,
-                validator: validateBirthDate,
+              GestureDetector(
+                onTap: _showDatePickerBirthDate,
+                child: WTextField(
+                  labelText: 'Data de Nascimento',
+                  textEditingController: _birthDateController,
+                  textInputType: TextInputType.datetime,
+                  validator: _validateBirthDate,
+                  enabled: false,
+                ),
               ),
-              WTextField(
-                labelText: 'Data de Registro',
-                textEditingController: _registrationDateController,
-                textInputType: TextInputType.datetime,
-                validator: validateRegistrationDate,
-              ),
+              GestureDetector(
+                onTap: _showDatePickerRegistrationDate,
+                child: WTextField(
+                  labelText: 'Data de Registro',
+                  textEditingController: _registrationDateController,
+                  textInputType: TextInputType.datetime,
+                  validator: _validateRegistrationDate,
+                  enabled: false,
+                ),
+              )
             ],
           ),
         ),
@@ -85,6 +94,8 @@ class _CadStudentPageState extends State<CadStudentPage> {
   }
 
   void _save() async {
+    FocusScope.of(context).unfocus();
+
     if (_formKey.currentState!.validate()) {
       StudentHelper studentHelper = StudentHelper();
 
@@ -100,11 +111,11 @@ class _CadStudentPageState extends State<CadStudentPage> {
         student = await studentHelper.insert(student);
 
         User user = User(
-            username: student.registrationId.toString().padLeft(8, '0'),
-            password: Crypt.sha256(student.registrationId.toString().padLeft(8, '0')).toString(),
-            userType: UserType.student.toInt(),
-            student: student,
-            isActive: 1
+          username: student.registrationId.toString().padLeft(8, '0'),
+          password: Crypt.sha256(student.registrationId.toString().padLeft(8, '0')).toString(),
+          userType: UserType.student.toInt(),
+          student: student,
+          isActive: 1
         );
 
         UserHelper userHelper = UserHelper();
@@ -116,7 +127,7 @@ class _CadStudentPageState extends State<CadStudentPage> {
         _student!.birthDate = DateFormat('dd/MM/yyyy').parse(_birthDateController.text);
         _student!.registrationDate = DateFormat('dd/MM/yyyy').parse(_registrationDateController.text);
 
-        await studentHelper.update(_student!);
+        studentHelper.update(_student!);
       }
 
       Navigator.pop(context);
@@ -133,7 +144,31 @@ class _CadStudentPageState extends State<CadStudentPage> {
     }
   }
 
-  String? validateRegistrationId(String? string) {
+  void _showDatePickerBirthDate() {
+    FocusScope.of(context).unfocus();
+
+    Utils.datePicker(context).then((value) {
+      setState(() {
+        if (value != null) {
+          _birthDateController.text = DateFormat('dd/MM/yyyy').format(value);
+        }
+      });
+    });
+  }
+
+  void _showDatePickerRegistrationDate() {
+    FocusScope.of(context).unfocus();
+
+    Utils.datePicker(context).then((value) {
+      setState(() {
+        if (value != null) {
+          _registrationDateController.text = DateFormat('dd/MM/yyyy').format(value);
+        }
+      });
+    });
+  }
+
+  String? _validateRegistrationId(String? string) {
     if (string == null || string.trim().isEmpty) {
       return 'Informe o R.A.';
     }
@@ -145,7 +180,7 @@ class _CadStudentPageState extends State<CadStudentPage> {
     return null;
   }
 
-  String? validateName(String? string) {
+  String? _validateName(String? string) {
     if (string == null || string.trim().isEmpty) {
       return 'Informe o Nome';
     }
@@ -153,7 +188,7 @@ class _CadStudentPageState extends State<CadStudentPage> {
     return null;
   }
 
-  String? validateCPF(String? string) {
+  String? _validateCPF(String? string) {
     if (string == null || string.trim().isEmpty) {
       return 'Informe o CPF';
     }
@@ -161,7 +196,7 @@ class _CadStudentPageState extends State<CadStudentPage> {
     return null;
   }
 
-  String? validateBirthDate(String? string) {
+  String? _validateBirthDate(String? string) {
     if (string == null || string.trim().isEmpty) {
       return 'Informe a Data de Nascimento';
     }
@@ -169,7 +204,7 @@ class _CadStudentPageState extends State<CadStudentPage> {
     return null;
   }
 
-  String? validateRegistrationDate(String? string) {
+  String? _validateRegistrationDate(String? string) {
     if (string == null || string.trim().isEmpty) {
       return 'Informe a Data de Registro';
     }

@@ -13,8 +13,10 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final TextEditingController _usernameController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
+  User? _user;
   bool _showLoginPage = false;
 
   @override
@@ -34,13 +36,15 @@ class _LoginPageState extends State<LoginPage> {
         body: Visibility(
           visible: _showLoginPage,
           child: SingleChildScrollView(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                Padding(
+            child: Form(
+              key: _formKey,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  Padding(
                     padding: const EdgeInsets.only(
-                        top: 100,
-                        bottom: 10
+                      top: 100,
+                      bottom: 10
                     ),
                     child: Column(
                       children: [
@@ -59,56 +63,61 @@ class _LoginPageState extends State<LoginPage> {
                         ),
                       ],
                     )
-                ),
-                WTextField(
-                  textEditingController: _usernameController,
-                  labelText: 'Usuário',
-                  paddingTop: 50,
-                  prefixIcon: const Icon(
-                    Icons.supervised_user_circle_outlined,
                   ),
-                ),
-                WTextField(
-                  textEditingController: _passwordController,
-                  labelText: 'Senha',
-                  prefixIcon: const Icon(
-                    Icons.password,
+                  WTextField(
+                    labelText: 'Usuário',
+                    textEditingController: _usernameController,
+                    validator: _validateUsername,
+                    autoValidate: false,
+                    paddingTop: 50,
+                    prefixIcon: const Icon(
+                      Icons.supervised_user_circle_outlined,
+                    ),
                   ),
-                  obscureText: true,
-                ),
-                WElevatedButton(
-                  padding: const EdgeInsets.only(
+                  WTextField(
+                    labelText: 'Senha',
+                    textEditingController: _passwordController,
+                    validator: _validatePassword,
+                    autoValidate: false,
+                    prefixIcon: const Icon(
+                      Icons.password,
+                    ),
+                    obscureText: true,
+                  ),
+                  WElevatedButton(
+                    padding: const EdgeInsets.only(
                       top: 50,
                       left: 30,
                       right: 30
+                    ),
+                    child: const Padding(
+                      padding: EdgeInsets.all(15),
+                      child: Text(
+                        'Entrar',
+                        style: TextStyle(
+                          fontSize: 25,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                    onPressed: _login,
                   ),
-                  child: const Padding(
-                    padding: EdgeInsets.all(15),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(
+                      vertical: 10,
+                      horizontal: 30,
+                    ),
                     child: Text(
-                      'Entrar',
+                      'Acesse o README.md do projeto no GitHub para visualizar o login padrão!',
+                      textAlign: TextAlign.center,
                       style: TextStyle(
-                        fontSize: 25,
-                        fontWeight: FontWeight.bold,
+                        color: Colors.grey.shade600,
+                        fontSize: 11,
                       ),
                     ),
                   ),
-                  onPressed: _login,
-                ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(
-                    vertical: 10,
-                    horizontal: 30,
-                  ),
-                  child: Text(
-                    'Acesse o README.md do projeto no GitHub para visualizar o login padrão!',
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      color: Colors.grey.shade600,
-                      fontSize: 11,
-                    ),
-                  ),
-                ),
-              ],
+                ],
+              ),
             ),
           ),
         ),
@@ -117,28 +126,22 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   void _login() async {
-    FocusScope.of(context).unfocus();
     UserHelper userHelper = UserHelper();
-    User? user = await userHelper.getByLogin(
-      _usernameController.text.trim(),
-      _passwordController.text.trim()
+    _user = await userHelper.getByLogin(
+        _usernameController.text.trim(),
+        _passwordController.text.trim()
     );
 
-    if (user != null) {
-      await (await SharedPreferences.getInstance()).setString('user_logged_in', user.username);
-      Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(
-              builder: (context) => HomePage(user: user)
-          )
-      );
-    }
-    else {
-      const snackBar = SnackBar(
-        content: Text('Usuário ou senha incorreta!')
-      );
-
-      ScaffoldMessenger.of(context).showSnackBar(snackBar);
+    if (_formKey.currentState!.validate()) {
+      if (_user != null) {
+        await (await SharedPreferences.getInstance()).setString('user_logged_in', _user!.username);
+        Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(
+                builder: (context) => HomePage(user: _user!)
+            )
+        );
+      }
     }
   }
 
@@ -155,11 +158,35 @@ class _LoginPageState extends State<LoginPage> {
       User? user = await userHelper.getByUsername(userLoggedIn);
 
       Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(
-              builder: (context) => HomePage(user: user!)
-          )
+        context,
+        MaterialPageRoute(
+          builder: (context) => HomePage(user: user!)
+        )
       );
     }
+  }
+
+  String? _validateUsername(String? string) {
+    if (string == null || string.trim().isEmpty) {
+      return 'Informe o usuário';
+    }
+
+    if (_user == null) {
+      return 'Usuário ou senha icorreta';
+    }
+
+    return null;
+  }
+
+  String? _validatePassword(String? string) {
+    if (string == null || string.trim().isEmpty) {
+      return 'Informe a senha';
+    }
+
+    if (_user == null) {
+      return 'Usuário ou senha icorreta';
+    }
+
+    return null;
   }
 }

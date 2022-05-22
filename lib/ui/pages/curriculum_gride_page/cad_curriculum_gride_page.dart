@@ -2,21 +2,29 @@ import 'package:aluno_mobile_flutter/datasources/helpers/helpers.dart';
 import 'package:aluno_mobile_flutter/enums/enums.dart';
 import 'package:aluno_mobile_flutter/models/models.dart';
 import 'package:aluno_mobile_flutter/ui/components/components.dart';
+import 'package:aluno_mobile_flutter/utils/utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 
 class CadCurriculumGridePage extends StatefulWidget {
-  const CadCurriculumGridePage({Key? key}) : super(key: key);
+  final CurriculumGride? curriculumGride;
+
+  const CadCurriculumGridePage({
+    this.curriculumGride,
+    Key? key
+  }) : super(key: key);
 
   @override
   State<CadCurriculumGridePage> createState() => _CadCurriculumGridePageState();
 }
 
 class _CadCurriculumGridePageState extends State<CadCurriculumGridePage> {
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   List<Course> _courses = List<Course>.empty();
   List<Discipline> _disciplines = List<Discipline>.empty();
   List<Discipline> _selectedDisciplines = [];
 
+  CurriculumGride? _curriculumGride;
   Course? _courseValue;
   Discipline? _disciplineValue;
   AcademicYear? _academicYearValue;
@@ -26,7 +34,7 @@ class _CadCurriculumGridePageState extends State<CadCurriculumGridePage> {
   @override
   void initState() {
     super.initState();
-
+    _curriculumGride = widget.curriculumGride;
     _loadLists();
   }
 
@@ -37,53 +45,22 @@ class _CadCurriculumGridePageState extends State<CadCurriculumGridePage> {
       onPressedFAB: _save,
       iconFAB: const Icon(Icons.save),
       body: SingleChildScrollView(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            _createDropdownCourses(),
-            _createDropdownAcademicYear(),
-            _createDropdownAcademicRegime(),
-            _createDropdownSemesterPeriod(),
-            _createDropdownDisciplines(),
-            _createListViewBuilder(),
-          ],
+        child: Form(
+          key: _formKey,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              _createDropdownCourses(),
+              _createDropdownAcademicYear(),
+              _createDropdownAcademicRegime(),
+              _createDropdownSemesterPeriod(),
+              _createDropdownDisciplines(),
+              _createListViewBuilder(),
+            ],
+          ),
         ),
       ),
     );
-  }
-
-  void _loadLists() async {
-    CourseHelper courseHelper = CourseHelper();
-    DisciplineHelper disciplineHelper = DisciplineHelper();
-
-    _courses = (await courseHelper.getAll());
-    _disciplines = (await disciplineHelper.getAll());
-
-    setState(() {});
-  }
-
-  void _save() async {
-    CurriculumGride curriculumGride = CurriculumGride(
-        course: _courseValue!,
-        academicYear: _academicYearValue!.toInt(),
-        academicRegime: _academicRegimeValue!.toInt(),
-        semesterPeriod: _semesterPeriodValue!.toInt()
-    );
-
-    CurriculumGrideHelper curriculumGrideHelper = CurriculumGrideHelper();
-    curriculumGride = (await curriculumGrideHelper.insert(curriculumGride));
-
-    CurriculumGrideDisciplineHelper curriculumGrideDisciplineHelper = CurriculumGrideDisciplineHelper();
-    for (Discipline discipline in _selectedDisciplines) {
-      CurriculumGrideDiscipline curriculumGrideDiscipline = CurriculumGrideDiscipline(
-        curriculumGride: curriculumGride,
-        discipline: discipline
-      );
-
-      curriculumGrideDisciplineHelper.insert(curriculumGrideDiscipline);
-    }
-
-    Navigator.pop(context);
   }
 
   Widget _createDropdownCourses() {
@@ -307,20 +284,85 @@ class _CadCurriculumGridePageState extends State<CadCurriculumGridePage> {
   }
 
   List<Widget> _createSlidablesActions(Discipline discipline) {
-    return [
-      SlidableAction(
-        icon: Icons.delete,
-        label: 'Remover',
-        backgroundColor: Colors.red,
-        foregroundColor: Colors.white,
-        onPressed: (context) {
-          setState(() {
-            _disciplines = _disciplines.toList();
-            _disciplines.add(discipline);
-            _selectedDisciplines.remove(discipline);
-          });
-        },
-      ),
-    ];
+    if (_curriculumGride == null) {
+      return [
+        SlidableAction(
+          icon: Icons.delete,
+          label: 'Remover',
+          backgroundColor: Colors.red,
+          foregroundColor: Colors.white,
+          onPressed: (context) {
+            setState(() {
+              _disciplines = _disciplines.toList();
+              _disciplines.add(discipline);
+              _selectedDisciplines.remove(discipline);
+            });
+          },
+        ),
+      ];
+    }
+
+    return [];
+  }
+
+  void _save() async {
+    FocusScope.of(context).unfocus();
+
+    if (_formKey.currentState!.validate()) {
+      CurriculumGrideHelper curriculumGrideHelper = CurriculumGrideHelper();
+
+      if (_curriculumGride == null) {
+        CurriculumGride curriculumGride = CurriculumGride(
+          course: _courseValue!,
+          academicYear: _academicYearValue!.toInt(),
+          academicRegime: _academicRegimeValue!.toInt(),
+          semesterPeriod: _semesterPeriodValue!.toInt()
+        );
+
+        curriculumGride = (await curriculumGrideHelper.insert(curriculumGride));
+
+        CurriculumGrideDisciplineHelper curriculumGrideDisciplineHelper = CurriculumGrideDisciplineHelper();
+        for (Discipline discipline in _selectedDisciplines) {
+          CurriculumGrideDiscipline curriculumGrideDiscipline = CurriculumGrideDiscipline(
+            curriculumGride: curriculumGride,
+            discipline: discipline
+          );
+
+          curriculumGrideDisciplineHelper.insert(curriculumGrideDiscipline);
+        }
+      }
+      else {
+        _curriculumGride!.course = _courseValue!;
+        _curriculumGride!.academicYear = _academicYearValue!.toInt();
+        _curriculumGride!.academicRegime = _academicRegimeValue!.toInt();
+        _curriculumGride!.semesterPeriod = _semesterPeriodValue!.toInt();
+
+        curriculumGrideHelper.update(_curriculumGride!);
+      }
+
+      Navigator.pop(context);
+    }
+  }
+
+  void _loadLists() async {
+    CourseHelper courseHelper = CourseHelper();
+    DisciplineHelper disciplineHelper = DisciplineHelper();
+
+    _courses = (await courseHelper.getAll());
+    _disciplines = (await disciplineHelper.getAll());
+
+    setState(() {
+      _loadCurriculumGride();
+    });
+  }
+
+  void _loadCurriculumGride() async {
+    if (_curriculumGride != null) {
+      _courseValue = _courses.isEmpty ? _curriculumGride?.course : _courses.firstWhere((course) => course.id == _curriculumGride?.course.id);
+      _academicYearValue = Utils.academicYearByInt(_curriculumGride!.academicYear.toInt());
+      _academicRegimeValue = Utils.academicRegimeByInt(_curriculumGride!.academicRegime.toInt());
+      _semesterPeriodValue = Utils.semesterPeriodByInt(_curriculumGride!.semesterPeriod.toInt());
+      _disciplines = [];
+    }
   }
 }

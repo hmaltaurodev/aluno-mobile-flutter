@@ -16,23 +16,23 @@ class WSlidable extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-        padding: padding,
-        child: Card(
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(5),
+      padding: padding,
+      child: Card(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(5),
+        ),
+        color: Colors.white,
+        elevation: 0,
+        child: Slidable(
+          child: ListTile(
+            title: Text(title),
           ),
-          color: Colors.white,
-          elevation: 0,
-          child: Slidable(
-            child: ListTile(
-              title: Text(title),
-            ),
-            startActionPane: ActionPane(
-              motion: const DrawerMotion(),
-              children: slideableActions,
-            ),
+          startActionPane: ActionPane(
+            motion: const DrawerMotion(),
+            children: slideableActions,
           ),
-        )
+        ),
+      )
     );
   }
 }

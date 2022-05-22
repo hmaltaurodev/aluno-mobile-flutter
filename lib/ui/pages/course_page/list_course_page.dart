@@ -39,13 +39,17 @@ class _ListCoursePageState extends State<ListCoursePage> {
     );
   }
 
-  void _openCadPage(Course? course) {
-    Navigator.push(
-        context,
-        MaterialPageRoute(
-            builder: (context) => const CadCoursePage()
+  void _openCadPage(Course? course) async {
+    await Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => CadCoursePage(
+          course: course,
         )
+      )
     );
+
+    setState(() {});
   }
 
   void _activateInactivate(Course course) {

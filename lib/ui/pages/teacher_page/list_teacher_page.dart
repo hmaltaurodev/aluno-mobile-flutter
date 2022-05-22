@@ -41,10 +41,12 @@ class _ListTeacherPageState extends State<ListTeacherPage> {
 
   void _openCadPage({Teacher? teacher}) async {
     await Navigator.push(
-        context,
-        MaterialPageRoute(
-            builder: (context) => const CadTeacherPage()
+      context,
+      MaterialPageRoute(
+        builder: (context) => CadTeacherPage(
+          teacher: teacher,
         )
+      )
     );
 
     setState(() { });

@@ -39,13 +39,17 @@ class _ListDisciplinePageState extends State<ListDisciplinePage> {
     );
   }
 
-  void _openCadPage(Discipline? discipline) {
-    Navigator.push(
+  void _openCadPage(Discipline? discipline) async {
+    await Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) => const CadDisciplinePage()
+        builder: (context) => CadDisciplinePage(
+          discipline: discipline,
+        )
       )
     );
+
+    setState(() {});
   }
 
   void _activateInactivate(Discipline discipline) {

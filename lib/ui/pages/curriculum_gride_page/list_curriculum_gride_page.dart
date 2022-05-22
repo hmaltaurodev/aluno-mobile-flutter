@@ -39,13 +39,17 @@ class _ListCurriculumGridePageState extends State<ListCurriculumGridePage> {
     );
   }
 
-  void _openCadPage(CurriculumGride? curriculumGride) {
-    Navigator.push(
-        context,
-        MaterialPageRoute(
-            builder: (context) => const CadCurriculumGridePage()
+  void _openCadPage(CurriculumGride? curriculumGride) async {
+    await Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => CadCurriculumGridePage(
+          curriculumGride: curriculumGride,
         )
+      )
     );
+
+    setState(() {});
   }
 
   void _activateInactivate(CurriculumGride curriculumGride) {

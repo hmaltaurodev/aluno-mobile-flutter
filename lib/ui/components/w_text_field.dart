@@ -13,6 +13,8 @@ class WTextField extends StatelessWidget {
   final double paddingRight;
   final bool obscureText;
   final bool readOnly;
+  final bool enabled;
+  final bool autoValidate;
   final String? Function(String?)? validator;
   final int? maxLenght;
 
@@ -27,6 +29,8 @@ class WTextField extends StatelessWidget {
     this.paddingRight = 30,
     this.obscureText = false,
     this.readOnly = false,
+    this.enabled = true,
+    this.autoValidate = true,
     this.validator,
     this.maxLenght,
     Key? key
@@ -43,7 +47,7 @@ class WTextField extends StatelessWidget {
       ),
       child: TextFormField(
         validator: validator,
-        autovalidateMode: AutovalidateMode.onUserInteraction,
+        autovalidateMode: autoValidate ? AutovalidateMode.onUserInteraction : AutovalidateMode.disabled,
         controller: textEditingController,
         keyboardType: textInputType,
         inputFormatters: _setInputFormatters(textInputType),
@@ -55,11 +59,9 @@ class WTextField extends StatelessWidget {
           label: WLabelInputDecoration(
             labelText: labelText
           ),
-          labelStyle: const TextStyle(
-            fontSize: 15,
-          ),
         ),
         readOnly: readOnly,
+        enabled: enabled,
       ),
     );
   }
