@@ -30,6 +30,7 @@ class _CadCurriculumGridePageState extends State<CadCurriculumGridePage> {
   AcademicYear? _academicYear;
   AcademicRegime? _academicRegime;
   SemesterPeriod? _semesterPeriod;
+  bool _curriculumGrideDuplicate = false;
 
   @override
   void initState() {
@@ -155,6 +156,7 @@ class _CadCurriculumGridePageState extends State<CadCurriculumGridePage> {
         onChanged: _curriculumGride != null ? null : (newValue) {
           setState(() {
             _academicRegime = newValue!;
+            _semesterPeriod = null;
           });
         },
         items: AcademicRegime.values.map((AcademicRegime academicRegime) {
@@ -319,15 +321,16 @@ class _CadCurriculumGridePageState extends State<CadCurriculumGridePage> {
   void _save() async {
     FocusScope.of(context).unfocus();
 
-    if (_formKey.currentState!.validate()) {
-      CurriculumGrideHelper curriculumGrideHelper = CurriculumGrideHelper();
+    CurriculumGrideHelper curriculumGrideHelper = CurriculumGrideHelper();
+    _curriculumGrideDuplicate = (await curriculumGrideHelper.isDuplicate(_course?.id, _academicYear?.toInt(), _academicRegime?.toInt(), _semesterPeriod?.toInt() ?? 0));
 
+    if (_formKey.currentState!.validate()) {
       if (_curriculumGride == null) {
         CurriculumGride curriculumGride = CurriculumGride(
           course: _course!,
           academicYear: _academicYear!.toInt(),
           academicRegime: _academicRegime!.toInt(),
-          semesterPeriod: _semesterPeriod!.toInt()
+          semesterPeriod: _semesterPeriod?.toInt() ?? 0
         );
 
         curriculumGride = (await curriculumGrideHelper.insert(curriculumGride));
@@ -346,7 +349,7 @@ class _CadCurriculumGridePageState extends State<CadCurriculumGridePage> {
         _curriculumGride!.course = _course!;
         _curriculumGride!.academicYear = _academicYear!.toInt();
         _curriculumGride!.academicRegime = _academicRegime!.toInt();
-        _curriculumGride!.semesterPeriod = _semesterPeriod!.toInt();
+        _curriculumGride!.semesterPeriod = _semesterPeriod?.toInt() ?? 0;
 
         curriculumGrideHelper.update(_curriculumGride!);
       }
@@ -384,6 +387,10 @@ class _CadCurriculumGridePageState extends State<CadCurriculumGridePage> {
   String? _validateCourse(Course? course) {
     if (course == null) {
       return 'Selecione um Curso';
+    }
+
+    if (_curriculumGrideDuplicate) {
+      return 'Já existe uma grade ativa para esse Curso, Série e Regime Acadêmico';
     }
 
     return null;

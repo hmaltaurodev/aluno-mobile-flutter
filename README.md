@@ -1,16 +1,16 @@
-# aluno_mobile_flutter
+# Aluno Mobile Flutter
 
-A new Flutter project.
+## Logins
 
-## Getting Started
+> O login padrão é:
+> usuário: admin
+> senha: admin
 
-This project is a starting point for a Flutter application.
-
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://flutter.dev/docs/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://flutter.dev/docs/cookbook)
-
-For help getting started with Flutter, view our
-[online documentation](https://flutter.dev/docs), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+> Logins de aluno e professor é pelo RA
+> Por exemplo:
+> Aluno com RA 1
+> usuário: 00000001
+> senha: 00000001
+> Professor com RA 2
+> usuário: 00000002
+> senha: 00000002

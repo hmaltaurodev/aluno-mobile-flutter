@@ -17,6 +17,7 @@ class WTextField extends StatelessWidget {
   final bool autoValidate;
   final String? Function(String?)? validator;
   final int? maxLenght;
+  final void Function(String)? onChanged;
 
   const WTextField({
     required this.textEditingController,
@@ -33,6 +34,7 @@ class WTextField extends StatelessWidget {
     this.autoValidate = true,
     this.validator,
     this.maxLenght,
+    this.onChanged,
     Key? key
   }) : super(key: key);
 
@@ -40,12 +42,13 @@ class WTextField extends StatelessWidget {
   Widget build(BuildContext context) {
     return Padding(
       padding: EdgeInsets.only(
-          top: paddingTop,
-          bottom: paddingBottom,
-          left: paddingLeft,
-          right: paddingRight
+        top: paddingTop,
+        bottom: paddingBottom,
+        left: paddingLeft,
+        right: paddingRight
       ),
       child: TextFormField(
+        onChanged: onChanged,
         validator: validator,
         autovalidateMode: autoValidate ? AutovalidateMode.onUserInteraction : AutovalidateMode.disabled,
         controller: textEditingController,

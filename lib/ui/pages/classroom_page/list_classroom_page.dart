@@ -32,7 +32,9 @@ class _ListClassroomPageState extends State<ListClassroomPage> {
           switch (snapshot.connectionState) {
             case ConnectionState.none:
             case ConnectionState.waiting:
-              return const CircularProgressIndicator();
+            return const Center(
+              child: CircularProgressIndicator(),
+            );
             default:
               return _listViewBuilder(snapshot);
           }
@@ -84,15 +86,6 @@ class _ListClassroomPageState extends State<ListClassroomPage> {
 
   List<Widget> _createSlidablesActions(Classroom classroom) {
     return [
-      SlidableAction(
-        icon: Icons.edit,
-        label: 'Editar',
-        backgroundColor: Theme.of(context).primaryColor,
-        foregroundColor: Colors.white,
-        onPressed: (context) {
-          _openCadPage(classroom);
-        },
-      ),
       SlidableAction(
         icon: Utils.activeInactiveIcon(classroom.isActive == 1),
         label: Utils.activeInactiveLabel(classroom.isActive == 1),

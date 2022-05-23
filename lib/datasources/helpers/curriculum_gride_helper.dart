@@ -32,6 +32,16 @@ const String curriculumGrideSqlSelectAll = '''
   INNER JOIN $courseTable ON $courseTable.$courseId = $curriculumGrideTable.$curriculumGrideCourse  
 ''';
 
+const String curriculumGrideSqlSelectDuplicate = '''
+  SELECT COUNT(1)
+  FROM $curriculumGrideTable
+  WHERE $curriculumGrideIsActive = 1
+  AND $curriculumGrideCourse = ?
+  AND $curriculumGrideAcademicYear = ?
+  AND $curriculumGrideAcademicRegime = ?
+  AND $curriculumGrideSemesterPeriod = ?
+''';
+
 const String curriculumGrideSqlSelectAllActive= '''
   $curriculumGrideSqlSelectAll
   WHERE $curriculumGrideIsActive = 1
@@ -120,5 +130,16 @@ class CurriculumGrideHelper {
     );
 
     return curriculumsGrides.map((e) => CurriculumGride.fromMap(e)).toList();
+  }
+
+  Future<bool> isDuplicate(int? idCourse, int? academicYear, int? academicRegime, int? semesterPeriod) async {
+    Database database = await DataBase().getDatabase;
+    int count = firstIntValue(
+      await database.rawQuery(
+        curriculumGrideSqlSelectDuplicate, [idCourse, academicYear, academicRegime, semesterPeriod]
+      )
+    )!;
+
+    return count >= 1;
   }
 }

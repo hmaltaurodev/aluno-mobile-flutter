@@ -181,7 +181,9 @@ class _HomePageState extends State<HomePage> {
                     switch (snapshot.connectionState) {
                       case ConnectionState.none:
                       case ConnectionState.waiting:
-                        return const CircularProgressIndicator();
+                      return const Center(
+                        child: CircularProgressIndicator(),
+                      );
                       default:
                         return _listViewBuilder(snapshot);
                     }
@@ -229,24 +231,6 @@ class _HomePageState extends State<HomePage> {
       ),
       itemBuilder: (context) => [
         PopupMenuItem(
-          value: 'change_password',
-          child: Row(
-            children: [
-              Icon(
-                Icons.password,
-                color: Colors.grey.shade700,
-              ),
-              const SizedBox(width: 10),
-              Text(
-                'Mudar senha',
-                style: TextStyle(
-                  color: Colors.grey.shade700,
-                ),
-              ),
-            ],
-          ),
-        ),
-        PopupMenuItem(
           value: 'about',
           child: Row(
             children: [
@@ -290,30 +274,22 @@ class _HomePageState extends State<HomePage> {
   }
 
   void _onSelectedPopup(Object? result) async {
-    if (result == 'change_password') {
+    if (result == 'about') {
       Navigator.push(
-          context,
-          MaterialPageRoute(
-              builder: (context) => PasswordPage(user: _user!)
-          )
-      );
-    }
-    else if (result == 'about') {
-      Navigator.push(
-          context,
-          MaterialPageRoute(
-              builder: (context) => const AboutPage()
-          )
+        context,
+        MaterialPageRoute(
+          builder: (context) => const AboutPage()
+        )
       );
     }
     else if (result == 'logout') {
       await (await SharedPreferences.getInstance()).remove('user_logged_in');
 
       Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(
-              builder: (context) => const LoginPage()
-          )
+        context,
+        MaterialPageRoute(
+          builder: (context) => const LoginPage()
+        )
       );
     }
   }

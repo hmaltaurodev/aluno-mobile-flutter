@@ -29,6 +29,7 @@ class _CadClassroomPageState extends State<CadClassroomPage> {
   Course? _course;
   CurriculumGride? _curriculumGride;
   Student? _student;
+  bool _classroomDuplicate = false;
 
   @override
   void initState() {
@@ -58,6 +59,7 @@ class _CadClassroomPageState extends State<CadClassroomPage> {
                 textEditingController: _periodYearController,
                 validator: _validatePeriodYear,
                 textInputType: TextInputType.number,
+                maxLenght: 4,
               ),
               _createDropdownStudents(),
               _createListViewBuilder(),
@@ -249,9 +251,10 @@ class _CadClassroomPageState extends State<CadClassroomPage> {
   void _save() async {
     FocusScope.of(context).unfocus();
 
-    if (_formKey.currentState!.validate()) {
-      ClassroomHelper classroomHelper = ClassroomHelper();
+    ClassroomHelper classroomHelper = ClassroomHelper();
+    _classroomDuplicate = (await classroomHelper.isDuplicate(_curriculumGride?.id, int.tryParse(_periodYearController.text)));
 
+    if (_formKey.currentState!.validate()) {
       if (_classroom == null) {
         Classroom classroom = Classroom(
           curriculumGride: _curriculumGride!,
@@ -320,6 +323,10 @@ class _CadClassroomPageState extends State<CadClassroomPage> {
   String? _validateCourse(Course? course) {
     if (course == null) {
       return 'Selecione um Curso';
+    }
+
+    if (_classroomDuplicate) {
+      return 'Já existe uma turma ativa para esse Curso, Grade e Ano';
     }
 
     return null;

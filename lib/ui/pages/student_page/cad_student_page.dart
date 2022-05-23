@@ -26,7 +26,9 @@ class _CadStudentPageState extends State<CadStudentPage> {
   final TextEditingController _cpfController = TextEditingController();
   final TextEditingController _birthDateController = TextEditingController();
   final TextEditingController _registrationDateController = TextEditingController();
+
   Student? _student;
+  bool _registrationIdNotUnique = false;
 
   @override
   void initState() {
@@ -57,6 +59,13 @@ class _CadStudentPageState extends State<CadStudentPage> {
                 paddingTop: 20,
                 readOnly: _student != null,
                 maxLenght: 8,
+                onChanged: (string) {
+                  if (_registrationIdNotUnique) {
+                    setState(() {
+                      _registrationIdNotUnique = false;
+                    });
+                  }
+                },
               ),
               WTextField(
                 labelText: 'Nome',
@@ -66,6 +75,7 @@ class _CadStudentPageState extends State<CadStudentPage> {
               WTextField(
                 labelText: 'CPF',
                 textEditingController: _cpfController,
+                textInputType: TextInputType.number,
                 validator: _validateCPF,
               ),
               GestureDetector(
@@ -100,6 +110,7 @@ class _CadStudentPageState extends State<CadStudentPage> {
 
     if (_formKey.currentState!.validate()) {
       StudentHelper studentHelper = StudentHelper();
+      UserHelper userHelper = UserHelper();
 
       if (_student == null) {
         Student student = Student(
@@ -109,6 +120,15 @@ class _CadStudentPageState extends State<CadStudentPage> {
           birthDate: DateFormat('dd/MM/yyyy').parse(_birthDateController.text),
           registrationDate: DateFormat('dd/MM/yyyy').parse(_registrationDateController.text),
         );
+
+        if ((await userHelper.getByUsername(student.registrationId.toString().padLeft(8, '0'))) != null) {
+          setState(() {
+            _registrationIdNotUnique = true;
+            _formKey.currentState!.validate();
+          });
+
+          return;
+        }
 
         student = await studentHelper.insert(student);
 
@@ -120,7 +140,6 @@ class _CadStudentPageState extends State<CadStudentPage> {
           isActive: 1
         );
 
-        UserHelper userHelper = UserHelper();
         userHelper.insert(user);
       }
       else {
@@ -177,6 +196,10 @@ class _CadStudentPageState extends State<CadStudentPage> {
 
     if (int.parse(string) == 0) {
       return 'Informe um R.A. valido';
+    }
+
+    if (_registrationIdNotUnique) {
+      return 'Já existe um aluno ou professor com esse R.A.';
     }
 
     return null;

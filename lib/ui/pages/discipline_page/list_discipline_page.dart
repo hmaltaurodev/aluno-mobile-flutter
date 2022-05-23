@@ -32,7 +32,9 @@ class _ListDisciplinePageState extends State<ListDisciplinePage> {
           switch (snapshot.connectionState) {
             case ConnectionState.none:
             case ConnectionState.waiting:
-              return const CircularProgressIndicator();
+            return const Center(
+              child: CircularProgressIndicator(),
+            );
             default:
               return _createListViewBuilder(snapshot);
           }

@@ -68,6 +68,7 @@ class _LoginPageState extends State<LoginPage> {
                     labelText: 'Usuário',
                     textEditingController: _usernameController,
                     validator: _validateUsername,
+                    maxLenght: 8,
                     autoValidate: false,
                     paddingTop: 50,
                     prefixIcon: const Icon(

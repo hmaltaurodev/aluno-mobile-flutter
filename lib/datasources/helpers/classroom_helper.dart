@@ -72,6 +72,14 @@ const String classroomSqlSelectByStudent = '''
   WHERE $classroomStudentTable.$classroomStudentStudent = ?
 ''';
 
+const String classroomSqlSelectDuplicate = '''
+  SELECT COUNT(1)
+  FROM $classroomTable
+  WHERE $classroomIsActive = 1
+  AND $classroomCurriculumGride = ?
+  AND $classroomPeriodYear = ?
+''';
+
 const String classroomSqlSelectByCourse = '''
   $classroomSqlSelectAllActive
   AND $courseId = ?
@@ -159,5 +167,16 @@ class ClassroomHelper {
     );
 
     return classrooms.map((e) => Classroom.fromMap(e)).toList();
+  }
+
+  Future<bool> isDuplicate(int? idCurriculumGride, int? periodYear) async {
+    Database database = await DataBase().getDatabase;
+    int count = firstIntValue(
+      await database.rawQuery(
+        classroomSqlSelectDuplicate, [idCurriculumGride, periodYear]
+      )
+    )!;
+
+    return count >= 1;
   }
 }

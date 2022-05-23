@@ -32,7 +32,9 @@ class _ListCurriculumGridePageState extends State<ListCurriculumGridePage> {
           switch (snapshot.connectionState) {
             case ConnectionState.none:
             case ConnectionState.waiting:
-              return const CircularProgressIndicator();
+            return const Center(
+              child: CircularProgressIndicator(),
+            );
             default:
               return _createListViewBuilder(snapshot);
           }
@@ -84,15 +86,6 @@ class _ListCurriculumGridePageState extends State<ListCurriculumGridePage> {
 
   List<Widget> _createSlidablesActions(CurriculumGride curriculumGride) {
     return [
-      SlidableAction(
-        icon: Icons.edit,
-        label: 'Editar',
-        backgroundColor: Theme.of(context).primaryColor,
-        foregroundColor: Colors.white,
-        onPressed: (context) {
-          _openCadPage(curriculumGride);
-        },
-      ),
       SlidableAction(
         icon: Utils.activeInactiveIcon(curriculumGride.isActive == 1),
         label: Utils.activeInactiveLabel(curriculumGride.isActive == 1),
