@@ -133,7 +133,7 @@ class _DetailDisciplinePageState extends State<DetailDisciplinePage> {
     else {
       if (frequencyPercentual < 70 && gradesAverage < 60) {
         status = const Text(
-          'Status: REPROVADO POR NOTAS E FALTAS',
+          'Status: REPROVADO POR NOTA E FALTAS',
           style: TextStyle(
               color: Colors.red,
               fontWeight: FontWeight.bold
@@ -151,7 +151,7 @@ class _DetailDisciplinePageState extends State<DetailDisciplinePage> {
       }
       else if (gradesAverage < 60) {
         status = const Text(
-          'Status: REPROVADO POR FALTAS',
+          'Status: REPROVADO POR NOTA',
           style: TextStyle(
               color: Colors.red,
               fontWeight: FontWeight.bold

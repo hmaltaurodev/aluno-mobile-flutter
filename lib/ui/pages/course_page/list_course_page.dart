@@ -74,11 +74,16 @@ class _ListCoursePageState extends State<ListCoursePage> {
       padding: const EdgeInsets.all(4),
       itemCount: courses.length,
       itemBuilder: (context, index) {
-        return WSlidable(
-          child: ListTile(
-            title: Text(courses[index].toString()),
+        return GestureDetector(
+          onTap: () {
+            _openCadPage(courses[index]);
+          },
+          child: WSlidable(
+            child: ListTile(
+              title: Text(courses[index].toString()),
+            ),
+            slideableActions: _createSlidablesActions(courses[index]),
           ),
-          slideableActions: _createSlidablesActions(courses[index]),
         );
       },
     );
