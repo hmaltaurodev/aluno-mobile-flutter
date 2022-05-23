@@ -4,9 +4,9 @@
 
 > O login padrão é:
 > usuário: admin
-> senha: admin
+> senha: admin  
 
-> Logins de aluno e professor é pelo RA  
+> Logins de aluno e professor é pelo RA
 > Por exemplo:
 
 > Aluno com RA 1
